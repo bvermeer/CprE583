@@ -1,0 +1,9 @@
+NET  sysclk               LOC="AH17";
+NET  RESET_low            LOC="E9";    # Bank 20, Vcco=3.3V, DCI using 49.9 ohm resistors
+NET  FPGA_SERIAL1_RX      LOC="AG15";  # Bank 4, Vcco=3.3V, No DCI
+NET  FPGA_SERIAL1_TX      LOC="AG20";  # Bank 4, Vcco=3.3V, No DCI
+
+# Tell tools what freq to target sysclk
+# in this case 33 MHz
+net sysclk tnm_net = sysclk;
+timespec ts_sysclk = period sysclk 30.30 ns high 50 %;
