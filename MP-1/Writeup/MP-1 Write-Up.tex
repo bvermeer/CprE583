@@ -1,0 +1,181 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University/School Laboratory Report
+% LaTeX Template
+% Version 3.0 (4/2/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Linux and Unix Users Group at Virginia Tech Wiki 
+% (https://vtluug.org/wiki/Example_LaTeX_chem_lab_report)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+%\usepackage{mhchem} % Package for chemical equation typesetting
+%\usepackage{siunitx} % Provides the \SI{}{} command for typesetting SI units
+
+\usepackage{graphicx} % Required for the inclusion of images
+\usepackage[top=1in,bottom=1in,right=1in,left=1in]{geometry}% Set the margins
+
+%Multiple column picture packages
+\usepackage{caption}
+\usepackage{subcaption}
+
+%Highlight command
+\usepackage{tikz}
+\usepackage{xspace}
+\usetikzlibrary{decorations.pathmorphing}
+\newcommand\hl[1]{%
+    \tikz[baseline,%
+      decoration={random steps,amplitude=1pt,segment length=15pt},%
+      outer sep=-15pt, inner sep = 0pt%
+    ]%
+   \node[decorate,rectangle,fill=yellow,anchor=text]{#1\xspace};%
+}%
+
+% Create the header and footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{CprE 583}
+\rhead{Blake Vermeer, Kris Hall, Rohit Zambre}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
+
+%\usepackage{times} % Uncomment to use the Times New Roman font
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{MP-1 Write-Up} % Add title here...
+
+\author{Blake \textsc{Vermeer}\\
+		Kris \textsc{Hall}\\
+		Rohit \textsc{Zambre}} % Author name
+
+\date{\today} % Date for the report
+
+\begin{document}
+
+\maketitle % Insert the title, author and date
+
+\begin{center}
+\begin{tabular}{l r}
+Date Performed: & September 19, 2014 \\ % Date the experiment was performed
+%Partners: & James Smith \\ % Partner names (optional)
+Instructors: & Joseph Zambreno % Instructor/supervisor
+\end{tabular}
+\end{center}
+
+% If you wish to include an abstract, uncomment the lines below
+% \begin{abstract}
+% Abstract text
+% \end{abstract}
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+
+\section{Objective}
+In this lab we were introduced to the Xilinx tools and the lab environment setup. Also, we did some basic VHDL coding to manipulate a UART link.
+
+
+\section{Software Overview}
+
+
+
+\section{Setting up Bluetooth}
+After generating the bitfile, I moved onto the software configuration side of UART0. To do this I just had to lookup the UART0 
+
+
+%\begin{figure}[h]
+%	\begin{center}
+%		\includegraphics[scale=0.5]{pics/Bluetooth_settings.JPG}
+%		\caption{Bluetooth settings}
+%	\end{center}
+%\end{figure}
+
+
+\section{Talking to the Quad}
+
+
+
+
+\section{PPM Passthrough}
+
+
+
+
+\section{Data Analysis}
+
+
+
+\section{Pseudo-GPS}
+
+
+
+
+\section{PID Controller}
+
+
+
+
+
+% If you have more than one objective, uncomment the below:
+%\begin{description}
+%\item[First Objective] \hfill \\
+%Objective 1 text
+%\item[Second Objective] \hfill \\
+%Objective 2 text
+%\end{description}
+
+%\subsection{Definitions}
+%\label{definitions}
+%\begin{description}
+%\item[Stoichiometry]
+%The relationship between the relative quantities of substances taking part in a reaction or forming a compound, typically a ratio of whole integers.
+%\item[Atomic mass]
+%The mass of an atom of a chemical element expressed in atomic mass units. It is approximately equivalent to the number of protons and neutrons in the atom (the mass number) or to the average number allowing for the relative abundances of different isotopes. 
+%\end{description} 
+ 
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 4
+%----------------------------------------------------------------------------------------
+\section{Conclusion}
+
+
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+%\newpage
+
+%\bibliographystyle{unsrt}
+
+%\bibliography{sample}
+
+%----------------------------------------------------------------------------------------
+
+
+\end{document}
