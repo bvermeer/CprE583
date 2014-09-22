@@ -8,7 +8,7 @@
 -- Project Name: 
 -- Target Devices: 
 -- Tool versions: 
--- Description: Echo data recived from the UART back to the PC
+-- Description: Echo data received from the UART back to the PC
 --
 -- Dependencies: 
 --
@@ -31,14 +31,14 @@ use IEEE.std_logic_1164.all;
 --use UNISIM.VComponents.all;
 
 entity echo is
-    Port ( clk       : in  STD_LOGIC;
-	        reset     : in STD_LOGIC;
-           new_data  : in  STD_LOGIC; -- Indicate a new byte has been captured from UART
-           data_in   : in  STD_LOGIC_VECTOR (7 downto 0);
-           TX_busy_n : in  STD_LOGIC;
-           send_data : out  STD_LOGIC; -- Request UART to transmit data_out
-           data_out  : out  STD_LOGIC_VECTOR (7 downto 0)
-			);
+    Port ( clk       	: in  STD_LOGIC;
+	       reset     	: in STD_LOGIC;
+           new_data  	: in  STD_LOGIC; -- Indicate a new byte has been captured from UART
+           data_in   	: in  STD_LOGIC_VECTOR (7 downto 0);
+           TX_busy_n 	: in  STD_LOGIC;
+           send_data 	: out  STD_LOGIC; -- Request UART to transmit data_out
+           data_out  	: out  STD_LOGIC_VECTOR (7 downto 0)
+	     );
 end echo;
 
 architecture Behavioral of echo is
@@ -47,9 +47,9 @@ architecture Behavioral of echo is
   -- None
   
 -- signals
-signal rdy_send_data_reg : std_logic; -- Indicate there is that is ready to be sent
-signal send_data_reg  : std_logic; -- Tell UART to send a byte of data
-signal data_out_reg   : std_logic_vector(7 downto 0); -- Temp storage for new data
+signal rdy_send_data_reg 	: std_logic; -- Indicate there is that is ready to be sent
+signal send_data_reg  		: std_logic; -- Tell UART to send a byte of data
+signal data_out_reg   		: std_logic_vector(7 downto 0); -- Temp storage for new data
 
 begin
 
@@ -59,9 +59,9 @@ begin
 if(clk'event and clk = '1') then
   
   if(reset = '1') then  -- reset registers
-    rdy_send_data_reg <= '0';
-	 send_data_reg     <= '0';
-    data_out_reg      <= (others => '0');	 
+    rdy_send_data_reg 	<= '0';
+	 send_data_reg     	<= '0';
+    data_out_reg      	<= (others => '0');	 
   else 
   
     -- default
@@ -90,7 +90,7 @@ if(clk'event and clk = '1') then
     elsif(rdy_send_data_reg = '1') then
 	   if(TX_busy_n = '1') then -- Check if UART is busy transmitting already
 		  rdy_send_data_reg <= '0'; -- reset this signal
-		  send_data_reg <= '1';     -- tell UART to transmit a byte 
+		  send_data_reg 	<= '1';     -- tell UART to transmit a byte 
 		end if;
 	 end if;
   

@@ -9,21 +9,21 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
-library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
+LIBRARY IEEE;
+USE IEEE.std_logic_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 
-entity MP1_top is
- port(
-  sysclk    : in  std_logic;  -- system clock
-  RESET_low : in  std_logic;  -- Active low (but polarity is immediately made active high)
-  FPGA_SERIAL1_TX  : out std_logic;
-  FPGA_SERIAL1_RX  : in  std_logic);  
-end MP1_top;
+ENTITY MP1_top IS
+ PORT(
+  sysclk    : IN  std_logic;  -- system clock
+  RESET_low : IN  std_logic;  -- Active low (but polarity is immediately made active high)
+  FPGA_SERIAL1_TX  : OUT std_logic;
+  FPGA_SERIAL1_RX  : IN  std_logic);  
+END MP1_top;
 
-architecture rtl of MP1_top is
+ARCHITECTURE rtl OF MP1_top IS
 
 ----------------------------------------------
 --       Component declarations             --
@@ -32,81 +32,81 @@ architecture rtl of MP1_top is
 
 -- UART component: Connect the FPGA to the PC
 -- over a serial (i.e. UART) cable
-component mmu_uart_top
-port
+COMPONENT mmu_uart_top
+PORT
 (
-        Clk     : in std_logic;         -- main clock
-        Reset_n : in std_logic;         -- main reset(phjones made active high)
-        TXD     : out std_logic;        -- RS232 TX data
-        RXD     : in std_logic;         -- RS232 RX data
+        Clk     : IN std_logic;         -- main clock
+        Reset_n : IN std_logic;         -- main reset(phjones made active high)
+        TXD     : OUT std_logic;        -- RS232 TX data
+        RXD     : IN std_logic;         -- RS232 RX data
 
-        ck_div  : in std_logic_vector(15 downto 0);
+        ck_div  : IN std_logic_vector(15 DOWNTO 0);
                                         -- clock divider value
                                         -- used to get the baud rate
                                         -- baud_rate = F(clk) / (ck_div * 3)
         -- bus interface
 
-        CE_N    : in std_logic;         -- chip enable
-        WR_N    : in std_logic;         -- write enable
-        RD_N    : in std_logic;         -- read enable
-        A0      : in std_logic;         -- 0 - Rx/TX data reg; 1 - status reg
-        D_IN    : in std_logic_vector(7 downto 0);
-        D_OUT   : out std_logic_vector(7 downto 0);
+        CE_N    : IN std_logic;         -- chip enable
+        WR_N    : IN std_logic;         -- write enable
+        RD_N    : IN std_logic;         -- read enable
+        A0      : IN std_logic;         -- 0 - Rx/TX data reg; 1 - status reg
+        D_IN    : IN std_logic_vector(7 DOWNTO 0);
+        D_OUT   : OUT std_logic_vector(7 DOWNTO 0);
 
         -- interrupt signals- same signals as the status register bits
-        RX_full     : out std_logic;  -- Indicate a byte is ready to be ready from UART
-        TX_busy_n   : out std_logic
+        RX_full     : OUT std_logic;  -- Indicate a byte is ready to be ready from UART
+        TX_busy_n   : OUT std_logic
 
 );
-end component;
+END COMPONENT;
 
 
 
 -- Component that passes data to/from a 
 -- subcomponent that does the actual data processing
-component process_data
-port
+COMPONENT process_data
+PORT
 (
-  clk       : in  STD_LOGIC;
-  reset     : in  STD_LOGIC;
-  data_in   : in  STD_LOGIC_VECTOR (7 downto 0); -- data recived
-  RX_full   : in  STD_LOGIC;  -- Indicate a byte is ready to be read from UART
-  TX_busy_n : in  STD_LOGIC;  -- Active low: indicate UART is busy transmitting
-  RD_n      : out  STD_LOGIC; -- Active low: read a byte from the UART
-  WR_n      : out  STD_LOGIC; -- Active low: write a byte to UART for transmission
-  data_out  : out  STD_LOGIC_VECTOR (7 downto 0) -- data to transmit
+  clk       : IN  STD_LOGIC;
+  reset     : IN  STD_LOGIC;
+  data_in   : IN  STD_LOGIC_VECTOR (7 DOWNTO 0); -- data recived
+  RX_full   : IN  STD_LOGIC;  -- Indicate a byte is ready to be read from UART
+  TX_busy_n : IN  STD_LOGIC;  -- Active low: indicate UART is busy transmitting
+  RD_n      : OUT  STD_LOGIC; -- Active low: read a byte from the UART
+  WR_n      : OUT  STD_LOGIC; -- Active low: write a byte to UART for transmission
+  data_out  : OUT  STD_LOGIC_VECTOR (7 DOWNTO 0) -- data to transmit
 
 );
-end component;
+END COMPONENT;
 
 
 
 ----------------------------------------------
 --          Signal declarations             --
 ----------------------------------------------
-signal reset     : std_logic;  -- Reset active high
-signal WR_N      : std_logic;  -- Active low write enable
-signal RD_N      : std_logic;  -- Active low read enable
+SIGNAL reset     : STD_LOGIC;  -- Reset active high
+SIGNAL WR_N      : STD_LOGIC;  -- Active low write enable
+SIGNAL RD_N      : STD_LOGIC;  -- Active low read enable
  
-signal D_IN   : std_logic_vector(7 downto 0);  -- Data to Transmit
-signal D_OUT  : std_logic_vector(7 downto 0);  -- Data Recieved
+SIGNAL D_IN   : STD_LOGIC_VECTOR(7 DOWNTO 0);  -- Data to Transmit
+SIGNAL D_OUT  : STD_LOGIC_VECTOR(7 DOWNTO 0);  -- Data Recieved
 
-signal RX_full   : std_logic;     -- Byte of Data Ready to read
-signal TX_busy_n : std_logic;     -- Active low indicate busy transmitting
+SIGNAL RX_full   : STD_LOGIC;     -- Byte of Data Ready to read
+SIGNAL TX_busy_n : STD_LOGIC;     -- Active low indicate busy transmitting
   
 
-begin
+BEGIN
 
 
 
 -- Combinational assignments
-reset <= not RESET_low;  -- convert to active high reset
+reset <= NOT RESET_low;  -- convert to active high reset
 
 -- Port map UART interface component
 -- One side of the interface connects to the UART cable
 -- The other side connects to your FPGA logic (i.e. the process_data component)
-UART_1  : mmu_uart_top
-port map
+UART_1  : MMU_UART_TOP
+PORT MAP
 (
   Clk     => sysclk,          -- main clock (33 MHz)
   Reset_n => reset,           -- main reset(phjones made active high)
@@ -133,8 +133,8 @@ port map
 
 
 -- Port map process_data for processing received data
-process_data_1  : process_data
-port map
+process_data_1  : PROCESS_DATA
+PORT MAP
 (
   clk       => sysclk,
   reset     => reset,
@@ -147,4 +147,4 @@ port map
 );
 
 
-end rtl;
+END rtl;
