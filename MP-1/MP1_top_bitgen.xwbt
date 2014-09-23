@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=/home/bvermeer/cpre583/CprE583/MP-1/MP1_top.ncd
+OUTFILE=/home/bvermeer/cpre583/CprE583/MP-1/MP1_top.bit
+FAMILY=Virtex5
+PART=xc5vlx110t-1ff1136
+WORKINGDIR=/home/bvermeer/cpre583/CprE583/MP-1
+LICENSE=ISE
+USER_INFO=174157297_174157298_210562663_503

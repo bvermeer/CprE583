@@ -47,17 +47,16 @@ architecture mixed of process_data is
 
 -- Component that echos data recived from the PC
 -- back to the PC.
-component echo
+component num_adder
 port
-(
-  clk       : in  STD_LOGIC;
-  reset     : in STD_LOGIC;
-  new_data  : in  STD_LOGIC; -- Indicate UART has recieved a new byte
-  data_in   : in  STD_LOGIC_VECTOR (7 downto 0); -- Data from the UART
-  TX_busy_n : in  STD_LOGIC;  -- Active low, indicates when UART is ready to transmit
-  send_data : out  STD_LOGIC; -- Tell UART to transmit a byte
-  data_out  : out  STD_LOGIC_VECTOR (7 downto 0)  -- Data to send to the UART
-);
+		   ( clk       	: in  STD_LOGIC;
+	        reset     	: in STD_LOGIC;
+           new_data  	: in  STD_LOGIC; -- Indicate a new byte has been captured from UART
+           data_in   	: in  STD_LOGIC_VECTOR (7 downto 0);
+           TX_busy_n 	: in  STD_LOGIC;
+           send_data 	: out  STD_LOGIC; -- Request UART to transmit data_out
+           data_out  	: out  STD_LOGIC_VECTOR (7 downto 0)
+			);
 end component;
 
 -- signal declarations
@@ -145,7 +144,7 @@ data_out <= data_out_reg;
 
 -- Component that echos data recived from the PC
 -- back to the PC.
-echo1 : echo
+num_adder1 : num_adder
 port map
 ( 
   clk       => clk,

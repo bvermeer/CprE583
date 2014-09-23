@@ -39,6 +39,7 @@ ENTITY num_check IS
 END num_check;
 
 ARCHITECTURE Behavioral OF num_check IS
+begin
 
 	output_reg : process(clk)
 	begin
@@ -65,6 +66,8 @@ ARCHITECTURE Behavioral OF num_check IS
 				end if;
 
 			end if;
+			
+		end if;
 
 	end process output_reg ;
 

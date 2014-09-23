@@ -1,0 +1,51 @@
+# //  ModelSim SE-64 10.1c Jul 27 2012 Linux 2.6.32-431.29.2.el6.x86_64
+# //
+# //  Copyright 1991-2012 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //
+# do {num_adder_tb.fdo} 
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim SE-64 vcom 10.1c Compiler 2012.07 Jul 27 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Compiling entity num_check
+# -- Compiling architecture Behavioral of num_check
+# Model Technology ModelSim SE-64 vcom 10.1c Compiler 2012.07 Jul 27 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity num_adder
+# -- Compiling architecture Behavioral of num_adder
+# Model Technology ModelSim SE-64 vcom 10.1c Compiler 2012.07 Jul 27 2012
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Compiling entity num_adder_tb
+# -- Compiling architecture rtl of num_adder_tb
+# vsim -lib work -voptargs=\"+acc\" -t 1ps work.num_adder_tb 
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Note: (vopt-143) Recognized 1 FSM in architecture body "num_adder(Behavioral)".
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.num_adder_tb(rtl)#1
+# Loading work.num_adder(behavioral)#1
+# Loading work.num_check(behavioral)#1
+# .main_pane.wave.interior.cs.body.pw.wf
+# .main_pane.structure.interior.cs.body.struct
+# .main_pane.objects.interior.cs.body.tree
+# ** Failure: Simulation finished. Device passed!
+#    Time: 1700113 ns  Iteration: 4  Process: /num_adder_tb/sim_test_data File: num_adder_tb.vhd
+# Break in Process sim_test_data at num_adder_tb.vhd line 164
+# Simulation Breakpoint: Break in Process sim_test_data at num_adder_tb.vhd line 164
+# MACRO ./num_adder_tb.fdo PAUSED at line 47
+# ** Warning: (vsim-31) Unable to unlink file "/home/bvermeer/cpre583/CprE583/MP-1/work/_opt__lock".
+# No such file or directory. (errno = ENOENT)

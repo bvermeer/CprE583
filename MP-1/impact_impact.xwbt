@@ -1,0 +1,8 @@
+INTSTYLE=impact
+INFILE=/home/bvermeer/cpre583/CprE583/MP-1/impact.xsl
+OUTFILE=/home/bvermeer/cpre583/CprE583/MP-1/impact.xsl
+FAMILY=Multiple
+PART=Multiple
+WORKINGDIR=/home/bvermeer/cpre583/CprE583/MP-1
+LICENSE=iMPACT
+USER_INFO=iMPACT
