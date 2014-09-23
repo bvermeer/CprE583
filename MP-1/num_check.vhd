@@ -34,7 +34,7 @@ ENTITY num_check IS
     PORT ( clk       	: IN  STD_LOGIC;
            in_one		: IN  STD_LOGIC_VECTOR (7 DOWNTO 0);
            in_two 		: IN  STD_LOGIC_VECTOR (7 DOWNTO 0);
-           both_nums	: OUT  STD_LOGIC; 
+           both_nums	: OUT  STD_LOGIC
 	     );
 END num_check;
 

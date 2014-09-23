@@ -22,6 +22,7 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -45,17 +46,34 @@ end num_adder;
 
 architecture Behavioral of num_adder is
 
--- Components
-  -- None
+----------------------------------------------------------------------------- 
+-- Component Declaration
+----------------------------------------------------------------------------- 
+COMPONENT num_check
+    PORT ( clk       	: IN  STD_LOGIC;
+           in_one		: IN  STD_LOGIC_VECTOR (7 DOWNTO 0);
+           in_two 		: IN  STD_LOGIC_VECTOR (7 DOWNTO 0);
+           both_nums	: OUT  STD_LOGIC
+	     );
+END COMPONENT;
  
 -- signals
-signal rdy_send_data_reg 			: std_logic; -- Indicate there is that is ready to be sent
 signal send_data_reg  				: std_logic; -- Tell UART to send a byte of data
 signal data_out_reg   				: std_logic_vector(7 downto 0); -- Temp storage for new data
-signal num_last_rec_flag			: std_logic; --This flag is sent when the last character echoed was 0-4
-signal is_num_flag					: std_logic; --This flag is set when the current char is 0-4
-signal last_num						: std_logic_vector (7 downto 0); -- Temp storage for last transmitted number 
+signal last_two_num_flag			: std_logic; --This flag is set when the last two character received were both numbers from 0-4
+signal transmit_sum_flag			: std_logic; --Flag to signify that the digit being transmitted is the sum
+signal current_data_in_reg			: std_logic_vector (7 downto 0); -- Temp storage for current received character
+signal last_data_in_reg				: std_logic_vector (7 downto 0); -- Temp storage for last received character
 
+
+CONSECUTIVE_NUMBERS : num_check 
+PORT MAP
+(
+	clk       	=> clk,
+	in_one 		=> last_data_in,
+	in_two 		=> current_data_in_reg,
+	both_nums 	=> last_two_num_flag,
+);
 
 
 --State machine signals
@@ -84,18 +102,22 @@ begin
 	comb_proc : process(PS)
 	begin
 		
+		--Set the default value for the send data register
+		send_data_reg <= '0';
+
+
 		case PS is 
 			--This state is entered on reset and clears the regs
 			when ST_RST =>
 				--Clear the registers
 				last_num <= (others => '0');
-		    	rdy_send_data_reg 	<= '0';
 				send_data_reg     	<= '0';
 		    	data_out_reg      	<= (others => '0');	 
+				last_data_in_reg    <= (others => '0');  
+				current_data_in_reg <= (others => '0'); 
 
 				--Set the next state to ST_WAIT
 				NS <= ST_WAIT;
-
 
 			--This state is entered when waiting for new data
 			--from the UART
@@ -105,21 +127,10 @@ begin
 
 					--Capture the new data
 					data_out_reg <= data_in;
+					current_data_in_reg <= data_in;
 
-					--Check if the new data being received is 0-4
-					if ( (data_in = x"30") OR 
-						 (data_in = x"31") OR 
-						 (data_in = x"32") OR 
-						 (data_in = x"33") OR 
-						 (data_in = x"34")  ) then
-						
-							is_num_flag <= '1';
-
-					else
-
-						is_num_flag <= '0';
-						
-						end if ;
+					--Save the last data sent
+					last_data_in_reg <= data_out_reg;
 
 					NS <= ST_READY;
 
@@ -128,6 +139,12 @@ begin
 			--This state is entered after data has been received and is 
 			--waiting to be transmitted
 			when ST_READY =>
+
+				if(transmit_sum_flag = '1') then
+					
+					data_out_reg = std_logic_vector((48 - unsigned(current_data_in_reg)) + (48 - unsigned(last_data_in_reg)) + 48);
+
+				end
 
 				--Wait for the UART to be ready to transmit
 				if(TX_busy_n = '1') then
@@ -139,7 +156,23 @@ begin
 			--Data is sent to the UART in this state 
 			when ST_TRANSMITT =>
 
-				
+				send_data_reg <= '1';
+
+				if((last_two_num_flag = '1') AND (transmit_sum_flag = '0')) then
+
+					transmit_sum_flag <= '1';
+
+					NS <= ST_READY;
+
+				else
+
+					--Reset the transmit sum flag
+					transmit_sum_flag <= '0';
+
+					NS <= ST_WAIT;
+
+				end if;
+
 
 			when others =>
 				NS <= ST_RST;

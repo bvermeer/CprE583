@@ -67,7 +67,7 @@ if(clk'event and clk = '1') then
     -- default
 	 send_data_reg <= '0';
   
-    if(new_data = '1') then  -- recieved new data from UART
+    if(new_data = '1') then  -- received new data from UART
 	   rdy_send_data_reg <= '1';  -- keep high until the UART is ready for us
 		                           -- to transmit a byte
 		 
