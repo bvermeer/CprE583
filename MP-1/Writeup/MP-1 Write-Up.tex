@@ -158,10 +158,26 @@ We generated the bitfile of this design and were able to see the successful resu
 \section{Exploring the Design}
 
 
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.6]{../part4_files/part4_timing_diagram.png}
+			\caption{Part 4 Timing Diagram}
+		\end{center}
+	\end{figure}
 
 
 \section{Echo Delay}
+The module works by taking in all signals sent between mmu\_uart\_top and process\_data and holding that information for one second, before sending it out to the respective components.
 
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.6]{../part5_files/part5_block_diagram.png}
+			\caption{Part 5 Block Diagram}
+		\end{center}
+	\end{figure}
+
+
+\pagebreak
 
 
 \section{In-Flight Calculations}
@@ -170,7 +186,7 @@ In this section, we modified the design so that it would echo back the sum of th
 
 	\begin{figure}[h]
 		\begin{center}
-			\includegraphics[scale=0.65]{../block_diagrams/part_6_block_diagram_num_adder.png}
+			\includegraphics[scale=0.55]{../block_diagrams/part_6_block_diagram_num_adder.png}
 			\caption{Part 6 - Block Diagram}
 		\end{center}
 	\end{figure}
@@ -179,7 +195,7 @@ The design is fairly simple. It primarily consists of a state machine and some s
 
 	\begin{figure}[h]
 		\begin{center}
-			\includegraphics[scale=0.3]{../dot/Part-6_state_machine.png}
+			\includegraphics[scale=0.25]{../dot/Part-6_state_machine.png}
 			\caption{NUM\_ADDER State Diagram}
 		\end{center}
 	\end{figure}
