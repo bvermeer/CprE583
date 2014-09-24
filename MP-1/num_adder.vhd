@@ -35,7 +35,7 @@ use IEEE.numeric_std.all;
 
 entity num_adder is
     Port ( clk       	: in  STD_LOGIC;
-	       reset     	: in STD_LOGIC;
+           reset     	: in STD_LOGIC;
            new_data  	: in  STD_LOGIC; -- Indicate a new byte has been captured from UART
            data_in   	: in  STD_LOGIC_VECTOR (7 downto 0);
            TX_busy_n 	: in  STD_LOGIC;
@@ -60,28 +60,30 @@ END COMPONENT;
 -- signals
 signal send_data_reg  				: std_logic; -- Tell UART to send a byte of data
 signal data_out_reg   				: std_logic_vector(7 downto 0); -- Temp storage for new data
+signal data_out_reg_in              : std_logic_vector(7 downto 0); -- Input to the data_out_reg D Flip-Flop
+signal data_out_reg_en              : std_logic; --Enable for the data_out_reg D Flip-Flop
 signal last_two_num_flag			: std_logic; --This flag is set when the last two character received were both numbers from 0-4
-signal transmit_sum_flag			: std_logic; --Flag to signify that the digit being transmitted is the sum
 signal current_data_in_reg			: std_logic_vector (7 downto 0); -- Temp storage for current received character
+signal current_data_in_reg_en       : std_logic; --Enable input for the current_data_in_reg D Flip-Flop
 signal last_data_in_reg				: std_logic_vector (7 downto 0); -- Temp storage for last received character
 
+
+--State machine signals
+type state_type is (ST_RST, ST_WAIT, ST_READY, ST_TRANSMIT, ST_READY2, ST_TRANSMIT2);
+signal PS, NS : state_type;
+
+
+begin
 
 CONSECUTIVE_NUMBERS : num_check 
 PORT MAP
 (
 	clk       	=> clk,
-	in_one 		=> last_data_in,
+	in_one 		=> last_data_in_reg,
 	in_two 		=> current_data_in_reg,
-	both_nums 	=> last_two_num_flag,
+	both_nums 	=> last_two_num_flag
 );
 
-
---State machine signals
-type state_type is (ST_RST, ST_WAIT, ST_READY, ST_TRANSMITT);
-signal PS, NS : state_type;
-
-
-begin
 
 	--Echo what was received back to the sender
 	--Synchronous process for the state machine (with synchronous reset) 
@@ -94,27 +96,25 @@ begin
 		  		PS <= ST_RST;
 		  else 
 				PS <= NS;
+			end if;
 		end if;
 	end process sync_proc; 
 
 
 	--Combinational process for the state machine
-	comb_proc : process(PS)
+	comb_proc : process(PS, new_data, TX_busy_n)
 	begin
 		
-		--Set the default value for the send data register
+		--Set the default value for the signals to avoid inferring latches
 		send_data_reg <= '0';
+        current_data_in_reg_en <= '0';
+		data_out_reg_en <= '0';
+        data_out_reg_in <= (others => '0') ; 
 
 
 		case PS is 
 			--This state is entered on reset and clears the regs
 			when ST_RST =>
-				--Clear the registers
-				last_num <= (others => '0');
-				send_data_reg     	<= '0';
-		    	data_out_reg      	<= (others => '0');	 
-				last_data_in_reg    <= (others => '0');  
-				current_data_in_reg <= (others => '0'); 
 
 				--Set the next state to ST_WAIT
 				NS <= ST_WAIT;
@@ -125,53 +125,80 @@ begin
 
 				if(new_data = '1') then
 
-					--Capture the new data
-					data_out_reg <= data_in;
-					current_data_in_reg <= data_in;
+					--Capture the new data and save the last data
+					data_out_reg_in <= data_in;
+					data_out_reg_en <= '1';
+                    current_data_in_reg_en <= '1'; 
 
-					--Save the last data sent
-					last_data_in_reg <= data_out_reg;
 
 					NS <= ST_READY;
 
-				end
+                else
+
+                    NS <= ST_WAIT;
+
+				end if;
+
 			
-			--This state is entered after data has been received and is 
-			--waiting to be transmitted
+			--This state is entered after data has been received and is waiting to be transmitted
 			when ST_READY =>
-
-				if(transmit_sum_flag = '1') then
-					
-					data_out_reg = std_logic_vector((48 - unsigned(current_data_in_reg)) + (48 - unsigned(last_data_in_reg)) + 48);
-
-				end
 
 				--Wait for the UART to be ready to transmit
 				if(TX_busy_n = '1') then
 					
-					NS <= ST_TRANSMITT;
+					NS <= ST_TRANSMIT;
 
-				end
+                else
+
+                    NS <= ST_READY;
+
+				end if;
+
+
 
 			--Data is sent to the UART in this state 
-			when ST_TRANSMITT =>
+			when ST_TRANSMIT =>
 
 				send_data_reg <= '1';
 
-				if((last_two_num_flag = '1') AND (transmit_sum_flag = '0')) then
+				if(last_two_num_flag = '1') then
 
-					transmit_sum_flag <= '1';
-
-					NS <= ST_READY;
+					NS <= ST_READY2;
 
 				else
-
-					--Reset the transmit sum flag
-					transmit_sum_flag <= '0';
 
 					NS <= ST_WAIT;
 
 				end if;
+
+
+            --Wait to transmit the second data byte
+            when ST_READY2 =>
+					
+				data_out_reg_in <= std_logic_vector((unsigned(current_data_in_reg) - 48) + (unsigned(last_data_in_reg) - 48) + 48);
+                data_out_reg_en <= '1';
+
+				--Wait for the UART to be ready to transmit
+				if(TX_busy_n = '1') then
+					
+					NS <= ST_TRANSMIT2;
+
+                else
+
+                    NS <= ST_READY2;
+
+				end if;
+
+
+
+			--Data is sent to the UART in this state 
+			when ST_TRANSMIT2 =>
+
+				send_data_reg <= '1';
+
+				NS <= ST_WAIT;
+
+
 
 
 			when others =>
@@ -180,6 +207,63 @@ begin
 		end case;
 
 	end process comb_proc;
+
+
+
+--D Flip-Flop for current_data_in_reg and last_data_in_reg
+current_data_in_reg_proc : process(clk)
+begin
+        
+    if(rising_edge(clk)) then
+
+        if(reset = '1') then
+
+            current_data_in_reg <= (others => '0') ; 
+            last_data_in_reg <= (others => '0') ; 
+
+        else
+
+            if(current_data_in_reg_en = '1') then
+
+                --Capture the current data and also move the previous data to last_data_in_reg
+                current_data_in_reg <= data_in;
+                last_data_in_reg <= current_data_in_reg;
+
+            end if;
+
+        end if;
+
+    end if;
+
+end process current_data_in_reg_proc ;
+
+
+
+
+--D Flip-Flop for data_out_reg 
+data_out_reg_proc : process(clk)
+begin
+        
+    if(falling_edge(clk)) then
+
+        if(reset = '1') then
+
+            data_out_reg <= (others => '0') ; 
+
+        else
+
+            if(data_out_reg_en = '1') then
+
+                data_out_reg <= data_out_reg_in;
+
+            end if;
+
+        end if;
+
+    end if;
+
+end process data_out_reg_proc;
+
 
 
 
