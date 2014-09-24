@@ -1,0 +1,33 @@
+digraph part_6_state_machine {
+	
+	rankdir=UD;
+	node [shape="oval"];
+
+
+	"start" [style=invis];
+
+	"start" -> "RST" [label="Reset"];
+
+	"RST" -> "WAIT";
+
+	"WAIT" -> "WAIT" [label="new_data = '0'"];
+
+	"WAIT" -> "READY" [label="new_data = '1'"];
+
+	"READY" -> "READY" [label="TX_busy_n = '0'"];
+
+	"READY" -> "TRANSMIT" [label="TX_busy_n = '1'"];
+
+	"TRANSMIT" -> "WAIT" [label="last_two_num_flag = '0'"];
+
+
+	"TRANSMIT" -> "DELAY" [label="last_two_num_flag = '1'"];
+
+	"DELAY" -> "READY2";
+
+	"READY2" -> "READY2" [label="TX_busy_n = '0'"];
+
+	"READY2" -> "TRANSMIT2" [label"TX_busy_n = '1'"];
+
+	"TRANSMIT2" -> "WAIT";
+}
