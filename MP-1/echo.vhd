@@ -23,7 +23,7 @@ use IEEE.std_logic_1164.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx primitives in this code.
@@ -77,10 +77,12 @@ if(clk'event and clk = '1') then
 		 -- case ONLY.  For all other parts you should make your
 		 -- own entity
 		 ---------------------------------------------------
-						
-											
-	   data_out_reg  <= data_in;  -- capture the new byte
-		
+		if (unsigned(data_in) >= 97 and unsigned(data_in) <= 122) then
+			data_out_reg <= std_logic_vector(unsigned(data_in) - 32);
+
+		else								
+	    	data_out_reg  <= data_in;  -- capture the new byte
+		end if;
 		
 		 ----------------------------------------------------------
 		 -- Your VHDL above here: for the first part of MP-1 only 

@@ -141,8 +141,8 @@ The upper case conversion is implemented with the following code in the echo mod
 
 	\begin{lstlisting}[style=vhdl]
 	
-		if (data_in >= 97 and data_in <= 122) then
-			data_out_reg <= (data_in - 32);		--convert to upper case
+		if (unsigned(data_in) >= 97 and unsigned(data_in) <= 122) then
+			data_out_reg <= std_logic_vector(unsinged(data_in) - 32);		--convert to upper case
 			
 		else
 			data_out_reg <= data_in;
@@ -156,7 +156,7 @@ We generated the bitfile of this design and were able to see the successful resu
 
 
 \section{Exploring the Design}
-
+In this section we were asked to create we were asked to create a timing diagram and schematic for the UART module. First we started by creating the timing diagram which is pictured below. 
 
 	\begin{figure}[h]
 		\begin{center}
@@ -165,9 +165,20 @@ We generated the bitfile of this design and were able to see the successful resu
 		\end{center}
 	\end{figure}
 
+This module needs to be hooked up to the hardware UART signals in the FPGA. After adding the module to the project, it is simple to use. Simply send data to it over the UART and it will echo the data back to you. \\
+
+After creating the timing diagram. We moved forward and created the block diagram for the UART module which is pictured below:
+
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.6]{../part4_files/part4_block_diagram.png}
+			\caption{Part 4 Block Diagram}
+		\end{center}
+	\end{figure}
 
 \section{Echo Delay}
 The module works by taking in all signals sent between mmu\_uart\_top and process\_data and holding that information for one second, before sending it out to the respective components.
+
 
 	\begin{figure}[h]
 		\begin{center}
@@ -175,6 +186,7 @@ The module works by taking in all signals sent between mmu\_uart\_top and proces
 			\caption{Part 5 Block Diagram}
 		\end{center}
 	\end{figure}
+
 
 
 \pagebreak
