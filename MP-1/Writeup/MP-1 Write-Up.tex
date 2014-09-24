@@ -31,6 +31,30 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
+%Add code formating
+\usepackage{listings}
+\lstset{tabsize=2}
+
+%Define the style for VHDL
+\lstdefinelanguage{VHDL}{
+  morekeywords={
+    library,use,all,entity,is,port,in,out,end,architecture,of,
+    begin,and
+  },
+  morecomment=[l]--
+}
+
+%Give the VHDL code color
+\usepackage{xcolor}
+\colorlet{keyword}{blue!100!black!80}
+\colorlet{comment}{green!90!black!90}
+\lstdefinestyle{vhdl}{
+  language     = VHDL,
+  basicstyle   = \ttfamily,
+  keywordstyle = \color{keyword}\bfseries,
+  commentstyle = \color{comment}
+}
+
 \usepackage{amssymb}
 \usepackage{amsmath}
 
@@ -98,10 +122,37 @@ In this lab we were introduced to the Xilinx tools and the lab environment setup
 
 
 \section{Initial Test}
-After generating the bitfile, I uploaded the file to the Xilinx board. After running the program, LEDs 1 and 4 lit up and remained lit. I then connected to the Xilinx board over the serial link using minicom. The Xilinx board simply echoed back any data sent to it over the serial link. 
+After generating the bitfile, we uploaded the file to the Xilinx board. After running the program, LEDs 1 and 4 lit up and remained lit. I then connected to the Xilinx board over the serial link using minicom. The Xilinx board simply echoed back any data sent to it over the serial link. 
 
 
 \section{Uppercase Conversion}
+The TX\_driver signal is the input to the hardware module of MP1\_Top (TX\_driver is the output of the MP1\_top\_driver module that acts as the UART for the simulation) while the RX\_driver is the output of the hardware module of MP1\_top. In the screen-shot below, we can see that the RX\_driver signal is essentially a delay of the TX\_driver signal. RX\_driver echoes back the value of TX\_driver as soon as the 8 bits have been completely transferred.
+
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.35]{../part3_files/MP1-Normal_Execution.png}
+			\caption{Part 3 - Normal Execution waveform}
+		\end{center}
+	\end{figure}
+
+The upper case conversion is implemented with the following code in the echo module:
+
+\begin{center}
+
+	\begin{lstlisting}[style=vhdl]
+	
+		if (data_in >= 97 and data_in <= 122) then
+			data_out_reg <= (data_in - 32);		--convert to upper case
+			
+		else
+			data_out_reg <= data_in;
+		end if;
+	
+	\end{lstlisting}
+
+\end{center}
+
+We generated the bitfile of this design and were able to see the successful results in minicom. The small-case letters were echoed back as upper-case letters in minicom. The bitfile for this part is included with the submission.
 
 
 \section{Exploring the Design}
@@ -187,7 +238,7 @@ In our design, the base clock rate is 33MHz.
 %	SECTION 4
 %----------------------------------------------------------------------------------------
 \section{Conclusion}
-
+In this lab we were introduced to the tools we will be using throughout the semester. We were also reintroduced to VHDL coding and some of the best design practices when coding with VHDL.
 
 
 %----------------------------------------------------------------------------------------
