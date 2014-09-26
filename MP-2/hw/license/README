@@ -1,0 +1,22 @@
+Due to a licensing bug with the Xilinx tools this eval 
+license must be installed in the follow direcotry:
+
+~/.Xilinx/Coregen/CoreLicenses/
+
+If you do not have this path in your home directory (i.e. ~), 
+then create this path using mkdir as follows.
+
+cd ~
+mkdir .Xilinx
+cd .Xilinx
+mkdir Corgen
+cd Corgen
+mkdir CoreLicenses
+
+
+Next cp the following file to the CoreLicenses directory:
+
+xps_ll_temac_soft_core_permanent_eval.lic
+
+If you do not do this the tools will give errors stating you 
+do not have a license for the temac core.

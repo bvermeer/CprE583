@@ -1,0 +1,71 @@
+#----- REMOVE LINES ABOVE HERE --------------------------
+#
+# This license is valid from Mon Jul  6 14:13:00 2009.
+#
+# This license is NODELOCKED to HOSTID=ANY;
+# there is no need to run lmgrd for this license.
+#
+#
+# This is a permanent license; it will never expire.
+INCREMENT xps_ll_temac_classic xilinxd 2010.07 permanent uncounted \
+	309E8780D56B \
+	VENDOR_STRING=License_Type:Hardware_Evaluation \
+	HOSTID=ANY \
+	ISSUER="Xilinx Inc, davet" \
+	NOTICE="The license for this core was generated for \
+		ip_admin@xilinx.com on Mon Jul 6 14:13:00 2009. It is \
+		the responsibility of the Licensee of this core to \
+		adhere to the site restriction and other terms of the \
+		Xilinx Core Evaluation Site License Agreement when using \
+		this core." \
+	START=4-Jul-2009 TS_OK
+#
+#----------------------------------------------------------------------
+# The following PACKAGE definition is a REQUIRED part of this license:
+# Suppressed PACKAGE for xps_ll_temac.
+#
+PACKAGE xps_ll_temac_classic xilinxd 2010.07 E2789168D325   \
+	COMPONENTS=" xps_ll_temac_v1 xps_ll_temac_v2 "  \
+	OPTIONS=SUITE
+#
+#----------------------------------------------------------------------
+# This is a permanent license; it will never expire.
+# soft_temac_wrap comes from Part Number IPCore:soft_temac_wrap 
+INCREMENT soft_temac_wrap xilinxd 2010.07 permanent uncounted \
+	4208118DE607 \
+	VENDOR_STRING=License_Type:Hardware_Evaluation;ip_admin_xilinx_com,soft_temac_wrap,ip,permanent,_3163_296_1246993748 \
+	HOSTID=ANY \
+	ISSUER="Xilinx Inc, davet" \
+	NOTICE="The license for this core was generated for \
+		ip_admin@xilinx.com on Tue Jul 7 12:09:08 2009. It is \
+		the responsibility of the Licensee of this core to \
+		adhere to the site restriction and other terms of the \
+		Xilinx Core Evaluation Site License Agreement when using \
+		this core." \
+	START=5-Jul-2009 TS_OK
+#
+# This is a permanent license; it will never expire.
+INCREMENT soft_temac_wrap_classic xilinxd 2010.07 permanent uncounted \
+	6302ED795D18 \
+	VENDOR_STRING=License_Type:Hardware_Evaluation;ip_admin_xilinx_com,soft_temac_wrap_classic,ip,permanent,_3163_296_1246993748 \
+	HOSTID=ANY \
+	ISSUER="Xilinx Inc, davet" \
+	NOTICE="The license for this core was generated for \
+		ip_admin@xilinx.com on Tue Jul 7 12:09:08 2009. It is \
+		the responsibility of the Licensee of this core to \
+		adhere to the site restriction and other terms of the \
+		Xilinx Core Evaluation Site License Agreement when using \
+		this core." \
+	START=5-Jul-2009 TS_OK
+#
+#----------------------------------------------------------------------
+# The following PACKAGE definition is a REQUIRED part of this license:
+# Suppressed PACKAGE for soft_temac_wrap.
+#
+PACKAGE soft_temac_wrap_classic xilinxd 2010.07 107EDFE90098   \
+	COMPONENTS=" soft_temac_wrap_v1 soft_temac_wrap_v2 "   \
+	OPTIONS=SUITE
+#
+#
+
+

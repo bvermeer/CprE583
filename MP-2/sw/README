@@ -1,0 +1,50 @@
+-----------------------------------------------
+-----------------------------------------------
+-- File name: README                         --
+--                                           --
+-- Description: Show how to use simple UDP   --
+-- network programs                          --
+--                                           --
+-----------------------------------------------
+-----------------------------------------------
+
+
+Test_gen.c  // Sends data, and waits for a response
+
+To compile: gcc -o exe_Test_gen Test_gen.c
+------------------------------------------------
+
+Test_echo.c  // Echos recieved data back to the sender
+
+To compile: gcc -o exe_Test_echo Test_echo.c
+-------------------------------------------------
+
+Test_Host_UDP.c  // Sends data
+
+To compile: gcc -o exe_Test_Host_UDP Test_Host_UDP.c
+-------------------------------------------------
+
+Test_Server_UDP.c  // Waits for Data
+
+To compile: gcc -o exe_Test_Server_UDP Test_Server_UDP.c
+--------------------------------------------------
+
+
+Example usage:
+
+Example 1 (Note must start exe_Test_echo first):
+
+// On Sender
+./exe_Test_gen  192.168.1.12 'Hi there!'
+
+// On Reciver
+./exe_Test_echo
+
+
+Example 2 (Note must start exe_Test_Server_UDP first)
+
+// On Sender
+./exe_Test_Host_UDP 192.168.1.12 'Hi there!'
+
+// On Reciver
+./exe_Test_Server_UDP
