@@ -1,0 +1,25 @@
+// CprE 583 - MP2
+// State Diagram for Part 2 (Basic Scanning)
+//
+// Author: Blake Vermeer
+// Date: 9-29-14
+
+digraph StateMachine {
+	rankdir=UD;
+
+	reset [style=invis];
+	eof [style=invis];
+
+	eof -> WAIT_START_SCAN [label="eof_n_scn_dly(1) = '0'"];
+	reset -> WAIT_START_SCAN [label="Reset"];
+	
+	WAIT_START_SCAN -> WAIT_C [label="start_scan_flag = '1'"];
+	WAIT_START_SCAN -> WAIT_START_SCAN [label="start_scan_flag = '0'"];
+
+	WAIT_C -> WAIT_C [label="data_scn_dly(0) != 'C'"];
+	WAIT_C -> WAIT_O [label="data_scn_dly(0) = 'C'"];
+
+	WAIT_O -> WAIT_O [label="data_scn_dly(0) = 'C'"];
+	WAIT_O -> WAIT_C [label="data_scn_dly(0) = 'O'\nset corn_flag = '1'\nelse\ncorn_flag = '0'"];
+
+}

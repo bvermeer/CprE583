@@ -141,6 +141,9 @@ Instructors: & Joseph Zambreno % Instructor/supervisor
 
 
 \section{Platform Overview}
+In this section we were asked to review the project and provide a short description of the project structure. Here is our description: \\
+
+The core part of this project is split into three main files: \textit{v5\_emac\_v1\_4\_example\_design.vhd}, \textit{v5\_emac\_v1\_4\_locallink.vhd}, and \textit{v5\_emac\_v1\_4\_block.vhd}. The \textit{v5\_emac\_v1\_4\_block.vhd} is the lowest level element of the three. This wrapper file is responsible for interfacing with the physical Ethernet hardware on the FPGA. The \textit{v5\_emac\_v1\_4\_locallink.vhd} is the next level up file. It is responsible for interfacing with the with the block level wrapper file and providing FIFOs for the input and output of the Ethernet module. The highest level of the design is \textit{v5\_emac\_v1\_4\_example\_design.vhd}. This module interfaces with the locallink wrapper file and provides a basic loopback interface.
 
 
 
