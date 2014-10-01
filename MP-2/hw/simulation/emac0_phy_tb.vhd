@@ -391,6 +391,790 @@ architecture behavioral of emac0_phy_tb is
        45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
        46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
        47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       52      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- O
+       53      => ( DATA => X"52", VALID => '1', ERROR => '0'),  -- R
+       54      => ( DATA => X"4E", VALID => '1', ERROR => '0'),  -- N
+       55      => ( DATA => X"21", VALID => '1', ERROR => '0'),  -- !
+       56      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+   -------------
+   -- Frame 4
+   -------------
+    4          => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       52      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- O
+       53      => ( DATA => X"52", VALID => '1', ERROR => '0'),  -- R
+       54      => ( DATA => X"4E", VALID => '1', ERROR => '0'),  -- N
+       55      => ( DATA => X"21", VALID => '1', ERROR => '0'),  -- !
+       56      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+   -------------
+   -- Frame 5
+   -------------
+    5          => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       52      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       53      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       54      => ( DATA => X"20", VALID => '1', ERROR => '0'),  -- "Space"
+       55      => ( DATA => X"2E", VALID => '1', ERROR => '0'),  
+       56      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+
+
+   -------------
+   -- Frame 6
+   -------------
+    6          => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       52      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- O
+       53      => ( DATA => X"52", VALID => '1', ERROR => '0'),  -- R
+       54      => ( DATA => X"4E", VALID => '1', ERROR => '0'),  -- N
+       55      => ( DATA => X"21", VALID => '1', ERROR => '0'),  -- !
+       56      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+   -------------
+   -- Frame 7
+   -------------
+    7          => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       52      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       53      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       54      => ( DATA => X"20", VALID => '1', ERROR => '0'),  --"Space"
+       55      => ( DATA => X"21", VALID => '1', ERROR => '0'),  
+       56      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+
+   -------------
+   -- Frame 8
+   -------------
+    8          => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       52      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       53      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       54      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       55      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E 
+       56      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       57      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       58      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+   -------------
+   -- Frame 9
+   -------------
+    9          => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       52      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       53      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       54      => ( DATA => X"20", VALID => '1', ERROR => '0'),  --"Space"
+       55      => ( DATA => X"21", VALID => '1', ERROR => '0'),  
+       56      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+   -------------
+   -- Frame 10
+   -------------
+    10         => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G
+       52      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       53      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- T
+       54      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       55      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G 
+       56      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+   -------------
+   -- Frame 11
+   -------------
+    11         => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       52      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C
+       53      => ( DATA => X"45", VALID => '1', ERROR => '0'),  -- E
+       54      => ( DATA => X"20", VALID => '1', ERROR => '0'),  --"Space"
+       55      => ( DATA => X"21", VALID => '1', ERROR => '0'),  
+       56      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+   -------------
+   -- Frame 12
+   -------------
+    12         => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
+       48      => ( DATA => X"26", VALID => '1', ERROR => '0'),  
+       49      => ( DATA => X"27", VALID => '1', ERROR => '0'),  
+       50      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- Word 10 -- O 
+       51      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G
+       52      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       53      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- T
+       54      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       55      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G 
+       56      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+   -------------
+   -- Frame 13
+   -------------
+    13         => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G
+       44      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       45      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- T
+       46      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- Word 9 -- A
+       47      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G
+       48      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A 
+       49      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- T
+       50      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- Word 10 -- A 
+       51      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G
+       52      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       53      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- T
+       54      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       55      => ( DATA => X"47", VALID => '1', ERROR => '0'),  -- G 
+       56      => ( DATA => X"41", VALID => '1', ERROR => '0'),  -- A
+       57      => ( DATA => X"2F", VALID => '1', ERROR => '0'),
+       58      => ( DATA => X"30", VALID => '1', ERROR => '0'),
+       59      => ( DATA => X"31", VALID => '1', ERROR => '0'),	-- 46th Byte of Ethernet payload
+       others  => ( DATA => X"00", VALID => '0', ERROR => '0')),
+
+      -- No error in this frame
+      bad_frame => false),
+
+
+
+
+   -------------
+   -- Frame 14
+   -------------
+    14         => (
+      columns  => (
+        0      => ( DATA => X"DA", VALID => '1', ERROR => '0'), -- Ethernet Destination Address (DA)
+        1      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        2      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        3      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+        4      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+        5      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+        6      => ( DATA => X"5A", VALID => '1', ERROR => '0'), -- Ethernet Source Address (5A)
+        7      => ( DATA => X"02", VALID => '1', ERROR => '0'),
+        8      => ( DATA => X"03", VALID => '1', ERROR => '0'),
+        9      => ( DATA => X"04", VALID => '1', ERROR => '0'),
+       10      => ( DATA => X"05", VALID => '1', ERROR => '0'),
+       11      => ( DATA => X"06", VALID => '1', ERROR => '0'),
+       12      => ( DATA => X"00", VALID => '1', ERROR => '0'), -- Ethernet Length = 46 (x"002E") bytes
+       13      => ( DATA => X"2E", VALID => '1', ERROR => '0'),
+       14      => ( DATA => X"54", VALID => '1', ERROR => '0'),  -- Word 1 of IP packet
+       15      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       16      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       17      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       18      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- Word 2 of IP packet
+       19      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       20      => ( DATA => X"02", VALID => '1', ERROR => '0'), 
+       21      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       22      => ( DATA => X"FF", VALID => '1', ERROR => '0'),  -- Word 3 of IP packet
+       23      => ( DATA => X"11", VALID => '1', ERROR => '0'),    -- Protocol = UDP = 17 (x"11)
+       24      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       25      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       26      => ( DATA => X"AA", VALID => '1', ERROR => '0'),  -- Word 4 of IP packet (src address)
+       27      => ( DATA => X"BB", VALID => '1', ERROR => '0'),
+       28      => ( DATA => X"CC", VALID => '1', ERROR => '0'),
+       29      => ( DATA => X"DD", VALID => '1', ERROR => '0'),
+       30      => ( DATA => X"55", VALID => '1', ERROR => '0'),  -- Word 5 of IP packet (dst address)
+       31      => ( DATA => X"66", VALID => '1', ERROR => '0'),
+       32      => ( DATA => X"77", VALID => '1', ERROR => '0'),
+       33      => ( DATA => X"88", VALID => '1', ERROR => '0'),
+       34      => ( DATA => X"11", VALID => '1', ERROR => '0'),  -- UDP src port (x"1122"), Word 6 
+       35      => ( DATA => X"22", VALID => '1', ERROR => '0'),
+       36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
+       37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
+       38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),
+       40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
+       41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
+       42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
+       43      => ( DATA => X"11", VALID => '1', ERROR => '0'),
+       44      => ( DATA => X"12", VALID => '1', ERROR => '0'),
+       45      => ( DATA => X"23", VALID => '1', ERROR => '0'),
+       46      => ( DATA => X"24", VALID => '1', ERROR => '0'),  -- Word 9
+       47      => ( DATA => X"25", VALID => '1', ERROR => '0'),
        48      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C  
        49      => ( DATA => X"4F", VALID => '1', ERROR => '0'),  -- O
        50      => ( DATA => X"43", VALID => '1', ERROR => '0'),  -- C Word 10
