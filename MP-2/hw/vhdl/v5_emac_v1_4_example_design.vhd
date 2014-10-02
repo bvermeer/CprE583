@@ -263,7 +263,9 @@ architecture TOP_LEVEL of v5_emac_v1_4_example_design is
       rx_ll_eof_out_n         : out std_logic;                     -- Output end of frame
       rx_ll_src_rdy_out_n     : out std_logic;                     -- Output source ready
       GPIO_LED_0              : out std_logic;
-      rx_ll_dst_rdy_in_n_scn  : in  std_logic                      -- Input destination ready
+      GPIO_LED_2              : out std_logic;
+      GPIO_LED_4              : out std_logic;
+		rx_ll_dst_rdy_in_n_scn  : in  std_logic                      -- Input destination ready
       );
    end component;
 
@@ -536,6 +538,8 @@ begin
         rx_ll_eof_out_n         => tx_ll_eof_n_0_i,
         rx_ll_src_rdy_out_n     => tx_ll_src_rdy_n_0_i,
         GPIO_LED_0              => GPIO_LED_0,
+        GPIO_LED_2              => GPIO_LED_2,
+        GPIO_LED_4              => GPIO_LED_4,
         rx_ll_dst_rdy_in_n_scn  => tx_ll_dst_rdy_n_0_i
     );
 

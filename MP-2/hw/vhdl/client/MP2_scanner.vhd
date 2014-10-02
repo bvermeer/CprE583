@@ -32,6 +32,8 @@ entity MP2_scanner is
            rx_ll_src_rdy_in_n_scn : in  STD_LOGIC;
            rx_ll_dst_rdy_in_n_scn : in  STD_LOGIC;
            GPIO_LED_0             : out std_logic;
+			  GPIO_LED_2             : out std_logic;
+			  GPIO_LED_4             : out std_logic;
            rx_ll_data_in          : out  STD_LOGIC_VECTOR (7 downto 0);
            rx_ll_sof_in_n         : out  STD_LOGIC;
            rx_ll_eof_in_n         : out  STD_LOGIC;
@@ -69,9 +71,9 @@ type scan_state_type is (WAIT_SOF, WAIT_SOIP, IP_SRC_AVL, IP_DST_AVL,
 
 type corn_state_type is (WAIT_START_SCAN,WAIT_C,WAIT_O,WAIT_R,WAIT_N,WAIT_EXCL);
 
-type ece_state_type is (WAIT_START_SCAN,WAIT_E_ONE,WAIT_E_TWO,WAIT_C,WAIT_E_OR_C);
+type ece_state_type is (WAIT_START_SCAN,WAIT_E_ONE,WAIT_E_TWO,WAIT_C_ECE,WAIT_E_OR_C);
 
-type gataga_state_type is (WAIT_START_SCAN,WAIT_G_ONE,WAIT_G_TWO,WAIT_A_ONE,WAIT_A_TWO,WAIT_A_THR,WAIT_GATAGA_END);
+type gataga_state_type is (WAIT_START_SCAN,WAIT_G_ONE,WAIT_G_TWO,WAIT_A_ONE,WAIT_A_TWO,WAIT_A_THR,WAIT_T,WAIT_GATAGA_END);
 
 type data_scn_dly_array is array (DELAY-1 downto 0) of std_logic_vector(7 downto 0);
 type sof_n_scn_dly_array is array (DELAY-1 downto 0) of std_logic;
@@ -158,8 +160,8 @@ signal  corn_state        : corn_state_type;
 signal  corn_state_next   : corn_state_type;
 signal  ece_state			  : ece_state_type;
 signal  ece_state_next	  : ece_state_type;
-signal  gataga_state		  : ece_state_type;
-signal  gataga_state_next : ece_state_type;
+signal  gataga_state		  : gataga_state_type;
+signal  gataga_state_next : gataga_state_type;
 
 signal corn_flag           : std_logic;
 signal corn_flag_LED_reg   : std_logic;
@@ -452,15 +454,15 @@ begin
     when WAIT_E_ONE =>
 
       if(data_scn_dly(0) = x"45") then
-        ece_state_next <= WAIT_C;
+        ece_state_next <= WAIT_C_ECE;
       end if;
       
-    when WAIT_C =>
+    when WAIT_C_ECE =>
      
       if(data_scn_dly(0) = x"43") then
         ece_state_next <= WAIT_E_TWO;
       elsif(data_scn_dly(0) = x"45") then
-        ece_state_next <= WAIT_C;
+        ece_state_next <= WAIT_C_ECE;
 		else
 		  ece_state_next <= WAIT_E_ONE;
       end if;
@@ -477,7 +479,7 @@ begin
     when WAIT_E_OR_C =>
      
       if(data_scn_dly(0) = x"45") then
-        ece_state_next <= WAIT_C;
+        ece_state_next <= WAIT_C_ECE;
       elsif(data_scn_dly(0) = x"43") then
         ece_state_next <= WAIT_E_TWO;
 		else
@@ -554,9 +556,9 @@ begin
       if(data_scn_dly(0) = x"41") then
         gataga_state_next <= WAIT_T;
       elsif(data_scn_dly(0) = x"47") then
-        ece_state_next <= WAIT_A_ONE;
+        gataga_state_next <= WAIT_A_ONE;
 		else
-		  ece_state_next <= WAIT_G_ONE;
+		  gataga_state_next <= WAIT_G_ONE;
       end if;
 		
     when WAIT_T =>
@@ -888,6 +890,9 @@ rx_ll_src_rdy_in_n_mux <=  '1' when ((rx_ll_src_rdy_in_n_scn_reg = '1') and (eof
 
   -- Assign output ports
 GPIO_LED_0           <= corn_flag_LED_reg;
+GPIO_LED_2           <= ece_flag_LED_reg;
+GPIO_LED_4           <= gataga_flag_LED_reg;
+
 -- need to assign an output port for ece_flag_LED_reg
 -- need to assign an output port for gataga_flag_LED_reg
 rx_ll_data_in        <= rx_ll_data_in_reg;
