@@ -363,9 +363,9 @@ begin
 
      -- Debug LEDs
      GPIO_LED_1  <= reset_i;
-     GPIO_LED_2  <= '0';
+     --GPIO_LED_2  <= '0';
      GPIO_LED_3  <= tx_ll_src_rdy_n_0_i;
-     GPIO_LED_4  <= '0';
+     --GPIO_LED_4  <= '0';
      GPIO_LED_5  <= '1';
      GPIO_LED_6  <= '0';
      GPIO_LED_7  <= '1';

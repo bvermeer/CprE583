@@ -676,7 +676,7 @@ begin
           ece_flag_LED_reg <= not ece_flag_LED_reg;  -- toggles LED each time ECE found
         end if;
         if(gataga_flag = '1') then
-          gataga_flag_LED_reg <= not gataga_flag_LED_reg;  -- toggles LED each time ECE found
+          gataga_flag_LED_reg <= not gataga_flag_LED_reg;  -- toggles LED each time GATAGA found
         end if;
         
         
@@ -893,8 +893,6 @@ GPIO_LED_0           <= corn_flag_LED_reg;
 GPIO_LED_2           <= ece_flag_LED_reg;
 GPIO_LED_4           <= gataga_flag_LED_reg;
 
--- need to assign an output port for ece_flag_LED_reg
--- need to assign an output port for gataga_flag_LED_reg
 rx_ll_data_in        <= rx_ll_data_in_reg;
 rx_ll_sof_in_n       <= rx_ll_sof_in_n_reg;
 rx_ll_eof_in_n       <= rx_ll_eof_in_n_reg;
