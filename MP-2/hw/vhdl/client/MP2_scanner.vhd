@@ -161,7 +161,6 @@ signal  ece_state_next	  : ece_state_type;
 signal  gataga_state		  : ece_state_type;
 signal  gataga_state_next : ece_state_type;
 
-
 signal corn_flag           : std_logic;
 signal corn_flag_LED_reg   : std_logic;
 signal ece_flag 			   : std_logic;

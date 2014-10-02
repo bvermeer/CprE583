@@ -137,7 +137,6 @@ entity v5_emac_v1_4_example_design is
  --     GTX_CLK_0                       : in  std_logic;  -- phjones generates from DCM
       sys_clk                           : in  std_logic;  -- 100 MHz
 
-     
       -- GMII Interface - EMAC0
       GMII_TXD_0                      : out std_logic_vector(7 downto 0);
       GMII_TX_EN_0                    : out std_logic;
