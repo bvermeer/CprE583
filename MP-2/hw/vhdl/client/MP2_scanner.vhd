@@ -154,7 +154,7 @@ signal eof_pend_reg           	: std_logic;  -- indicate the eof of the most rec
 signal packet_done_reg        	: std_logic;  -- indicate done processing the current packet
 
 
--- CORN! search signals
+-- string search signals
 
 signal  corn_state        		: corn_state_type;
 signal  corn_state_next   		: corn_state_type;
@@ -169,6 +169,12 @@ signal ece_flag 			   	: std_logic;
 signal ece_flag_LED_reg    		: std_logic;
 signal gataga_flag 		   		: std_logic;
 signal gataga_flag_LED_reg 		: std_logic;
+
+-- string detection counters
+
+signal corn_counter			: unsigned(7 downto 0);
+signal ece_counter			: unsigned(7 downto 0);
+signal gataga_counter			: unsigned(7 downto 0);
 
 -- components
   -- None
@@ -319,6 +325,11 @@ begin
     else
       if(pause_flag = '0') then -- active high
         corn_state <= corn_state_next;
+	if(corn_flag = '1') then -- if CORN! is found
+		corn_counter <= corn_counter + 1;
+	else
+		corn_counter <= corn_counter;
+	end if;
       end if;
     end if;
 	 
@@ -419,6 +430,11 @@ begin
     else
       if(pause_flag = '0') then -- active high
         ece_state <= ece_state_next;
+	if(ece_flag = '1') then
+		ece_counter <= ece_counter + 1;
+	else
+		ece_counter <= ece_counter;
+	end if;
       end if;
     end if;
 	 
@@ -513,6 +529,11 @@ begin
     else
       if(pause_flag = '0') then -- active high
         gataga_state <= gataga_state_next;
+	if(gataga_flag = '1') then
+		gataga_counter <= gataga_counter + 1;
+	else
+		gataga_counter <= gataga_counter;
+	end if;
       end if;
     end if;
 	 
