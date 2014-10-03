@@ -310,6 +310,55 @@ end process Comp_Nxt_ST_pkt;
 --       End: Flag Packet Events                 --
 ---------------------------------------------------
 
+---------------------------------------------------
+--	Handling of the word counters		 --
+---------------------------------------------------
+
+Counter_Handling: process(rx_ll_clock, corn_flag, ece_flag, gataga_flag,
+				start_scan_flag)
+begin
+	if(rising_edge(rx_ll_clock)) then
+		if(start_scan_flag = '0' or rx_ll_reset = '1') then
+			corn_counter	<= (others => '0');
+			ece_counter	<= (others => '0');
+			gataga_counter	<= (others => '0');
+		else
+			if(corn_flag = '1' and ece_flag = '1' and gataga_flag = '1') then
+				corn_counter	<= corn_counter + 1;
+				ece_counter	<= ece_counter + 1;
+				gataga_counter	<= gataga_counter + 1;
+			elsif(corn_flag = '1' and ece_flag = '1' and gataga_flag = '0') then
+				corn_counter	<= corn_counter + 1;
+				ece_counter	<= ece_counter + 1;
+				gataga_counter	<= gataga_counter;
+			elsif(corn_flag = '1' and ece_flag = '0' and gataga_flag = '1') then
+				corn_counter <= corn_counter + 1;
+				ece_counter <= ece_counter;
+				gataga_counter <= gataga_counter + 1;
+			elsif(corn_flag = '1' and ece_flag = '0' and gataga_flag = '0') then
+				corn_counter	<= corn_counter + 1;
+				ece_counter	<= ece_counter;
+				gataga_counter	<= gataga_counter;
+			elsif(corn_flag = '0' and ece_flag = '1' and gataga_flag = '1') then
+				corn_counter	<= corn_counter;
+				ece_counter	<= ece_counter + 1;
+				gataga_counter	<= gataga_counter + 1;
+			elsif(corn_flag = '0' and ece_flag = '1' and gataga_flag = '0') then
+				corn_counter	<= corn_counter;
+				ece_counter	<= ece_counter + 1;
+				gataga_counter	<= gataga_counter;
+			elsif(corn_flag = '0' and ece_flag = '0' and gataga_flag = '1') then
+				corn_counter	<= corn_counter;
+				ece_counter	<= ece_counter;
+				gataga_counter	<= gataga_counter + 1;
+			else
+				corn_counter	<= corn_counter;
+				ece_counter	<= ece_counter;
+				gataga_counter	<= gataga_counter;
+			end if;
+		end if;
+	end if;
+end process Counter_Handling;
 
 ---------------------------------------------------
 --       Begin: Find CORN!     (Upper case only) --
@@ -325,11 +374,6 @@ begin
     else
       if(pause_flag = '0') then -- active high
         corn_state <= corn_state_next;
-	if(corn_flag = '1') then -- if CORN! is found
-		corn_counter <= corn_counter + 1;
-	else
-		corn_counter <= corn_counter;
-	end if;
       end if;
     end if;
 	 
@@ -430,11 +474,6 @@ begin
     else
       if(pause_flag = '0') then -- active high
         ece_state <= ece_state_next;
-	if(ece_flag = '1') then
-		ece_counter <= ece_counter + 1;
-	else
-		ece_counter <= ece_counter;
-	end if;
       end if;
     end if;
 	 
@@ -529,11 +568,6 @@ begin
     else
       if(pause_flag = '0') then -- active high
         gataga_state <= gataga_state_next;
-	if(gataga_flag = '1') then
-		gataga_counter <= gataga_counter + 1;
-	else
-		gataga_counter <= gataga_counter;
-	end if;
       end if;
     end if;
 	 
