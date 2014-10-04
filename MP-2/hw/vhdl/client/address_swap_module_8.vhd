@@ -71,8 +71,13 @@ entity address_swap_module_8 is
       rx_ll_eof_out_n         : out std_logic; -- Output end of frame
       rx_ll_src_rdy_out_n     : out std_logic; -- Output source ready
       GPIO_LED_0              : out std_logic;
-		GPIO_LED_2              : out std_logic;
-		GPIO_LED_4              : out std_logic;
+      GPIO_LED_1              : out std_logic;
+      GPIO_LED_2              : out std_logic;
+      GPIO_LED_3              : out std_logic;
+      GPIO_LED_4              : out std_logic;
+      GPIO_LED_5              : out std_logic;
+      GPIO_LED_6              : out std_logic;
+      GPIO_LED_7              : out std_logic;
       rx_ll_dst_rdy_in_n_scn  : in  std_logic  -- Input destination ready
       );
 
@@ -94,8 +99,13 @@ architecture arch1 of address_swap_module_8 is
 
         --output
       GPIO_LED_0              : out std_logic;
-		GPIO_LED_2              : out std_logic;
-		GPIO_LED_4              : out std_logic;
+      GPIO_LED_1              : out std_logic;
+      GPIO_LED_2              : out std_logic;
+      GPIO_LED_3              : out std_logic;
+      GPIO_LED_4              : out std_logic;
+      GPIO_LED_5              : out std_logic;
+      GPIO_LED_6              : out std_logic;
+      GPIO_LED_7              : out std_logic;
       rx_ll_data_in           : out  std_logic_vector(7 downto 0);  -- Input data
       rx_ll_sof_in_n          : out  std_logic;                     -- Input start of frame
       rx_ll_eof_in_n          : out  std_logic;                     -- Input end of frame
@@ -169,8 +179,13 @@ begin  -- arch1
         
         -- outputs
         GPIO_LED_0          => GPIO_LED_0,
+        GPIO_LED_1          => GPIO_LED_1,
         GPIO_LED_2          => GPIO_LED_2,
+        GPIO_LED_3          => GPIO_LED_3,
         GPIO_LED_4          => GPIO_LED_4,
+        GPIO_LED_5          => GPIO_LED_5,
+        GPIO_LED_6          => GPIO_LED_6,
+        GPIO_LED_7          => GPIO_LED_7,
         rx_ll_data_in       => rx_ll_data_in,
         rx_ll_sof_in_n      => rx_ll_sof_in_n,
         rx_ll_eof_in_n      => rx_ll_eof_in_n,

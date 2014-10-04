@@ -179,8 +179,16 @@ add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_a
 add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/rx_ll_src_rdy_in_n_scn
 add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/rx_ll_dst_rdy_in_n_scn
 add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_0
+add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_1
 add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_2
+add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_3
 add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_4
+add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_5
+add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_6
+add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gpio_led_7
+add wave -noupdate -format Literal -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/corn_counter
+add wave -noupdate -format Literal -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/ece_counter
+add wave -noupdate -format Literal -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/gataga_counter
 add wave -noupdate -format Literal -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/rx_ll_data_in
 add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/rx_ll_sof_in_n
 add wave -noupdate -format Logic -radix hexadecimal /testbench/dut/client_side_asm_emac0/my_mp2_scanner/rx_ll_eof_in_n

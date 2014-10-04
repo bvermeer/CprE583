@@ -343,6 +343,39 @@ begin
             end if;
 
 
+			--if(corn_flag = '1' and ece_flag = '1' and gataga_flag = '1') then
+			--	corn_counter	<= corn_counter + 1;
+			--	ece_counter	<= ece_counter + 1;
+			--	gataga_counter	<= gataga_counter + 1;
+			--elsif(corn_flag = '1' and ece_flag = '1' and gataga_flag = '0') then
+			--	corn_counter	<= corn_counter + 1;
+			--	ece_counter	<= ece_counter + 1;
+			--	gataga_counter	<= gataga_counter;
+			--elsif(corn_flag = '1' and ece_flag = '0' and gataga_flag = '1') then
+			--	corn_counter <= corn_counter + 1;
+			--	ece_counter <= ece_counter;
+			--	gataga_counter <= gataga_counter + 1;
+			--elsif(corn_flag = '1' and ece_flag = '0' and gataga_flag = '0') then
+			--	corn_counter	<= corn_counter + 1;
+			--	ece_counter	<= ece_counter;
+			--	gataga_counter	<= gataga_counter;
+			--elsif(corn_flag = '0' and ece_flag = '1' and gataga_flag = '1') then
+			--	corn_counter	<= corn_counter;
+			--	ece_counter	<= ece_counter + 1;
+			--	gataga_counter	<= gataga_counter + 1;
+			--elsif(corn_flag = '0' and ece_flag = '1' and gataga_flag = '0') then
+			--	corn_counter	<= corn_counter;
+			--	ece_counter	<= ece_counter + 1;
+			--	gataga_counter	<= gataga_counter;
+			--elsif(corn_flag = '0' and ece_flag = '0' and gataga_flag = '1') then
+			--	corn_counter	<= corn_counter;
+			--	ece_counter	<= ece_counter;
+			--	gataga_counter	<= gataga_counter + 1;
+			--else
+			--	corn_counter	<= corn_counter;
+			--	ece_counter	<= ece_counter;
+			--	gataga_counter	<= gataga_counter;
+			--end if;
 		end if;
 	end if;
 end process Counter_Handling;

@@ -263,9 +263,14 @@ architecture TOP_LEVEL of v5_emac_v1_4_example_design is
       rx_ll_eof_out_n         : out std_logic;                     -- Output end of frame
       rx_ll_src_rdy_out_n     : out std_logic;                     -- Output source ready
       GPIO_LED_0              : out std_logic;
+      GPIO_LED_1              : out std_logic;
       GPIO_LED_2              : out std_logic;
+      GPIO_LED_3              : out std_logic;
       GPIO_LED_4              : out std_logic;
-		rx_ll_dst_rdy_in_n_scn  : in  std_logic                      -- Input destination ready
+      GPIO_LED_5              : out std_logic;
+      GPIO_LED_6              : out std_logic;
+      GPIO_LED_7              : out std_logic;
+      rx_ll_dst_rdy_in_n_scn  : in  std_logic                      -- Input destination ready
       );
    end component;
 
@@ -362,13 +367,13 @@ begin
       CLIENTEMAC0PAUSEVAL   <= x"0010";  -- phjones
 
      -- Debug LEDs
-     GPIO_LED_1  <= reset_i;
+     --GPIO_LED_1  <= reset_i;
      --GPIO_LED_2  <= '0';
-     GPIO_LED_3  <= tx_ll_src_rdy_n_0_i;
+     --GPIO_LED_3  <= tx_ll_src_rdy_n_0_i;
      --GPIO_LED_4  <= '0';
-     GPIO_LED_5  <= '1';
-     GPIO_LED_6  <= '0';
-     GPIO_LED_7  <= '1';
+     --GPIO_LED_5  <= '1';
+     --GPIO_LED_6  <= '0';
+     --GPIO_LED_7  <= '1';
 
 
   
@@ -538,8 +543,13 @@ begin
         rx_ll_eof_out_n         => tx_ll_eof_n_0_i,
         rx_ll_src_rdy_out_n     => tx_ll_src_rdy_n_0_i,
         GPIO_LED_0              => GPIO_LED_0,
+        GPIO_LED_1              => GPIO_LED_1,
         GPIO_LED_2              => GPIO_LED_2,
+        GPIO_LED_3              => GPIO_LED_3,
         GPIO_LED_4              => GPIO_LED_4,
+        GPIO_LED_5              => GPIO_LED_5,
+        GPIO_LED_6              => GPIO_LED_6,
+        GPIO_LED_7              => GPIO_LED_7,
         rx_ll_dst_rdy_in_n_scn  => tx_ll_dst_rdy_n_0_i
     );
 
