@@ -25,6 +25,59 @@
     <file xil_pn:fileType="FILE_NCD" xil_pn:name="v5_emac_v1_4_example_design_guide.ncd" xil_pn:origination="imported"/>
   </files>
 
-  <transforms xmlns="http://www.xilinx.com/XMLSchema"/>
+  <transforms xmlns="http://www.xilinx.com/XMLSchema">
+    <transform xil_pn:end_ts="1412872261" xil_pn:in_ck="4171340376285260391" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1412872261">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="simulation/configuration_tb.vhd"/>
+      <outfile xil_pn:name="simulation/demo_tb.vhd"/>
+      <outfile xil_pn:name="simulation/emac0_phy_tb.vhd"/>
+      <outfile xil_pn:name="vhdl/client/MP2_scanner.vhd"/>
+      <outfile xil_pn:name="vhdl/client/address_swap_module_8.vhd"/>
+      <outfile xil_pn:name="vhdl/client/fifo/eth_fifo_8.vhd"/>
+      <outfile xil_pn:name="vhdl/client/fifo/rx_client_fifo_8.vhd"/>
+      <outfile xil_pn:name="vhdl/client/fifo/tx_client_fifo_8.vhd"/>
+      <outfile xil_pn:name="vhdl/physical/gmii_if.vhd"/>
+      <outfile xil_pn:name="vhdl/temac_clk_gen.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4_block.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4_example_design.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4_locallink.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1412872261" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="3288031787147523374" xil_pn:start_ts="1412872261">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1412872261" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="-2011430872806323812" xil_pn:start_ts="1412872261">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1412872261" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="-6044175782372256606" xil_pn:start_ts="1412872261">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1412872261" xil_pn:in_ck="4171340376285260391" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1412872261">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="simulation/configuration_tb.vhd"/>
+      <outfile xil_pn:name="simulation/demo_tb.vhd"/>
+      <outfile xil_pn:name="simulation/emac0_phy_tb.vhd"/>
+      <outfile xil_pn:name="vhdl/client/MP2_scanner.vhd"/>
+      <outfile xil_pn:name="vhdl/client/address_swap_module_8.vhd"/>
+      <outfile xil_pn:name="vhdl/client/fifo/eth_fifo_8.vhd"/>
+      <outfile xil_pn:name="vhdl/client/fifo/rx_client_fifo_8.vhd"/>
+      <outfile xil_pn:name="vhdl/client/fifo/tx_client_fifo_8.vhd"/>
+      <outfile xil_pn:name="vhdl/physical/gmii_if.vhd"/>
+      <outfile xil_pn:name="vhdl/temac_clk_gen.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4_block.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4_example_design.vhd"/>
+      <outfile xil_pn:name="vhdl/v5_emac_v1_4_locallink.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1412872262" xil_pn:in_ck="4171340376285260391" xil_pn:name="TRAN_MSimulateBehavioralModel" xil_pn:prop_ck="1216753662234284735" xil_pn:start_ts="1412872261">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+  </transforms>
 
 </generated_project>

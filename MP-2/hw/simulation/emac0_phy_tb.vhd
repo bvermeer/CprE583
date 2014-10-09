@@ -240,7 +240,7 @@ architecture behavioral of emac0_phy_tb is
        36      => ( DATA => X"EE", VALID => '1', ERROR => '0'),  -- UDP dst port (x"EEFF")
        37      => ( DATA => X"FF", VALID => '1', ERROR => '0'),
        38      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP length = 26 (x"001A") bytes, Word 7 
-       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),  -- Must update field if you change lenghth!
+       39      => ( DATA => X"1A", VALID => '1', ERROR => '0'),  -- Must update field if you change length!
        40      => ( DATA => X"00", VALID => '1', ERROR => '0'),  -- UDP checksum
        41      => ( DATA => X"00", VALID => '1', ERROR => '0'),
        42      => ( DATA => X"10", VALID => '1', ERROR => '0'),  -- UDP payload, Word 8 
