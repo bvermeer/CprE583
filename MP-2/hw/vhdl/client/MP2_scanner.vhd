@@ -403,6 +403,8 @@ begin
      
       if(data_scn_dly(0) = x"4F") then -- Found 'O'
         corn_state_next <= WAIT_R;
+      elsif (data_scn_dly(0) = x"43") then -- Found 'C'
+        corn_state_next <= WAIT_O;
       else
         corn_state_next <= WAIT_C;
       end if;
@@ -411,6 +413,8 @@ begin
      
       if(data_scn_dly(0) = x"52") then -- Found 'R'
         corn_state_next <= WAIT_N;
+      elsif (data_scn_dly(0) = x"43") then -- Found 'C'
+        corn_state_next <= WAIT_O;
       else
         corn_state_next <= WAIT_C;
       end if;
@@ -419,6 +423,8 @@ begin
      
       if(data_scn_dly(0) = x"4E") then -- Found 'N'
         corn_state_next <= WAIT_EXCL;
+      elsif (data_scn_dly(0) = x"43") then -- Found 'C'
+        corn_state_next <= WAIT_O;
       else
         corn_state_next <= WAIT_C;
       end if;
@@ -428,6 +434,8 @@ begin
       if(data_scn_dly(0) = x"21") then -- Found '!'
         corn_flag <= '1';               -- Flag found CORN!
         corn_state_next <= WAIT_C;
+      elsif (data_scn_dly(0) = x"43") then -- Found 'C'
+        corn_state_next <= WAIT_O;
       else
         corn_state_next <= WAIT_C;
       end if;
