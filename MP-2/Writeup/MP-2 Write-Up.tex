@@ -156,6 +156,15 @@ The state machine diagram for the detection of "CO" is as follows:
 	
 This diagram is correct so long as the string "CO" is not split up over multiple packets. If the string is split over multiple packets, the \textit{eof\_n\_scn\_dly(1)} flag will reset the state machine. \\
 
+Here is the screenshot of the simulation where we can see CO being detected:
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.3]{../part2_files/CO_string_detection.png}
+			\caption{Detection of "CO" in simulation}
+		\end{center}
+	\end{figure}
+
+
 The hardware diagram for how the UDP checksum is being set to zero is shown below:
 	\begin{figure}[H]
 		\begin{center}
