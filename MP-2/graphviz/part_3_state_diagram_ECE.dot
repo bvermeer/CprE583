@@ -1,0 +1,33 @@
+// CprE 583 - MP2
+// State Diagram for Part 3 (ECE Scanning)
+//
+// Author: Rohit Zambre
+// Date: 10-09-14
+
+digraph StateMachine {
+	rankdir=UD;
+
+	reset [style=invis];
+	eof [style=invis];
+
+	eof -> WAIT_START_SCAN [label="eof_n_scn_dly(1) = '0'"];
+	reset -> WAIT_START_SCAN [label="Reset"];
+	
+	WAIT_START_SCAN -> WAIT_E_ONE [label="start_scan_flag = '1'"];
+	WAIT_START_SCAN -> WAIT_START_SCAN [label="start_scan_flag = '0'"];
+
+	WAIT_E_ONE -> WAIT_E_ONE [label="else"];
+	WAIT_E_ONE -> WAIT_C_ECE [label="E"];
+
+	WAIT_C_ECE -> WAIT_C_ECE [label="E"];
+	WAIT_C_ECE -> WAIT_E_ONE [label="else"];
+	WAIT_C_ECE -> WAIT_E_TWO [label="C"];
+
+	WAIT_E_TWO -> WAIT_E_ONE [label="else"];
+	WAIT_E_TWO -> WAIT_E_OR_C [label="E\nece_flag = '1'"];
+ 	
+	WAIT_E_OR_C -> WAIT_C_ECE [label="E"];
+	WAIT_E_OR_C -> WAIT_E_TWO [label="C"];
+	WAIT_E_OR_C -> WAIT_E_ONE [label="else"];
+
+}

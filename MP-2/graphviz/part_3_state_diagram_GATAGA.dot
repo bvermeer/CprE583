@@ -1,0 +1,45 @@
+// CprE 583 - MP2
+// State Diagram for Part 3 (GATAGA Scanning)
+//
+// Author: Rohit Zambre
+// Date: 10-09-14
+
+digraph StateMachine {
+	rankdir=UD;
+
+	reset [style=invis];
+	eof [style=invis];
+
+	eof -> WAIT_START_SCAN [label="eof_n_scn_dly(1) = '0'"];
+	reset -> WAIT_START_SCAN [label="Reset"];
+	
+	WAIT_START_SCAN -> WAIT_G_ONE [label="start_scan_flag = '1'"];
+	WAIT_START_SCAN -> WAIT_START_SCAN [label="start_scan_flag = '0'"];
+
+	WAIT_G_ONE -> WAIT_G_ONE [label="else"];
+	WAIT_G_ONE -> WAIT_A_ONE [label="G"];
+
+	WAIT_A_ONE -> WAIT_A_ONE [label="G"];
+	WAIT_A_ONE -> WAIT_G_ONE [label="else"];
+	WAIT_A_ONE -> WAIT_T [label="A"];
+	
+ 	WAIT_T -> WAIT_A_ONE [label="G"];
+	WAIT_T -> WAIT_G_ONE [label="else"];
+	WAIT_T -> WAIT_A_TWO [label="T"];
+ 	
+	WAIT_A_TWO -> WAIT_A_ONE [label="G"];
+	WAIT_A_TWO -> WAIT_G_ONE [label="else"];
+	WAIT_A_TWO -> WAIT_G_TWO [label="A"];
+	
+	WAIT_G_TWO -> WAIT_G_ONE [label="else"];
+	WAIT_G_TWO -> WAIT_A_THR [label="G"];
+	
+	WAIT_A_THR -> WAIT_A_ONE [label="G"];
+	WAIT_A_THR -> WAIT_G_ONE [label="else"];
+	WAIT_A_THR -> WAIT_GATAGA_END [label="A"];
+	
+	WAIT_GATAGA_END -> WAIT_A_TWO [label="T"];
+	WAIT_GATAGA_END -> WAIT_G_ONE [label="else"];
+	WAIT_GATAGA_END -> WAIT_A_ONE [label="G"];
+	
+}

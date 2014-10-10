@@ -148,15 +148,70 @@ The core part of this project is split into three main files: \textit{v5\_emac\_
 
 
 \section{Basic Scanning}
+The state machine diagram for the detection of "CO" is as follows:
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.45]{../graphviz/part_2_state_diagram.png}
+			\caption{State machine diagram for the detection of "CO"}
+		\end{center}
+	\end{figure}
+This diagram is correct so long as the string "CO" is not split up over multiple packets.\\
 
+The hardware diagram for how the UDP checksum is being set to zero is shown below:
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.25]{../part2_files/udp_cksum.png}
+			\caption{UDP checksum zeroing diagram}
+		\end{center}
+	\end{figure}
 
 
 \section{String Detection}
+Adding on to the previous section, the task for this section is to extend the finite state machine that can detect the string "CO" to be able to detect the string "CORN!" along with the creation of two extra finite state machines that detect the strings "ECE", and "GATAGA".\\
 
+The extended finite state machine for detecting the string "CO", now extended to detect the string "CORN!", has the following state diagram:
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.40]{../graphviz/part_3_state_diagram_CORN.png}
+			\caption{Extended "CO" FSM to detect "CORN!"}
+		\end{center}
+	\end{figure}
+\\
+A new finite state machine for the detection of the string "ECE" has the following state diagram:
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.45]{../graphviz/part_3_state_diagram_ECE.png}
+			\caption{FSM to detect "ECE"}
+		\end{center}
+	\end{figure}
+
+Another new finite state machine for the detection of the string "GATAGA" has the following state diagram:
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.35]{../graphviz/part_3_state_diagram_GATAGA.png}
+			\caption{FSM to detect "GATAGA"}
+		\end{center}
+	\end{figure}
 
 \section{String Counting}
+In this section, the task given is that of creating counters to count how many times the strings CORN!, ECE, or GATAGA are detected in a given UDP packet. These counters are to be 8-bit counters, and the bits of the separate counters are to be tied to the following LEDs:\\
 
+corn\_counter[0] = LED0\\
+corn\_counter[1] = LED1\\
+ece\_counter[0] = LED2\\
+ece\_counter[1] = LED3\\
+ece\_counter[2] = LED4\\
+gataga\_counter[0] = LED5\\
+gataga\_counter[1] = LED6\\
+gataga\_counter[2] = LED7\\
 
+In simulation, the counters work as expected, as can be seen in this screenshot of Modelsim.
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[scale=0.35]{../part4_files/String_counter_sim.png}
+			\caption{Relevant signals for the simulation of the counters}
+		\end{center}
+	\end{figure}
 
 \section{Message Return}
 
