@@ -154,7 +154,7 @@ The state machine diagram for the detection of "CO" is as follows:
 		\end{center}
 	\end{figure}
 	
-This diagram is correct so long as the string "CO" is not split up over multiple packets.\\
+This diagram is correct so long as the string "CO" is not split up over multiple packets. If the string is split over multiple packets, the \textit{eof\_n\_scn\_dly(1)} flag will reset the state machine. \\
 
 The hardware diagram for how the UDP checksum is being set to zero is shown below:
 	\begin{figure}[H]
@@ -241,7 +241,18 @@ Here is a screen-shot of the output from the module implemented on hardware with
 
 
 \section{Bonus - Inner-Packet Counting}
+For the bonus portion, we could accomplish the goal of counting the number of occurrences of the various target strings over multiple packets without any modifications to our state machine. Our state machines for our target strings were signaling a corresponding counter to advance on string detection. The counters where then being reset when a device reset signal or a new packet signal were received. To allow our module to count over multiple packets, we simply had to change the reset conditions for the counters and only have the counters reset on device reset and not on the new packet signal. \\
 
+For proof in the simulation of the string counters counting over multiple packets, compare time-stamp 22843000 ps and time-stamp 23491000 ps in the simulation (specifically, look at the \textit{rx\_ll\_data\_in\_insert} signal to see the UDP output). \\
+
+Here is a screen-shot of the output from the device over multiple packets. Notice how the counter values keep advancing over multiple packets.
+
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.65]{../part6_files/Part6_output_screenshot.png}
+			\caption{Part 6 output}
+		\end{center}
+	\end{figure}
 
 
 
@@ -277,7 +288,7 @@ Here is a screen-shot of the output from the module implemented on hardware with
 %	SECTION 4
 %----------------------------------------------------------------------------------------
 \section{Conclusion}
-
+In this lab we learned more about state machines and how to better design a VHDL project solution and how to better collaborate as a team. We also learned how to examine an existing VHDL project and determine where to modify it to obtain the desired functionality.
 
 
 %----------------------------------------------------------------------------------------
