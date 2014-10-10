@@ -136,9 +136,6 @@ Instructors: & Joseph Zambreno % Instructor/supervisor
 %	SECTION 1
 %----------------------------------------------------------------------------------------
 
-\section{Objective}
-
-
 
 \section{Platform Overview}
 In this section we were asked to review the project and provide a short description of the project structure. Here is our description: \\
@@ -149,18 +146,20 @@ The core part of this project is split into three main files: \textit{v5\_emac\_
 
 \section{Basic Scanning}
 The state machine diagram for the detection of "CO" is as follows:
-	\begin{figure}[h]
+
+	\begin{figure}[H]
 		\begin{center}
-			\includegraphics[scale=0.45]{../graphviz/part_2_state_diagram.png}
+			\includegraphics[scale=0.35]{../graphviz/part_2_state_diagram.png}
 			\caption{State machine diagram for the detection of "CO"}
 		\end{center}
 	\end{figure}
+	
 This diagram is correct so long as the string "CO" is not split up over multiple packets.\\
 
 The hardware diagram for how the UDP checksum is being set to zero is shown below:
-	\begin{figure}[h]
+	\begin{figure}[H]
 		\begin{center}
-			\includegraphics[scale=0.25]{../part2_files/udp_cksum.png}
+			\includegraphics[scale=0.3]{../part2_files/udp_cksum.png}
 			\caption{UDP checksum zeroing diagram}
 		\end{center}
 	\end{figure}
@@ -170,25 +169,28 @@ The hardware diagram for how the UDP checksum is being set to zero is shown belo
 Adding on to the previous section, the task for this section is to extend the finite state machine that can detect the string "CO" to be able to detect the string "CORN!" along with the creation of two extra finite state machines that detect the strings "ECE", and "GATAGA".\\
 
 The extended finite state machine for detecting the string "CO", now extended to detect the string "CORN!", has the following state diagram:
-	\begin{figure}[h]
+
+	\begin{figure}[H]
 		\begin{center}
-			\includegraphics[scale=0.40]{../graphviz/part_3_state_diagram_CORN.png}
+			\includegraphics[scale=0.3]{../graphviz/part_3_state_diagram_CORN.png}
 			\caption{Extended "CO" FSM to detect "CORN!"}
 		\end{center}
 	\end{figure}
-\\
+
 A new finite state machine for the detection of the string "ECE" has the following state diagram:
-	\begin{figure}[h]
+
+	\begin{figure}[H]
 		\begin{center}
-			\includegraphics[scale=0.45]{../graphviz/part_3_state_diagram_ECE.png}
+			\includegraphics[scale=0.35]{../graphviz/part_3_state_diagram_ECE.png}
 			\caption{FSM to detect "ECE"}
 		\end{center}
 	\end{figure}
 
 Another new finite state machine for the detection of the string "GATAGA" has the following state diagram:
-	\begin{figure}[h]
+
+	\begin{figure}[H]
 		\begin{center}
-			\includegraphics[scale=0.35]{../graphviz/part_3_state_diagram_GATAGA.png}
+			\includegraphics[scale=0.3]{../graphviz/part_3_state_diagram_GATAGA.png}
 			\caption{FSM to detect "GATAGA"}
 		\end{center}
 	\end{figure}
@@ -206,7 +208,8 @@ gataga\_counter[1] = LED6\\
 gataga\_counter[2] = LED7\\
 
 In simulation, the counters work as expected, as can be seen in this screenshot of Modelsim.
-	\begin{figure}[h]
+
+	\begin{figure}[H]
 		\begin{center}
 			\includegraphics[scale=0.35]{../part4_files/String_counter_sim.png}
 			\caption{Relevant signals for the simulation of the counters}
@@ -214,7 +217,27 @@ In simulation, the counters work as expected, as can be seen in this screenshot 
 	\end{figure}
 
 \section{Message Return}
+In this section, we added the ability for our module to overwrite the last three bytes of the return packet with the counts for the number of times "CORN!", "ECE", and "GATAGA" were detected within the packet respectively. We decided to return these counts as ASCII numbers since it is unlikely that there would be more than 9 of any one of the words in a packet and it makes debugging substantially easier. \\
 
+This portion of the project was accomplished by adding a simple process that tests when the UDP index is three bytes from the end of the UDP packet and sends a signal to preload a 3 bit shift register with all ones. This process also makes sure that the length of the UDP packet is greater than 10 (3 or more bytes of payload) so that the checksum cannot be overwritten with the counter values. The shift register then controls the output of a mux to the \textit{rx\_ll\_in\_insert} signal from the MP2\_scanner.vhd module. \\
+
+Here is a screen-shot from a portion of the testbench that shows the counter values being output at the end of the UDP packet.
+
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.45]{../part5_files/Part5_waveform_screenshot.png}
+			\caption{Part 5 simulation screen-shot}
+		\end{center}
+	\end{figure}
+	
+Here is a screen-shot of the output from the module implemented on hardware with various inputs. Notice that the module does not output the counter values when the input is less than 3 characters long.
+
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.45]{../part5_files/Part5_output_screenshot.png}
+			\caption{Part 5 output}
+		\end{center}
+	\end{figure}
 
 
 \section{Bonus - Inner-Packet Counting}
