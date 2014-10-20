@@ -6,7 +6,10 @@ CCOPT=-msoft-float -O1
 %.o: %.c
 	$(CC) $(CCOPT) -c $<
 
-all: 
+all: frameloop hello 
+
+hello: hello.o report_device.o
+	$(CC) $(CCOPT) -o hello.leon hello.o report_device.o
 
 frameloop:  frameloop.o report_device.o
 	$(CC) $(CCOPT) -o frameloop.leon frameloop.o report_device.o

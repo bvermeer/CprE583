@@ -1,0 +1,2 @@
+#define STARTADDR 0x40100000
+#define NFRAMES 51
