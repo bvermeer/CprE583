@@ -1,0 +1,5 @@
+The main function of the frameloop.c first sets up the environment by enabling the coprocessor, and configuring and enabling the SVGA controller. It primarily copies all (= NFRAMES) the image frames from memory to the SVGA controller; it can do so via two modes: mode 1 and mode 2. After the completion of the transfer of all (= NFRAMES) image frames, it computes the Frame Per Second measure for the buffering process.
+
+Mode 1 merely copies the current image from memory to the controller withougt applying any filters.
+
+Mode 2 is much more involved than mode 1. In mode 2, a filter is applied to each frame being transferred from memory to the buffer in the controller. Currently, two RGB values are being computed for each image frame and an OR is performed between the two RGB values to obtain the final the image frame that will be sent to the controller.
