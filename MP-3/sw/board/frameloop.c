@@ -24,7 +24,7 @@
 
 /* Set the run mode as a compile-time constant */
 #ifndef MODE
-#define MODE 1
+#define MODE 2
 #endif
 
 
@@ -35,7 +35,7 @@ format_s *f;
 int main()
 {
 	uint32_t *fbase, *imageaddr, *graybuffer;
-	uint32_t i, j;
+	uint32_t i, j, k;
 	float time, fps;
 	clock_t t1, t2;
 
@@ -45,29 +45,30 @@ int main()
 
 	t1 = clock(); /* Get the start time */
 
-	for (i = 0; i < NFRAMES; i++)
-	{
-		switch(MODE)
-		{
-			default:
-			case 1: /* Copy images to framebuffer */
-				mode1(fbase, imageaddr);
-				break;
-			case 2: /* Floating point grayscale conversion */
-				mode2(fbase, imageaddr);
-				break;
-			/* Add more cases for new modes */
-		}
+    for (i = 0; i < NFRAMES; i++)
+    {
+    	switch(MODE)
+    	{
+    		default:
+    		case 1: /* Copy images to framebuffer */
+    			mode1(fbase, imageaddr);
+    			break;
+    		case 2: /* Floating point grayscale conversion */
+    			mode2(fbase, imageaddr);
+    			break;
+    		/* Add more cases for new modes */
+    	}
 
-		imageaddr += f->hactive_video*f->vactive_video/2; /* Move to the next image */
-	}
+    	imageaddr += f->hactive_video*f->vactive_video/2; /* Move to the next image */
+    }
 
-	/* Report the time to process the frames */
-	t2 = clock();
-	time = (t2 - t1) / CLOCKS_PER_SEC;
-	fps = NFRAMES / time;
-	printf("FPS: %f\n", fps);
-	t1 = t2;
+    /* Report the time to process the frames */
+    t2 = clock();
+    time = (t2 - t1) / CLOCKS_PER_SEC;
+    fps = NFRAMES / time;
+    printf("FPS: %f\n", fps);
+    t1 = t2;
+
 
 	return 0;
 }
