@@ -24,7 +24,7 @@
 
 /* Set the run mode as a compile-time constant */
 #ifndef MODE
-#define MODE 2
+#define MODE 3
 #endif
 
 
@@ -57,6 +57,9 @@ int main()
     			mode2(fbase, imageaddr);
     			break;
     		/* Add more cases for new modes */
+    		case 3: /* Floating point grayscale conversion */
+    			mode3(fbase, imageaddr);
+    			break;
     	}
 
     	imageaddr += f->hactive_video*f->vactive_video/2; /* Move to the next image */
@@ -128,6 +131,51 @@ inline void mode2(uint32_t *fbase, uint32_t *imageaddr)
 		fbase[x] = ((R1 << 11) | (G1 << 5) | (B1)) | ((R2 << 27) | (G2 << 21) | (B2 << 16));
 	}
 }
+
+
+/* Mode 3 - fixed-point grayscale conversion */
+inline void mode3(uint32_t *fbase, uint32_t *imageaddr)
+{
+	uint32_t x;
+
+	/* Y = 0.299*R + 0.587*G + 0.114*B */
+	/* 640x480 resolution, 16-bit pixels in 5-6-5 format  */
+	/* hactive_video = 640, vactive_video = 480 */
+
+	uint16_t *fbase2, *imageaddr2;
+	uint32_t R1, R2, G1, G2, B1, B2;
+	uint32_t Y1, Y2;
+
+	fbase2 = (uint16_t *)fbase;
+	imageaddr2 = (uint16_t *)imageaddr;
+
+	for (x = 0; x < f->hactive_video*f->vactive_video/2; x++)
+	{
+		R1 = (uint16_t)((imageaddr[x] & 0x0000F800) >> 11);
+		R2 = (uint16_t)((imageaddr[x]) >> 27);
+
+		G1 = (uint16_t)((imageaddr[x] & 0x000007E0) >> 5);
+		G2 = (uint16_t)((imageaddr[x] & 0x07E00000) >> 21);
+
+		B1 = (uint16_t)(imageaddr[x] & 0x0000001F);
+		B2 = (uint16_t)((imageaddr[x] & 0x001F0000) >> 16);
+
+		Y1 = 158*R1 + 152*G1 + 60*B1;
+		Y2 = 158*R2 + 152*G2 + 60*B2;
+
+		R1 = (Y1 & 0x3E00) >> 9;
+		G1 = R1*2;
+		B1 = R1;
+
+		R2 = (Y2 & 0x3E00) >> 9;
+		G2 = R2*2;
+		B2 = R2;
+
+
+		fbase[x] = ((R1 << 11) | (G1 << 5) | (B1)) | ((R2 << 27) | (G2 << 21) | (B2 << 16));
+	}
+}
+
 
 
 /* DO NOT MODIFY */
