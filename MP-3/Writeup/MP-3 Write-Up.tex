@@ -167,6 +167,14 @@ After getting acquainted with the build environment for the LEON processor, we d
 Next we looked at the two different modes that were present in \textit{frameloop.c} to determine what they did. Mode 1 merely copies the current image from memory to the controller without applying any filters. Mode 2 is much more involved than mode 1. In mode 2, a filter is applied to each frame being transferred from memory to the buffer in the controller. Currently, two RGB values are being computed for each image frame and an OR is performed between the two RGB values to obtain the final the image frame that will be sent to the controller.
 
 
+
+%----------------------------------------------------------------------------------------
+%	SECTION 3
+%----------------------------------------------------------------------------------------
+\section{Hardware Coprocessor - Grayscale Conversion}
+In this section we were asked to read through the code in \textit{coproc.vhd} and \textit{coproc\_core.vhd} and provide a description of how the controller sends data to the core. After reading over the code in \textit{coproc.vhd} it became apparent that the LEON processor was passing the entire program instruction to the coprocessor. From there the coprocessor parses the instruction and extracts the op-code and source and destination register addresses. After getting the source register addresses it pulls the data directly from these registers. Therefore, the coprocessor has direct access to the LEON processor's registers. 
+
+
 %----------------------------------------------------------------------------------------
 %	SECTION 4
 %----------------------------------------------------------------------------------------
