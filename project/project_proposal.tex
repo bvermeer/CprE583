@@ -488,9 +488,21 @@ IEEEtran, journal, \LaTeX, paper, template.
 % 
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\IEEEPARstart{T}{he} discovery and verification of prime numbers is crucial for security systems. 
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
+\IEEEPARstart{C}{ryptocurrencies} have been around since early 2009, with the creation of Bitcoin. Since then many new and
+interesting cryptocurrencies have been created following Bitcoin's example.
+Cryptocurrencies such as Litecoin, Dogecoin, Vertcoin, and Primecoin,
+are a subset of what are called alt-coins, or alternative coins, so called for being an alternative to Bitcoin.
+In regards to this project proposal, the alt-coin Primecoin is
+of interest. In order to explain the interest given to Primecoin, it is imperative that the reader understand how cryptocurrencies work, at least at the conceptual level.
+
+\subsection{High level explanation of cryptocurrencies}
+Cryptocurrencies are a form of digital currency, that is similar to physical currency. Unlike physical currency, however, cryptocurrencies use programs, called wallets, as a means for individuals to transfer cryptocurrencies to each other. Each wallet has an address that is used for the sending and receiving of funds. Another thing that these wallets have is what is called the block chain. The block chain holds information of all the transactions using the specified cryptocurrency. For example, a wallet for Bitcoin will hold an address that can only receive Bitcoins, and it will contain the Bitcoin block chain. Similarly, a wallet for Primecoin or Vertcoin would have addresses specific to each coin, and contain their respective block chains.\\
+
+Suppose an individual A wants to transfer an arbitrary amount of currency to another user B of the same coin, then A would generate a message that includes their wallet address, B's wallet address, the amount to send, and a few extra pieces of information. B checks the block chain to see if A has that amount to spend, if A does, then B would accept the transaction. A then appends this message to the end of the block chain. Once the message is appended, the updated block chain is broadcasted from A's wallet through the peer-to-peer network of wallets. Once the updated block chain is broadcasted, the network then attempts to verify the new transaction through what is called mining.\\
+
+The details of the process of mining is potentially different between coins, but one aspect of mining is present in all cryptocurrencies and that is called proof of work. Proof of work is a way for the network to guarantee that the verification of transactions are not haphazard and that there was some effort put into the verification. Generally, the proof of work is an algorithm chosen by the developers of the coin with the property that the algorithm is hard or computationally intensive to perform, but very easy to verify.\\
+
+This project is interested in the proof of work aspect of Primecoin. Where most cryptocurrencies define a specific algorithm, Primecoin defines its proof of work to be a result. Primecoin defines its proof of work to be a sequence of prime numbers, more specifically, Cunningham chains of the first or second kinds, and Bi-twin chains.\cite{primecoin}
 
 
 %\hfill mds
@@ -501,13 +513,30 @@ IEEEtran, journal, \LaTeX, paper, template.
 After researching the topic of prime number generation and verification, we have identified three main core problems that need to be solved:
 
 \subsection{Generation of Cunningham Chains}
-A Cunningham chain is a chain or sequence of prime numbers such that the following property is true:
+A Cunningham chain, named after the mathematician A.J.C. Cunningham and sometimes called a chain of nearly doubled primes, is a certain sequence of prime numbers such that the following property is true:
 
-	\begin{displaymath}
-	a_i = (2^{i}) P_{initial} \pm (2^{i} - 1)
-	\end{displaymath}
-	
-Where P is a prime number seed. 
+\begin{displaymath}
+	a_{i + 1} = (2^{i}) a_{i} \pm (2^{i} - 1)
+\end{displaymath}
+
+Where $a_{i}$ is a prime number seed. Furthermore, Cunningham chains can be categorized as being of the first or second kind. Cunningham chains of the first kind are described as follows:
+
+\begin{displaymath}
+	a_{i + 1} = (2^{i})a_{i} + (2^{i} - 1)
+\end{displaymath}
+
+Again, $a_{i}$ is the prime number seed for the chain. Cunningham chains of the second kind are described as follows:
+
+\begin{displaymath}
+	a_{i + 1} = (2^{i})a_{i} - (2^{i} - 1)
+\end{displaymath}
+
+Cunningham chains of either the first kind generate what are called Sophie Germain primes, which is defined as:\\
+
+A prime number p is a Sophie Germain prime if 2p + 1 is also prime.\\
+
+The value 2p + 1 that is generated from a Sophie Germain prime is called a safe prime. A Cunningham chain is called \textbf{complete} if the chain can no longer be extended. Using a Cunningham chain of the first kind, candidates can be quickly generated with very little computational overhead. 
+
 
 \subsection{Generation of Prime Numbers}
 The problem of generating prime numbers ultimately boils down to determining if a given number has any factors apart from 1 and the number itself. Over the years, multiple factorisation algorithms have been developed to tackle this problem. Alternatively, sieve techniques don't require complex mathematics and are used to find prime numbers within a certain range. Since an immense amount of parallelization can be achieved with a seive-based technique, they are ideal for hardware implementation.
