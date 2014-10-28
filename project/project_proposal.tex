@@ -488,7 +488,7 @@ IEEEtran, journal, \LaTeX, paper, template.
 % 
 % Here we have the typical use of a "T" for an initial drop letter
 % and "HIS" in caps to complete the first word.
-\IEEEPARstart{C}{ryptocurrencies} have been around since early 2009, with the creation of Bitcoin. Since then many new and
+\IEEEPARstart{C}{ryptocurrencies} have been around for some time, though it did not enter popular thought until the creation of Bitcoin, with the paper outlining Bitcoin being published in 2008. Since then many new and
 interesting cryptocurrencies have been created following Bitcoin's example.
 Cryptocurrencies such as Litecoin, Dogecoin, Vertcoin, and Primecoin,
 are a subset of what are called alt-coins, or alternative coins, so called for being an alternative to Bitcoin.
@@ -500,9 +500,11 @@ Cryptocurrencies are a form of digital currency, that is similar to physical cur
 
 Suppose an individual A wants to transfer an arbitrary amount of currency to another user B of the same coin, then A would generate a message that includes their wallet address, B's wallet address, the amount to send, and a few extra pieces of information. B checks the block chain to see if A has that amount to spend, if A does, then B would accept the transaction. A then appends this message to the end of the block chain. Once the message is appended, the updated block chain is broadcasted from A's wallet through the peer-to-peer network of wallets. Once the updated block chain is broadcasted, the network then attempts to verify the new transaction through what is called mining.\\
 
-The details of the process of mining is potentially different between coins, but one aspect of mining is present in all cryptocurrencies and that is called proof of work. Proof of work is a way for the network to guarantee that the verification of transactions are not haphazard and that there was some effort put into the verification. Generally, the proof of work is an algorithm chosen by the developers of the coin with the property that the algorithm is hard or computationally intensive to perform, but very easy to verify.\\
+The details of the process of mining is potentially different between coins, but one aspect of mining is present in all cryptocurrencies and that is called proof-of-work. Proof-of-work is a way for the network to guarantee that the verification of transactions are not haphazard and that there was some effort put into the verification. Generally, the proof of work is an algorithm chosen by the developers of the coin with the property that the algorithm is hard or computationally intensive to perform, but very easy to verify.\\
 
-This project is interested in the proof of work aspect of Primecoin. Where most cryptocurrencies define a specific algorithm, Primecoin defines its proof of work to be a result. Primecoin defines its proof of work to be a sequence of prime numbers, more specifically, Cunningham chains of the first or second kinds, and Bi-twin chains.\cite{primecoin}
+This project is interested in the proof of work aspect of Primecoin. Where most cryptocurrencies define a specific algorithm, Primecoin defines its proof-of-work to be a result. Primecoin defines its proof of work to be a sequence of prime numbers, more specifically, Cunningham chains of the first or second kinds, and Bi-twin chains.\cite{primecoin} Due to such a proof-of-work, and its definition, there has been very little success at hardware acceleration of such a proof-of-work. The seemingly lack of success at hardware acceleration of such a proof-of-work is due in part to the lack of a defined algorithm to accelerate, along with the fact that verification of prime numbers is quite a hard problem in itself.\\
+
+With such a problem in mind, the goal of this project is to attempt to perform hardware acceleration on the process of the generation of prime number candidates and the validation of these candidates in the hopes of generating a Cunningham chain of the first kind.
 
 
 %\hfill mds
@@ -531,12 +533,11 @@ Again, $a_{i}$ is the prime number seed for the chain. Cunningham chains of the 
 	a_{i + 1} = (2^{i})a_{i} - (2^{i} - 1)
 \end{displaymath}
 
-Cunningham chains of either the first kind generate what are called Sophie Germain primes, which is defined as:\\
+Cunningham chains of the first kind generate what are called Sophie Germain primes, which is defined as:\\
 
 A prime number p is a Sophie Germain prime if 2p + 1 is also prime.\\
 
-The value 2p + 1 that is generated from a Sophie Germain prime is called a safe prime. A Cunningham chain is called \textbf{complete} if the chain can no longer be extended. Using a Cunningham chain of the first kind, candidates can be quickly generated with very little computational overhead. 
-
+The value 2p + 1 that is generated from a Sophie Germain prime is called a safe prime. A Cunningham chain is called \textbf{complete} if the chain can no longer be extended. Using a Cunningham chain of the first kind, candidates can be quickly generated with very little computational overhead. This is due to the fact that each $a_{i+1}$ is effectively $2a_{i} + 1$, or $2a_{i} - 1$. 
 
 \subsection{Generation of Prime Numbers}
 The problem of generating prime numbers ultimately boils down to determining if a given number has any factors apart from 1 and the number itself. Over the years, multiple factorisation algorithms have been developed to tackle this problem. Alternatively, sieve techniques don't require complex mathematics and are used to find prime numbers within a certain range. Since an immense amount of parallelization can be achieved with a seive-based technique, they are ideal for hardware implementation.
@@ -544,14 +545,14 @@ The problem of generating prime numbers ultimately boils down to determining if 
 \subsubsection{The sieve of Eratosthenes}
 The sieve of Eratosthenes is an ancient and simple algorithm to find all prime numbers up to any given limit. The following describes the algorithm:
 
-\begin{enumerated}
+%\begin{enumerated}
 
-	\item Create a list of consecutive integers from 2 through n.
-	\item Let p equal to 2, the first prime number.
-	\item Starting from p, mark all the multiples of p in the list by counting to n in increments of p.
-	\item Find the number greater than p in the list that is NOT marked. If there was such a number, stop. Otherwise, let p equal this new number which is the next prime number and repeat from step 3.
+%	\item Create a list of consecutive integers from 2 through n.
+%	\item Let p equal to 2, the first prime number.
+%	\item Starting from p, mark all the multiples of p in the list by counting to n in increments of p.
+%	\item Find the number greater than p in the list that is NOT marked. If there was such a number, stop. Otherwise, let p equal this new number which is the next prime number and repeat from step 3.
 
-\end{enumerated}
+%\end{enumerated}
 
 \subsubsection{Related work}
 
@@ -767,7 +768,8 @@ A. Daly and W. Mamane. Efficient architectures for implementing montgomery modul
 \bibitem{wiki_miller-rabin}
 Miller-Rabin Primality Test. On: \textit{Wikipedia}, 27 Oct. 2014. $<$http://en.wikipedia.org/wiki/Miller\%E2\%80\%93Rabin\_primality\_test$>$
 
-\bibitem{IEEEhowto:kopka}
+\bibitem{primecoin}
+S. King. (2007, July 7). Primecoin: Cryptocurrency with Prime Number Proof-of-Work(\textit{1st ed.})[Online] Available:http://primecoin.io/bin/primecoin-paper.pdf
 
 \bibitem{IEEEhowto:kopka}
 
