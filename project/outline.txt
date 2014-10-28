@@ -1,0 +1,12 @@
+Outline of the project proposal
+
+1) What is the Cunningham Chain?
+	Core problems
+		- Generation of chain
+		- Generation of prime numbers
+		- Verification of generated prime numbers
+
+Papers to refer:
+	- Cunningham chain generation --> Wiki (Kriss)
+	- Generation of prime number --> Fast Algo, Prime generation (Rohit)
+	- Validation of prime numbers --> Scalable Hardware Architecture ... (Blake)

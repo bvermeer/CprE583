@@ -511,7 +511,31 @@ Since the prime number generators work on the principal of generating numbers th
 
 
 \subsubsection{Rabin-Miller Primality Test}
-The Rabin-Miller primality test is a probabilistic method of determining if a number is prime. The algorithm is based around the idea of testing if a number in question is divisible by a subset of small primes. If it is not divisible by any of the small primes in the set then it is a prime number with a probability that is determined by the number of small primes in the set. The larger the set of small prime numbers is allows for the primality of the number in question to be determined with greater confidence. 
+The Rabin-Miller primality test is a probabilistic method of determining if a number is prime. The algorithm is based around the idea of testing if a number in question is divisible by a subset of small primes. If it is not divisible by any of the small primes in the set then it is a prime number with a probability that is determined by the number of small primes in the set. The larger the set of small prime numbers is allows for the primality of the number in question to be determined with greater confidence. Since the probability of correctly identifying a prime number is directly related to the number of small primes tested again the test number, the accuracy of the Rabin-Miller primality test can be easily customized. \cite{cheung} \\
+
+Now to dive into the theory of the Rabin-Miller primality test. The Rabin-Miller theory is based on the contrapositive of Fermat's little theorem which states that for a prime number \textit{n}:
+
+	\begin{displaymath}
+		a^{n-1} \equiv 1\ (\textrm{mod}\ n)
+	\end{displaymath}
+
+Therefore, the Rabin-Miller primality test can show that a number is not positive of for a number \textit{n} if we can find a number \textit{a} such that:
+
+	\begin{displaymath}
+		a^d \not \equiv 1\ (\textrm{mod}\ n)
+	\end{displaymath}
+	
+and
+
+	\begin{displaymath}
+		a^{2^rd} \not \equiv -1\ (\textrm{mod}\ n) 
+	\end{displaymath}
+
+for all $0 \le r \le s-1$, then \textit{n} is not prime. \cite{wiki_miller-rabin} \\
+
+The Rabin-Miller Primality test is a good test to implement on hardware since the test can be parallelized by testing many small primes again the number in question concurrently and the math operations involved would be fairly expense in terms of cycles if implemented in software because of its sequential nature. Since we are attempting to implement this design in hardware let's first examine how to do the modulus operation in hardware. \\
+
+One way to implement a modulus operation in hardware is to use the Montgomery algorithm to perform a modulo-multiply. 
 
 
 % needed in second column of first page if using \IEEEpubid
@@ -677,12 +701,14 @@ The conclusion goes here.
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
+\bibitem{cheung}
 Cheung, R., Brown, A., Luk, W., Cheung, P.: A scalable hardware architecture for prime number validation. In: IEEE Int. Conf. on Field-Programmable Technology, pp. 177-184 (2004)
 
-\bibitem{IEEEhowto:kopka}
+\bibitem{daly}
+A. Daly and W. Mamane. Efficient architectures for implementing montgomery modular multiplication and RSA modular exponentiation on reconfigurable logic. In \textit{Tenth ACM International Symposium on Field-Programmable Gate Arrays} pages 40-49, February 2002.
 
-\bibitem{IEEEhowto:kopka}
+\bibitem{wiki_miller-rabin}
+Miller-Rabin Primality Test. On: \textit{Wikipedia}, 27 Oct. 2014. $<$http://en.wikipedia.org/wiki/Miller\%E2\%80\%93Rabin\_primality\_test$>$
 
 \bibitem{IEEEhowto:kopka}
 
