@@ -569,6 +569,9 @@ Their algorithm was a very straigtforward one. For a given number, a search for 
 \textit{For RSA encryption/decryption}\\
 C. Torng and Y. Lee from Cornell University implemented a prime nunmber generator and RSA encrypter/decrypter using the Altera DE2 FPGA. The prime number generation was based on the Miller-Rabin primality test to search for prime numbers. They fed in pseudo-randomly generated odd numbers to the test to "generate" prime numbers. We have described the Miller-Rabin test in the following section.\\  
 
+\subsubsection{Proposed Approach}
+
+For our project, the ultimate aim is to generate a Cunningham chain and hence, the generaion of prime numbers would essentially mean computing 2\textit{p} + 1 where \textit{p} is the seed given by the user. All the prime number generation techniques described above are essentially verification techniques and hence conducting research on prime number generation techniques will serve useful in the prime number validation stage of our project.\\
 
 \subsection{Verification of Generated Prime Numbers}
 Since the prime number generators work on the principal of generating numbers that has a reasonably high probability of being prime, the numbers must be verified to insure that they are actually prime. This is a very resource intensive problem since it requires testing if the potential prime number number is evenly divisible by a set of numbers. Since it is prohibitively expensive to test if large prime numbers are definitively prime, probabilistic methods have been developed that will determine if a number is prime with a high probability. One of these probability methods of determining if a number is prime is called the Rabin-Miller primality test. \\
