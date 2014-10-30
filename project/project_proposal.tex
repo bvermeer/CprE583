@@ -628,14 +628,37 @@ Here is one possible algorithm that can be used to perform modular multiplicatio
   }
 \end{lstlisting}
 
-Now that we have some understanding for the algorithm behind a Montgomery multiplication we can move on to discussing a possible hardware implementation. One way to break this problem down is to focus on the two addition and two multiplication operations that are performed every round. We can break the problem down into an addition of $2A*b[i] + S[i-1]$ and $q[i]*M$ added to the sum of the previous operation. We can simplify the divide by two operation to simply eliminating the LSB from the next addition operation. Figure 1 portrays a block diagram for this particular implementation of the Montgomery exponential multiplier.
+Now that we have some understanding for the algorithm behind a Montgomery multiplication we can move on to discussing a possible hardware implementation. One way to break this problem down is to focus on the two addition and two multiplication operations that are performed every round. We can break the problem down into an addition of $2A*b[i] + S[i-1]$ and $q[i]*M$ added to the sum of the previous operation. We can simplify the divide by two operation to simply eliminating the LSB from the next addition operation. Figure 1 portrays a block diagram for this particular implementation of the Montgomery multiplier. \\
 
 	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.2]{pics/Montgomery_exp_mult.png}
-		\caption{Montgomery Exponential Multiplier Block Diagram}
+		\caption{Montgomery Multiplier Block Diagram}
 	\end{figure}   
 
+
+Once the Montgomery multiplier is built, it is fairly easy to use the use the design to do exponential modulus operations as well. This is done by feeding the end result from the Montgomery multiplier back in as an input and repeating this pattern as many times as needed to arrive at the correct answer for the desired power. This is most clearly shown with an example.  
+
+\begin{displaymath}
+	32^3\ mod\ 7 = 32*((32*32)\ mod\ 7)\ mod\ 7
+\end{displaymath}
+
+To perform the given operation with the Montgomery multiplier, the first round of inputs would be:
+
+\begin{displaymath}
+	A = 32,\ \ B = 32,\ \ M = 7
+\end{displaymath}
+
+For the second round:
+
+\begin{displaymath}
+	A = (previous\ result),\ \ B=32,\ \ M=7
+\end{displaymath}
+
+Therefore, to perform a exponential modulus operation requires $(exponential\ power) - 1$ operations to complete using a single Montgomery multiplier. \\
+
+There is another advantage to the algorithm chosen for verifying prime numbers.
+The $a^{2^rd} \not \equiv (n-1)$ operation for all $0 \le r \le s-1$ can be performed by simply starting up the operation for $a^{2^{s-1}d}$ and comparing the results continuously at the correct cycle counts to determine if the number is prime. This saves the design from the penalty that would be occurred if the operation would have to be restarted for every new value of $r$. 
 
 % needed in second column of first page if using \IEEEpubid
 %\IEEEpubidadjcol
