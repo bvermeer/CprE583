@@ -366,6 +366,9 @@
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
+% Add the listings package for code formatting
+\usepackage{listings}
+
 
 \begin{document}
 %
@@ -550,9 +553,9 @@ The sieve of Eratosthenes is an ancient and simple algorithm to find all prime n
 	\item Create a list of consecutive integers from 2 through n.
 	\item Let p equal to 2, the first prime number.
 	\item Starting from p, mark all the multiples of p in the list by counting to n in increments of p.
-	\item Find the number greater than p in the list that is NOT marked. If there was such a number, stop. Otherwise, let p equal this new number which is the next prime number and repeat from step 3. 
+	\item Find the number greater than p in the list that is NOT marked. If there was not such a number, stop. Otherwise, let p equal this new number which is the next prime number and repeat from step 3. \\
 
-\end{enumerate}
+\end{enumerate} 
 
 \subsubsection{Related work}
 
@@ -577,23 +580,45 @@ Now to dive into the theory of the Rabin-Miller primality test. The Rabin-Miller
 		a^{n-1} \equiv 1\ (\textrm{mod}\ n)
 	\end{displaymath}
 
-Therefore, the Rabin-Miller primality test can show that a number is not positive of for a number \textit{n} if we can find a number \textit{a} such that:
+Therefore, the Rabin-Miller primality test can show that a number is not prime for a number \textit{n} if we can find a number \textit{a} such that:
 
 	\begin{displaymath}
-		a^d \not \equiv 1\ (\textrm{mod}\ n)
+		a^d \not \equiv 1\ or\ (n-1)
 	\end{displaymath}
 	
 and
 
 	\begin{displaymath}
-		a^{2^rd} \not \equiv -1\ (\textrm{mod}\ n) 
+		a^{2^rd} \not \equiv (n-1)
 	\end{displaymath}
 
-for all $0 \le r \le s-1$, then \textit{n} is not prime. \cite{wiki_miller-rabin} \\
+for all $0 \le r \le s-1$, then \textit{n} is not prime if any such case is found. \cite{wiki_miller-rabin} \\
 
 The Rabin-Miller Primality test is a good test to implement on hardware since the test can be parallelized by testing many small primes again the number in question concurrently and the math operations involved would be fairly expense in terms of cycles if implemented in software because of its sequential nature. Since we are attempting to implement this design in hardware let's first examine how to do the modulus operation in hardware. \\
 
-One way to implement a modulus operation in hardware is to use the Montgomery algorithm to perform a modulo-multiply. These modulo-multiply operations can then be repeatedly run to perform an modular exponentiation. As it turns out there are multiple ways to implement a Montgomery algorithm. The two major approaches are performing the multiplication first and then taking the modulus of the result or the other option is to do the multiplication and module operations in parallel. Since we are trying to implement this as efficiently as possible in hardware we will just focus on the designs that perform the multiplication and module operations in parallel.
+One way to implement a modulus operation in hardware is to use the Montgomery algorithm to perform a modulo-multiply. These modulo-multiply operations can then be repeatedly run to perform an modular exponentiation. One potential issue with the modular exponentiation module is that it needs a pre-computed constant ($2^{2n}\ \textrm{mod}\ M$) to function. This isn't the worst thing since $M$ is the number we are testing if it is prime and $n$ is simply the number of bits in the multiplier. Therefore, this constant will be reused plenty when testing if a single number is prime. \\
+
+As it turns out there are multiple ways to implement a Montgomery algorithm. The two major approaches are performing the multiplication first and then taking the modulus of the result or the other option is to do the multiplication and module operations in parallel. Since we are trying to implement this as efficiently as possible in hardware we will just focus on the designs that perform the multiplication and module operations in parallel. There are also many different ways to implement the multipliers used in the Montgomery algorithm. For brevities sake I will just discuss one of them here. For more information on some of the other possible configurations for the multipliers, please refer to reference: \cite{daly}. \\
+
+Before I dive into the architecture for the Montgomery multiplier I am going to discuss, it is important to understand the theory behind its operation. A Montgomery multiplier works on the principal of using the fact that normal multiplication accumulates digit products in the intermediate steps of its operation and does modular reductions for this digit product as the multiplication operation is occurring. This is done by using the least significant bits of the intermediate result and performs an addition and shift operation on it to arrive at the next bit of the modular product result. 
+
+Here is one possible algorithm that can be used to perform modular multiplication when the operation is $(A * B)\ mod\ M$. \\
+
+\begin{lstlisting}
+  Montgomery_Mod_Mult(A,B,M)
+  {
+    S[0] = 0;
+    A = 2*A;
+	  
+    for{i=1; i <= n+1; i++}{
+      q[i] = S[i-1] mod 2; //LSB of S[i-1]
+      S[i] = (S[i-1] + q[i]*M + b[i]*A)/2;
+    }
+    return S;
+  }
+\end{lstlisting}
+
+Now that we have some understanding for the algorithm behind a Montgomery multiplication we can move on to discussing a possible hardware implementation. One way to break this problem down is to focus on the two addition and two multiplication operations that are performed every round. We can break the problem down into an addition of $2A*b[i] + S[i-1]$ and $q[i]*M$ added to the sum of the previous operation. We can simplify the divide by two operation to simply eliminating the LSB from the next addition operation and only using it to compute the next $q$ value.    
 
 
 % needed in second column of first page if using \IEEEpubid
