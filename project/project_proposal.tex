@@ -593,13 +593,13 @@ Now to dive into the theory of the Rabin-Miller primality test. The Rabin-Miller
 Therefore, the Rabin-Miller primality test can show that a number is not prime for a number \textit{n} if we can find a number \textit{a} such that:
 
 	\begin{displaymath}
-		a^d \not \equiv 1\ or\ (n-1)
+		a^d\ \textrm{mod}\ n\not \equiv 1\ or\ (n-1)
 	\end{displaymath}
 		
 and
 
 	\begin{displaymath}
-		a^{2^rd} \not \equiv (n-1)
+		a^{2^rd}\ \textrm{mod}\ n \not \equiv (n-1)
 	\end{displaymath}
 
 for all $0 \le r \le s-1$, then \textit{n} is not prime if any such case is found. \cite{wiki_miller-rabin} \\
@@ -841,13 +841,6 @@ Szecowka, Przemysław M., and Wojciech Buszko, "Digital hardware for prime numbe
 \bibitem{ausPrime}
 Saleeba, Michael and Pose, Ronald, "A Fast Algorithm for Prime Number Generation using Dynamically Reconfigurable Logic", Clayton, Australia.
 
-\bibitem{IEEEhowto:kopka}
-
-\bibitem{IEEEhowto:kopka}
-
-\bibitem{IEEEhowto:kopka}
-
-\bibitem{IEEEhowto:kopka}
 
 \end{thebibliography}
 
