@@ -301,6 +301,7 @@ inline void mode3(uint32_t *, uint32_t *);
 inline void mode4(uint32_t *, uint32_t *);
 inline void mode5(uint32_t *, uint32_t *);
 inline void mode6(uint32_t *, uint32_t *);
+inline void hackmode(uint32_t *, uint32_t *);
 
 
 uint32_t *svga_enable();
