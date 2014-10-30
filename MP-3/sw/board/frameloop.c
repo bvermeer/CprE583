@@ -22,9 +22,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//#include "hackaday_logo.h"
+
 /* Set the run mode as a compile-time constant */
 #ifndef MODE
-#define MODE 3
+#define MODE 5
 #endif
 
 
@@ -60,6 +62,15 @@ int main()
     		case 3: /* Floating point grayscale conversion */
     			mode3(fbase, imageaddr);
     			break;
+    		case 4: /* Mode to use the fixed point grayscale coprocessor */
+    			mode4(fbase, imageaddr);
+    			break;
+    		case 5: /* Mode to do the Laplacian edge detection in software  */
+    			mode5(fbase, imageaddr);
+    			break;
+    		// case 7: /* "Hack" the screen! */
+    		// 	hackmode(fbase, imageaddr);
+    		// 	break;
     	}
 
     	imageaddr += f->hactive_video*f->vactive_video/2; /* Move to the next image */
@@ -175,6 +186,112 @@ inline void mode3(uint32_t *fbase, uint32_t *imageaddr)
 		fbase[x] = ((R1 << 11) | (G1 << 5) | (B1)) | ((R2 << 27) | (G2 << 21) | (B2 << 16));
 	}
 }
+
+
+/* Mode 4 - fixed-point grayscale conversion with coprocessor */
+inline void mode4(uint32_t *fbase, uint32_t *imageaddr)
+{
+
+}
+
+
+/* Mode 5 - Laplacian edge detection in software */ 
+inline void mode5(uint32_t *fbase, uint32_t *imageaddr)
+{
+	uint32_t x, y;
+
+	/* Y = 0.299*R + 0.587*G + 0.114*B */
+	/* 640x480 resolution, 16-bit pixels in 5-6-5 format  */
+	/* hactive_video = 640, vactive_video = 480 */
+
+    // Temporary pixels to use for Laplacian kernel
+    int32_t ul, uc, ur, cl, c, cr, ll, lc, lr, tmp; 
+
+    // Test to see if assumption on array index is correct.
+	uint16_t (*fbase2d)[f->hactive_video] = (uint16_t (*)[f->hactive_video])&fbase[0];
+    
+    uint32_t *grayscale_img = (uint32_t *)malloc(2*f->hactive_video*f->vactive_video);
+
+    uint16_t (*grayscale_img2d)[f->hactive_video]= (uint16_t (*)[f->hactive_video])&grayscale_img[0];
+
+    if(grayscale_img == 0)
+    {
+        printf("ERROR: Out of memory!\n");
+    }
+
+    
+    if(imageaddr == 0x41e4c000)
+    {
+	    for (x = 0; x < f->hactive_video*f->vactive_video/2; x++)
+	    {
+	    	fbase[x] = imageaddr[x];
+	    }
+    }
+    else
+    {
+    
+        // Used the fixed point software grayscale mode to get a grayscale image
+        mode3(grayscale_img, imageaddr);
+
+
+        for(y = 1; y < (f->vactive_video - 1); y++)
+        {
+            for(x = 1; x < (f->hactive_video - 1); x++)
+            {
+                // Edge case to load initial pixels
+                if(x == 1)
+                {
+                    ul = grayscale_img2d[y-1][0];
+                    uc = grayscale_img2d[y-1][1];
+                    cl = grayscale_img2d[y][0];
+                    c  = grayscale_img2d[y][1];
+                    ll = grayscale_img2d[y+1][0];
+                    lc = grayscale_img2d[y+1][1];
+                }
+
+                ur = grayscale_img2d[y-1][x+1];
+                cr = grayscale_img2d[y][x+1];
+                lr = grayscale_img2d[y+1][x+1];
+
+                tmp = ((8*c) - ul - uc - ur - cl - cr - ll - lc - lr);
+
+                if(tmp < 0)
+                {
+                    fbase2d[y][x] = 0;
+                }
+                else if(tmp > 65535)
+                {
+                    
+                    fbase2d[y][x] = 0xFFFF; 
+                }
+                else
+                {
+                    fbase2d[y][x] = tmp & 0xFFFF;
+                }
+
+            }
+        }
+   
+    }
+   
+   // Free the memory we used for the temporary image
+   free(grayscale_img); 
+}
+
+
+
+
+/* Default mode - copies the current frame to the frame buffer */
+// inline void hackmode(uint32_t *fbase, uint32_t *imageaddr)
+// {
+//     uint32_t x;
+// 
+// 	for (x = 0; x < f->hactive_video*f->vactive_video/2; x++)
+// 	{
+// 		fbase[x] = (hackaday_logo[2*x]<<16) | hackaday_logo[2*x+1];
+// 	}
+// }
+
 
 
 
