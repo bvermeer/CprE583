@@ -369,6 +369,8 @@
 % Add the listings package for code formatting
 \usepackage{listings}
 
+\usepackage{graphicx} % Required for the inclusion of images
+
 
 \begin{document}
 %
@@ -626,7 +628,13 @@ Here is one possible algorithm that can be used to perform modular multiplicatio
   }
 \end{lstlisting}
 
-Now that we have some understanding for the algorithm behind a Montgomery multiplication we can move on to discussing a possible hardware implementation. One way to break this problem down is to focus on the two addition and two multiplication operations that are performed every round. We can break the problem down into an addition of $2A*b[i] + S[i-1]$ and $q[i]*M$ added to the sum of the previous operation. We can simplify the divide by two operation to simply eliminating the LSB from the next addition operation and only using it to compute the next $q$ value.    
+Now that we have some understanding for the algorithm behind a Montgomery multiplication we can move on to discussing a possible hardware implementation. One way to break this problem down is to focus on the two addition and two multiplication operations that are performed every round. We can break the problem down into an addition of $2A*b[i] + S[i-1]$ and $q[i]*M$ added to the sum of the previous operation. We can simplify the divide by two operation to simply eliminating the LSB from the next addition operation. Figure 1 portrays a block diagram for this particular implementation of the Montgomery exponential multiplier.
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.2]{pics/Montgomery_exp_mult.png}
+		\caption{Montgomery Exponential Multiplier Block Diagram}
+	\end{figure}   
 
 
 % needed in second column of first page if using \IEEEpubid
