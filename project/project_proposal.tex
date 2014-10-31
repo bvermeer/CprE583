@@ -544,7 +544,7 @@ Cunningham chains of the first kind generate what are called Sophie Germain prim
 
 A prime number p is a Sophie Germain prime if 2p + 1 is also prime.\\
 
-The value 2p + 1 that is generated from a Sophie Germain prime is called a safe prime. A Cunningham chain is called \textbf{complete} if the chain can no longer be extended. Using a Cunningham chain of the first kind, candidates can be quickly generated with very little computational overhead. This is due to the fact that each $a_{i+1}$ is effectively $2a_{i} + 1$, or $2a_{i} - 1$. 
+The value 2p + 1 that is generated from a Sophie Germain prime is called a safe prime. A Cunningham chain is called \textbf{complete} if the chain can no longer be extended. Using a Cunningham chain of the first kind, candidates can be quickly generated with very little computational overhead. This is due to the fact that each $a_{i+1}$ is effectively $2a_{i} + 1$, or $2a_{i} - 1$. The simplest approach to this problem would be to take the previously generated candidate, shift it to the left by one bit, and add or subtract 1 to the result. This will be the approach to generating the candidates.
 
 \subsection{Generation of Prime Numbers}
 The problem of generating prime numbers ultimately boils down to determining if a given number has any factors apart from 1 and the number itself. Over the years, multiple factorisation algorithms have been developed to tackle this problem. Alternatively, sieve techniques don't require complex mathematics and are used to find prime numbers within a certain range. Since an immense amount of parallelization can be achieved with a seive-based technique, they are ideal for hardware implementation.
