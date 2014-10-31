@@ -452,12 +452,14 @@
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-The abstract goes here.
+This paper outlines a project proposal to hardware accelerate the generation of a chain of large prime numbers, known as a Cunningham chain, on an FPGA. The motivation for this project came from a cryptocurrency called Primecoin, specifically its proof-of-work. Primecoin accepts as a proof-of-work a Cunningham chain of the first or second kind, as well as a Bi-twin chain. Due to this proof-of-work, there have been little public success with hardware acceleration of the mining of this cryptocurrency, providing proof that such a problem is not an easy one to attempt.\\
+
+The core problems of this project would be the generation of Cunningham chain prime number candidates, and the validation of the candidates as being prime. Using the equation to describe Cunningham chains, the candidates can be generated very quickly. Validation would be performed using a probabilistic test of primality, specifically the Rabin-Miller primality test, as the team does not fully understand the math behind the fast deterministic algorithm to test for primality.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-IEEEtran, journal, \LaTeX, paper, template.
+FPGA, primality test, Cunningham chain.
 \end{IEEEkeywords}
 
 
@@ -505,11 +507,11 @@ Cryptocurrencies are a form of digital currency, that is similar to physical cur
 
 Suppose an individual A wants to transfer an arbitrary amount of currency to another user B of the same coin, then A would generate a message that includes their wallet address, B's wallet address, the amount to send, and a few extra pieces of information. B checks the block chain to see if A has that amount to spend, if A does, then B would accept the transaction. A then appends this message to the end of the block chain. Once the message is appended, the updated block chain is broadcasted from A's wallet through the peer-to-peer network of wallets. Once the updated block chain is broadcasted, the network then attempts to verify the new transaction through what is called mining.\\
 
-The details of the process of mining is potentially different between coins, but one aspect of mining is present in all cryptocurrencies and that is called proof-of-work. Proof-of-work is a way for the network to guarantee that the verification of transactions are not haphazard and that there was some effort put into the verification. Generally, the proof of work is an algorithm chosen by the developers of the coin with the property that the algorithm is hard or computationally intensive to perform, but very easy to verify.\\
+The details of the process of mining is potentially different between coins, but one aspect of mining is present in all cryptocurrencies and that is called proof-of-work. Proof-of-work is a way for the network to guarantee that the verification of transactions are not haphazard and that there was some effort put into the verification. Generally, the proof-of-work is an algorithm chosen by the developers of the coin with the property that the algorithm is hard or computationally intensive to perform, but very easy to verify.\\
 
-This project is interested in the proof of work aspect of Primecoin. Where most cryptocurrencies define a specific algorithm, Primecoin defines its proof-of-work to be a result. Primecoin defines its proof of work to be a sequence of prime numbers, more specifically, Cunningham chains of the first or second kinds, and Bi-twin chains.\cite{primecoin} Due to such a proof-of-work, and its definition, there has been very little success at hardware acceleration of such a proof-of-work. The seemingly lack of success at hardware acceleration of such a proof-of-work is due in part to the lack of a defined algorithm to accelerate, along with the fact that verification of prime numbers is quite a hard problem in itself.\\
+This project is interested in the proof-of-work aspect of Primecoin. Where most cryptocurrencies define a specific algorithm, Primecoin defines its proof-of-work to be a result. Primecoin defines its proof of work to be a sequence of prime numbers, more specifically, Cunningham chains of the first or second kinds, and Bi-twin chains.\cite{primecoin} Due to such a proof-of-work, and its definition, there has been very little success at hardware acceleration of such a proof-of-work. The seemingly lack of success at hardware acceleration of such a proof-of-work is due in part to the lack of a defined algorithm to accelerate, along with the fact that verification of prime numbers is quite a hard problem in itself.\\
 
-With such a problem in mind, the goal of this project is to attempt to perform hardware acceleration on the process of the generation of prime number candidates and the validation of these candidates in the hopes of generating a Cunningham chain of the first kind.
+With such a problem in mind, the goal of this project is to attempt to perform hardware acceleration on the process of the generation of Cunningham chain prime number candidates and the validation of these candidates in the hopes of generating a Cunningham chain of the first kind.
 
 
 %\hfill mds
@@ -526,13 +528,13 @@ A Cunningham chain, named after the mathematician A.J.C. Cunningham and sometime
 	a_{i + 1} = (2^{i}) a_{i} \pm (2^{i} - 1)
 \end{displaymath}
 
-Where $a_{i}$ is a prime number seed. Furthermore, Cunningham chains can be categorized as being of the first or second kind. Cunningham chains of the first kind are described as follows:
+Where $a_{0}$ is a prime number seed. Furthermore, Cunningham chains can be categorized as being of the first or second kind. Cunningham chains of the first kind are described as follows:
 
 \begin{displaymath}
 	a_{i + 1} = (2^{i})a_{i} + (2^{i} - 1)
 \end{displaymath}
 
-Again, $a_{i}$ is the prime number seed for the chain. Cunningham chains of the second kind are described as follows:
+Again, $a_{0}$ is the prime number seed for the chain. Cunningham chains of the second kind are described as follows:
 
 \begin{displaymath}
 	a_{i + 1} = (2^{i})a_{i} - (2^{i} - 1)
