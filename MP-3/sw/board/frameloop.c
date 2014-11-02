@@ -55,11 +55,11 @@ int main()
     		case 1: /* Copy images to framebuffer */
     			mode1(fbase, imageaddr);
     			break;
-    		case 2: /* Floating point grayscale conversion */
+    		case 2: /* Floating point grayscale conversion in software */
     			mode2(fbase, imageaddr);
     			break;
     		/* Add more cases for new modes */
-    		case 3: /* Floating point grayscale conversion */
+    		case 3: /* Fixed point grayscale conversion in software */
     			mode3(fbase, imageaddr);
     			break;
     		case 4: /* Mode to use the fixed point grayscale coprocessor */
