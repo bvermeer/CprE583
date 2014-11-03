@@ -190,6 +190,8 @@ inline void ld_c31(uint32_t a)
 	asm("ld %0, %%c31" : : "m" (a) );
 }
 
+
+
 /* Memory-coproc load functions (64-bit). */
 inline void ldd_c0(uint64_t a)
 {
@@ -390,10 +392,6 @@ inline void st_c31(uint32_t *a)
 inline void std_c0(uint64_t *a)
 {
 	asm("std %%c0, %0" : "=m" (*a) );
-}
-inline void std_c1(uint64_t *a)
-{
-	asm("std %%c1, %0" : "=m" (*a) );
 }
 inline void std_c2(uint64_t *a)
 {
