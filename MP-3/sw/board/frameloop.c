@@ -196,17 +196,6 @@ inline void mode4(uint32_t *fbase, uint32_t *imageaddr)
 	/* hactive_video = 640, vactive_video = 480 */
 	
     uint32_t x;
-    uint64_t *fbase64;
-
-    uint32_t in1 = 14;
-    uint32_t in2 = 1142;
-
-    uint64_t test;
-    
-    uint32_t test1;
-    uint32_t test2;
-
-    fbase64 = (uint64_t *)fbase;
 
 
 	for (x = 0; x < f->hactive_video*f->vactive_video/2; x+=2)
@@ -218,31 +207,21 @@ inline void mode4(uint32_t *fbase, uint32_t *imageaddr)
         // Call the coprocessor to process the 4 input pixels 
         // Instruction format: IN1, IN2, OUTPUT
 	    asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x4"));
-	    // asm(cpop1(CP_SIMPLE_ADD, "0x0", "0x2", "0x4"));
 
         // Store the 4 BW pixels to the output framebuffer
-        // std_c4(&fbase64[x]);
-        st_c4(&test1);
-        st_c5(&test2);
+        st_c4(&(fbase[x]));
+        st_c5(&(fbase[x+1]));
 
-        fbase[x] = test1;
-        fbase[x+1] = test2;
 
         //DEBUG
-        if(x == 0)
-        {
-            printf("First two pixels: 0x%x\n"
-                    "Next two pixels: 0x%x\n"
-                    "Output 1: 0x%x\n"
-                    "Output 2: 0x%x\n", imageaddr[x], imageaddr[x+1], test1, test2 );
-	        
-
-            asm(cpop1(CP_SIMPLE_ADD, "0x0", "0x2", "0x4"));
-
-            std_c4(&test);
-
-            printf("Test addition: %x\n\n", test);
-        }
+        // if(x == 0)
+        // {
+        //     printf("First two pixels: 0x%x\n"
+        //             "Next two pixels: 0x%x\n"
+        //             "Output 1: 0x%x\n"
+        //             "Output 2: 0x%x\n", imageaddr[x], imageaddr[x+1], fbase[x], fbase[x+1]);
+	    //     
+        // }
 	}
 }
 
