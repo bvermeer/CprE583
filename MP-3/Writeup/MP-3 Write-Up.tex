@@ -172,7 +172,18 @@ Next we looked at the two different modes that were present in \textit{frameloop
 %	SECTION 3
 %----------------------------------------------------------------------------------------
 \section{Hardware Coprocessor - Grayscale Conversion}
-In this section we were asked to read through the code in \textit{coproc.vhd} and \textit{coproc\_core.vhd} and provide a description of how the controller sends data to the core. After reading over the code in \textit{coproc.vhd} it became apparent that the LEON processor was passing the entire program instruction to the coprocessor. From there the coprocessor parses the instruction and extracts the op-code and source and destination register addresses. After getting the source register addresses it pulls the data directly from these registers. Therefore, the coprocessor has direct access to the LEON processor's registers. 
+In this section we were asked to read through the code in \textit{coproc.vhd} and \textit{coproc\_core.vhd} and provide a description of how the controller sends data to the core. After reading over the code in \textit{coproc.vhd} it became apparent that the LEON processor was passing the entire program instruction to the coprocessor. From there the coprocessor parses the instruction and extracts the op-code and source and destination register addresses. After getting the source register addresses it pulls the data directly from these registers. Therefore, the coprocessor has direct access to the LEON processor's registers. \\
+
+We based our hardware coprocessor for the grayscale conversion on the logic we used to implement the software grayscale conversion. Here is a hardware diagram for the coprocessor we designed:
+
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part5_files/Grayscale_coprocessor_dataflow.png}
+	 		\caption{Hardware Grayscale Conversion Coprocessor Dataflow Diagram}
+	 	\end{center}
+	 \end{figure}
+
+The structure for the hardware coprocessor ended up being fairly simple and easily parallelized. Because of these qualities we were able to make the coprocesser complete the operation in one clock cycle. Additionally, since we were able to output a 64-bit value from the coprocessor, we are able to process four individual pixels in that single clock cycle. Including the load and storing operations (for some reason we could only get the 32-bit load/store operations to work correctly) it would only take 5 clock cycles (assuming the load and store operations take one cycle each).
 
 
 %----------------------------------------------------------------------------------------
