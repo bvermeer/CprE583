@@ -1,4 +1,4 @@
-APP=hello
+APP=frameloop
 CC=sparc-elf-gcc
 CCOPT=-msoft-float -O1
 

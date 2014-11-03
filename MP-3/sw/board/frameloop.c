@@ -26,7 +26,7 @@
 
 /* Set the run mode as a compile-time constant */
 #ifndef MODE
-#define MODE 5
+#define MODE 4
 #endif
 
 
@@ -191,7 +191,38 @@ inline void mode3(uint32_t *fbase, uint32_t *imageaddr)
 /* Mode 4 - fixed-point grayscale conversion with coprocessor */
 inline void mode4(uint32_t *fbase, uint32_t *imageaddr)
 {
+	/* Y = 0.299*R + 0.587*G + 0.114*B */
+	/* 640x480 resolution, 16-bit pixels in 5-6-5 format  */
+	/* hactive_video = 640, vactive_video = 480 */
+	
+    uint32_t x;
 
+
+	for (x = 0; x < f->hactive_video*f->vactive_video/2; x+=2)
+	{
+        // Load the next 4 pixels to be processed (16 bits per pixel)
+        ld_c0(imageaddr[x]);
+        ld_c2(imageaddr[x+1]);
+
+        // Call the coprocessor to process the 4 input pixels 
+        // Instruction format: IN1, IN2, OUTPUT
+	    asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x4"));
+
+        // Store the 4 BW pixels to the output framebuffer
+        st_c4(&(fbase[x]));
+        st_c5(&(fbase[x+1]));
+
+
+        //DEBUG
+        // if(x == 0)
+        // {
+        //     printf("First two pixels: 0x%x\n"
+        //             "Next two pixels: 0x%x\n"
+        //             "Output 1: 0x%x\n"
+        //             "Output 2: 0x%x\n", imageaddr[x], imageaddr[x+1], fbase[x], fbase[x+1]);
+	    //     
+        // }
+	}
 }
 
 
