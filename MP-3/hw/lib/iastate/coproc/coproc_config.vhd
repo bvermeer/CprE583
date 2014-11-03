@@ -41,6 +41,12 @@ package coproc_config is
     busy : std_logic; --set to 1 immediately after receiving start='1', set to 0 when result is ready
   end record;
 
+  type pixel_type is record  
+    R : unsigned ( 15 downto 0) ;
+    G : unsigned ( 15 downto 0) ;
+    B : unsigned ( 15 downto 0) ;
+  end record;
+
   component coproc_core
   port(clk : in  std_logic;        
        rst : in  std_logic; 
@@ -54,7 +60,7 @@ package coproc_config is
   constant CP_COLOR_2_BW : std_logic_vector(8 downto 0) := "000000100";
  
   -- current control state
-  type unit_status_type is (free, started, ready);
+  type unit_status_type is (free, started, processing, ready);
   type store_status_type is (free, wait_a, wait_e, first_half, second_half);
   type load_status_type is (free, first_half, second_half);
 

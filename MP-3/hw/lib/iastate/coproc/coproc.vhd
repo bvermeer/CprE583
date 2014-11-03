@@ -434,6 +434,7 @@ begin
              (others => '0'); -- inputs could be different (e.g. change concatenation order), but probably don't need to be
              
   eui.op2 <= rfo1.data2 & rfo2.data2 when (eui.opcode = CP_SIMPLE_ADD) else
+             rfo1.data2 & rfo2.data2 when (eui.opcode = CP_COLOR_2_BW) else
              x"ffffffffffffffff" when (eui.opcode = CP_ANOTHER_OP) else -- add more when (eui.opcode) statements as needed
              (others => '0'); -- inputs could be different (e.g. change concatenation order), but probably don't need to be
 
