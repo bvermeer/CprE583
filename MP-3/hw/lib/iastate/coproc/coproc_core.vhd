@@ -68,25 +68,25 @@ begin
       control_state <= free; -- execution state
 
       --reset the upper shift register
-      up_shift.S4 <= (others => '0');
-      up_shift.S3 <= (others => '0');
-      up_shift.S2 <= (others => '0');
-      up_shift.S1 <= (others => '0');
+      up_shift.S4 <= 0;
+      up_shift.S3 <= 0;
+      up_shift.S2 <= 0;
+      up_shift.S1 <= 0;
 
       --reset the middle shift register
-      mid_shift.S4 <= (others => '0');
-      mid_shift.S3 <= (others => '0');
-      mid_shift.S2 <= (others => '0');
-      mid_shift.S1 <= (others => '0');
+      mid_shift.S4 <= 0;
+      mid_shift.S3 <= 0;
+      mid_shift.S2 <= 0;
+      mid_shift.S1 <= 0;
 
       --reset the lower shift register
-      low_shift.S4 <= (others => '0');
-      low_shift.S3 <= (others => '0');
-      low_shift.S2 <= (others => '0');
-      low_shift.S1 <= (others => '0');
+      low_shift.S4 <= 0;
+      low_shift.S3 <= 0;
+      low_shift.S2 <= 0;
+      low_shift.S1 <= 0;
 
-      temp1 <= (others => '0');
-      temp2 <= (others => '0');
+      temp1 <= 0;
+      temp2 <= 0;
       
     elsif rising_edge(clk) then
       if control_state = free then -- wait to receive a command
