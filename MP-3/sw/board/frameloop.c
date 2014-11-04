@@ -300,6 +300,13 @@ inline void mode5(uint32_t *fbase, uint32_t *imageaddr)
                     fbase2d[y][x] = tmp & 0xFFFF;
                 }
 
+		ul = uc;
+		uc = ur;
+		cl = c;
+		c = cr;
+		ll = lc;
+		lc = lr;
+
             }
         }
    
