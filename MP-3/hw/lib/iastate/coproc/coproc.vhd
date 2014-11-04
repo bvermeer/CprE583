@@ -172,12 +172,6 @@ begin
                 
                 control_state <= free;
               end if;
-            
-            when CP_ANOTHER_OP =>
-              if (euo.busy = '0' and eu_start = '0') then -- if done executing
-                -- possibly write the result in a different way; might take multiple cycles
-                control_state <= free;
-              end if;
               
             when others => -- invalid opcode
           end case;
@@ -433,7 +427,7 @@ begin
              
   eui.op2 <= rfo1.data2 & rfo2.data2 when (eui.opcode = CP_SIMPLE_ADD) else
              rfo1.data2 & rfo2.data2 when (eui.opcode = CP_COLOR_2_BW) else
-             rfo1.data2 & rfo2.data2 when (eui.opcode = CP_ANOTHER_OP) else
+             rfo1.data2 & rfo2.data2 when (eui.opcode = CP_EDGE_DETECT) else
 	     rfo1.data2 & rfo2.data2 when (eui.opcode = CP_PRELOAD) else -- add more when (eui.opcode) statements as needed
              (others => '0'); -- inputs could be different (e.g. change concatenation order), but probably don't need to be
 
