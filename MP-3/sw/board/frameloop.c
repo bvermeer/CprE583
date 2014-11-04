@@ -310,7 +310,45 @@ inline void mode5(uint32_t *fbase, uint32_t *imageaddr)
 }
 
 
+inline void mode6(uint32_t *fbase, uint32_t *imageaddr){
 
+	uint32_t x, y;
+
+	uint32_t (*imageaddr_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&imageaddr[0];
+	uint32_t (*fbase_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&fbase[0];
+
+	for(y = 1; y < (f->vactive_video - 1); y++){
+		ld_c0(imageaddr_2d[y-1][0]);
+		ld_c2(imageaddr_2d[y][0]);
+		ld_c4(imageaddr_2d[y+1][0]);
+
+		//Grayscale conversion
+		asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
+		asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+
+		asm(cpop1(CP_PRELOAD, "0x0", "0x2", "0x4"));
+
+		for (x = 1; x < (f->hactive_video - 1); x+=2)
+		{
+        	// Load the next 4 pixels to be processed (16 bits per pixel)
+        	ld_c0(imageaddr_2d[y-1][x]);
+		ld_c2(imageaddr_2d[y][x]);
+        	ld_c4(imageaddr_2d[y+1][x]);
+	
+        	// Call the coprocessor to process the 4 input pixels 
+        	// Instruction format: IN1, IN2, OUTPUT
+		    asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
+		    asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+
+		    asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
+
+        	// Store the 4 BW pixels to the output framebuffer
+        	st_c4(&(fbase_2d[y][x]));
+        	
+		}
+	}
+
+}
 
 /* Default mode - copies the current frame to the frame buffer */
 // inline void hackmode(uint32_t *fbase, uint32_t *imageaddr)

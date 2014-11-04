@@ -127,15 +127,12 @@ begin
                 cpop_rs2 := rs2_s;
                 
                 case cpi.d.inst(13 downto 5) is -- set the register addresses depending on the opcode
-                  when CP_SIMPLE_ADD | CP_COLOR_2_BW =>
+                  when CP_SIMPLE_ADD | CP_COLOR_2_BW | CP_PRELOAD | CP_EDGE_DETECT =>
                     -- assumes the address starts on an even register
                     rfi1.rd1addr <= rs1_s(4 downto 1);
                     rfi2.rd1addr <= rs1_s(4 downto 1);
                     rfi1.rd2addr <= rs2_s(4 downto 1);
                     rfi2.rd2addr <= rs2_s(4 downto 1);
-                    
-                  when CP_ANOTHER_OP =>
-                    -- different setup
                     
                   when others => -- invalid opcode
                 end case;
@@ -163,7 +160,7 @@ begin
           eu_start <= '0';
               
           case eui.opcode is
-            when CP_SIMPLE_ADD | CP_COLOR_2_BW =>
+            when CP_SIMPLE_ADD | CP_COLOR_2_BW | CP_PRELOAD | CP_EDGE_DETECT =>
               if (euo.busy = '0' and eu_start = '0') then -- if done executing
                 -- write the result
                 rfi1.wraddr <= cpop_rd(4 downto 1);
@@ -430,12 +427,14 @@ begin
   -- COPROC INPUT CONTROL
   eui.op1 <= rfo1.data1 & rfo2.data1 when (eui.opcode = CP_SIMPLE_ADD) else
              rfo1.data1 & rfo2.data1 when (eui.opcode = CP_COLOR_2_BW) else
-             x"ffffffffffffffff" when (eui.opcode = CP_ANOTHER_OP) else -- add more when (eui.opcode) statements as needed
+             rfo1.data1 & rfo2.data1 when (eui.opcode = CP_EDGE_DETECT) else 
+	     rfo1.data1 & rfo2.data1 when (eui.opcode = CP_PRELOAD) else -- add more when (eui.opcode) statements as needed
              (others => '0'); -- inputs could be different (e.g. change concatenation order), but probably don't need to be
              
   eui.op2 <= rfo1.data2 & rfo2.data2 when (eui.opcode = CP_SIMPLE_ADD) else
              rfo1.data2 & rfo2.data2 when (eui.opcode = CP_COLOR_2_BW) else
-             x"ffffffffffffffff" when (eui.opcode = CP_ANOTHER_OP) else -- add more when (eui.opcode) statements as needed
+             rfo1.data2 & rfo2.data2 when (eui.opcode = CP_ANOTHER_OP) else
+	     rfo1.data2 & rfo2.data2 when (eui.opcode = CP_PRELOAD) else -- add more when (eui.opcode) statements as needed
              (others => '0'); -- inputs could be different (e.g. change concatenation order), but probably don't need to be
 
 

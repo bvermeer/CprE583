@@ -50,6 +50,9 @@ begin
   variable opc : std_logic_vector(8 downto 0);
    
   variable pixel1, pixel2, pixel3, pixel4 : pixel_type;
+  variable up_shift, mid_shift, low_shift : pixel_shift_type;
+
+  variable temp1, temp2 : signed(19 downto 0);
 
   variable y1, y2, y3, y4 : std_logic_vector ( 15 downto 0) ;
 
@@ -63,6 +66,27 @@ begin
       
       cpo.res <= (others => '0'); -- result
       control_state <= free; -- execution state
+
+      --reset the upper shift register
+      up_shift.S4 <= (others => '0');
+      up_shift.S3 <= (others => '0');
+      up_shift.S2 <= (others => '0');
+      up_shift.S1 <= (others => '0');
+
+      --reset the middle shift register
+      mid_shift.S4 <= (others => '0');
+      mid_shift.S3 <= (others => '0');
+      mid_shift.S2 <= (others => '0');
+      mid_shift.S1 <= (others => '0');
+
+      --reset the lower shift register
+      low_shift.S4 <= (others => '0');
+      low_shift.S3 <= (others => '0');
+      low_shift.S2 <= (others => '0');
+      low_shift.S1 <= (others => '0');
+
+      temp1 <= (others => '0');
+      temp2 <= (others => '0');
       
     elsif rising_edge(clk) then
       if control_state = free then -- wait to receive a command
@@ -108,8 +132,34 @@ begin
               control_state <= ready;
             
             
-            when CP_ANOTHER_OP =>
-              -- probably do different setups for different opcodes
+            when CP_EDGE_DETECT =>
+              -- shift the old data over and load in new data
+		up_shift.S4 := up_shift.S2;
+		up_shift.S3 := up_shift.S1;
+		up_shift.S2 := signed( "0000" & op1(63 downto 48) );
+		up_shift.S1 := signed( "0000" & op1(47 downto 32) );
+
+		mid_shift.S4 := mid_shift.S2;
+		mid_shift.S3 := mid_shift.S1;
+		mid_shift.S2 := signed( "0000" & op1(31 downto 16) );
+		mid_shift.S1 := signed( "0000" & op1(15 downto 0) );
+
+		low_shift.S4 := low_shift.S2;
+		low_shift.S3 := low_shift.S1;
+		low_shift.S2 := signed( "0000" & op2(63 downto 48) );
+		low_shift.S1 := signed( "0000" & op2(47 downto 32) );
+
+		control_state <= started;
+
+	    when CP_PRELOAD =>
+		up_shift.S2 := signed( "0000" & op1(63 downto 48) );
+		up_shift.S1 := signed( "0000" & op1(47 downto 32) );
+		mid_shift.S2 := signed( "0000" & op1(31 downto 16) );
+		mid_shift.S1 := signed( "0000" & op1(15 downto 0) );
+		low_shift.S2 := signed( "0000" & op2(63 downto 48) );
+		low_shift.S1 := signed( "0000" & op2(47 downto 32) );
+
+		control_state <= ready;
               
             when others => -- invalid opcode; add more CP_OP constants in coproc_config as needed
           end case;
@@ -121,8 +171,30 @@ begin
             cpo.res <= std_logic_vector(signed(op1) + signed(op2));
             control_state <= ready;
 
-          when CP_ANOTHER_OP =>
-            -- do some other operations instead
+	  when CP_EDGE_DETECT =>
+	    temp1 := (mid_shift.S3 * 8) - up_shift.S4 - up_shift.S3 - up_shift.S2 - mid_shift.S4 - mid_shift.S2 - low_shift.S4 - low_shift.S3 - 			low_shift.S2;
+	    temp2 := (mid_shift.S2 * 8) - up_shift.S3 - up_shift.S2 - up_shift.S1 - mid_shift.S3 - mid_shift.S1 - low_shift.S3 - low_shift.S2 -
+			low_shift.S1;
+
+	    if(temp1 > 65535) then
+		cpo.res(63 downto 48) <= X"FFFF";
+	    elsif(temp1 < 0) then
+		cpo.res(63 downto 48) <= X"0000";
+	    else
+		cpo.res(63 downto 48) <= std_logic_vector(temp1(15 downto 0));
+	    end if;
+
+	    if(temp2 > 65535) then
+		cpo.res(47 downto 32) <= X"FFFF";
+	    elsif(temp2 < 0) then
+		cpo.res(47 downto 32) <= X"0000";
+	    else
+		cpo.res(47 downto 32) <= std_logic_vector(temp2(15 downto 0));
+	    end if;
+
+	    cpo.res(31 downto 0) <= X"00000000";
+            
+	    control_state <= ready;
           
           when others => -- invalid opcode
         end case;
