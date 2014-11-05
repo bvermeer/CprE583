@@ -202,8 +202,8 @@ The structure for the hardware coprocessor ended up being fairly simple and easi
 %   SECTION 4
 %----------------------------------------------------------------------------------------
 \section{Hardware Coprocessor - Edge Detection}
-In this section, the task given is to modify the coprocessor to be able to perform greyscale edge detection. In order to implement this ability correctly, some changes had to be made to the files \textit{coproc.h}, \textit{coproc.vhd}, and \textit{coproc\_core.vhd}. The changes to the files were to provide two new instructions, CP\_PRELOAD, and CP\_EDGE\_DETECT.
-\\
+In this section, the task given is to modify the coprocessor to be able to perform greyscale edge detection. In order to implement this ability correctly, some changes had to be made to the files \textit{coproc.h}, \textit{coproc.vhd}, and \textit{coproc\_core.vhd}. The changes to the files were to provide two new instructions, CP\_PRELOAD, and CP\_EDGE\_DETECT. \\
+
 In order to increase throughput, and potentially accelerate the process, the conclusion was made that the best approach to performing edge detection is as follows. Since the laplacian edge detection operation performed on a pixel requires the values of the eight pixels that surround it, a design decision made was that edge detection will not be performed on the pixels on the edge of the screen. 
 
 	 \begin{figure}[H]
