@@ -250,7 +250,11 @@ Here is a screenshot of our performance results of the software edge detection:
 %----------------------------------------------------------------------------------------
 \section{Hardware Coprocessor - Edge Detection}
 
-For the hardware edge detection implementation, we added two new opcodes - CP_PRELOAD and CP_EDGE_DETECT. In coproc_core, we essentially implemented 3 shift registers each being 64-bits long. Using CP_PRELOAD, we shift in the next pixels to be apply the Laplacian edge detection on. CP_EDGE_DETECT consists of two cycles. In the first cycle, it performs the internal shifting of the shift registers and in the next cycle, it performs the Laplacian edge detection computation. Since we have 64-bit (4 pixels) shift registers, we are able to compute the Laplacian value for two center pixels simultaneously.\\
+For the hardware edge detection implementation, we added two new opcodes - CP\_PRELOAD and 
+
+CP\_EDGE\_DETECT. In coproc\_core, we essentially implemented 3 shift registers each being 64-bits long. Using CP\_PRELOAD, we shift in the next pixels to be apply the Laplacian edge detection on. 
+
+CP\_EDGE\_DETECT consists of two cycles. In the first cycle, it performs the internal shifting of the shift registers and in the next cycle, it performs the Laplacian edge detection computation. Since we have 64-bit (4 pixels) shift registers, we are able to compute the Laplacian value for two center pixels simultaneously.\\
 
 We perform our grayscale conversion in line with the edge detection computation, unlike the software implementation in which we first converted all the images to grayscale and then performed the edge detection. With the hardware implementation we were able to observe a 2.75 speedup when compared to the software implementation of the edge detection algorithm.\\
 
