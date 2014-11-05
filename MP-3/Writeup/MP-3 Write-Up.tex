@@ -166,6 +166,19 @@ After getting acquainted with the build environment for the LEON processor, we d
 
 Next we looked at the two different modes that were present in \textit{frameloop.c} to determine what they did. Mode 1 merely copies the current image from memory to the controller without applying any filters. Mode 2 is much more involved than mode 1. In mode 2, a filter is applied to each frame being transferred from memory to the buffer in the controller. Currently, two RGB values are being computed for each image frame and an OR is performed between the two RGB values to obtain the final the image frame that will be sent to the controller.
 
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part4_files/Floating_Point_Grayscale_Screenshot.png}
+	 		\caption{Floating Point Software Grayscale Conversion Results}
+	 	\end{center}
+	 \end{figure}
+	 
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part4_files/Fixed_point_grayscale_resluts_screenshot.png}
+	 		\caption{Fixed Point Software Grayscale Conversion Results}
+	 	\end{center}
+	 \end{figure}
 
 
 %----------------------------------------------------------------------------------------
@@ -192,8 +205,43 @@ The structure for the hardware coprocessor ended up being fairly simple and easi
 In this section, the task given is to modify the coprocessor to be able to perform greyscale edge detection. In order to implement this ability correctly, some changes had to be made to the files \textit{coproc.h}, \textit{coproc.vhd}, and \textit{coproc\_core.vhd}. The changes to the files were to provide two new instructions, CP\_PRELOAD, and CP\_EDGE\_DETECT.\\
 In order to increase throughput, and potentially accelerate the process, the conclusion was made that the best approach to performing edge detection is as follows. Since the laplacian edge detection operation performed on a pixel requires the values of the eight pixels that surround it, a design decision made was that edge detection will not be performed on the pixels on the edge of the screen. 
 
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part5_files/Fixed_point_greyscale_coprocessor_results.png}
+	 		\caption{Fixed Point Coprocessor Grayscale Conversion Results}
+	 	\end{center}
+	 \end{figure}
+
+
 %----------------------------------------------------------------------------------------
 %	SECTION 4
+%----------------------------------------------------------------------------------------
+\section{Software Edge Detection}
+
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part6_files/Software_Laplace_edge_software_performance.png}
+	 		\caption{Software Laplace Edge Detection Results}
+	 	\end{center}
+	 \end{figure}
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 5
+%----------------------------------------------------------------------------------------
+\section{Hardware Coprocessor - Edge Detection}
+
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part7_files/Hardware_Laplace_edge_detection_performance.png}
+	 		\caption{Hardware Laplace Edge Detection Results}
+	 	\end{center}
+	 \end{figure}
+
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 6
 %----------------------------------------------------------------------------------------
 \section{Conclusion}
 
