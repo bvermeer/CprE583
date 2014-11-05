@@ -198,20 +198,15 @@ We based our hardware coprocessor for the grayscale conversion on the logic we u
 
 The structure for the hardware coprocessor ended up being fairly simple and easily parallelized. Because of these qualities we were able to make the coprocessor complete the operation in one clock cycle. Additionally, since we were able to output a 64-bit value from the coprocessor, we are able to process four individual pixels in that single clock cycle. Including the load and storing operations (for some reason we could only get the 32-bit load/store operations to work correctly) it would only take 5 clock cycles (assuming the load and store operations take one cycle each).
 
-%----------------------------------------------------------------------------------------
-%   SECTION 4
-%----------------------------------------------------------------------------------------
-\section{Hardware Coprocessor - Edge Detection}
-In this section, the task given is to modify the coprocessor to be able to perform greyscale edge detection. In order to implement this ability correctly, some changes had to be made to the files \textit{coproc.h}, \textit{coproc.vhd}, and \textit{coproc\_core.vhd}. The changes to the files were to provide two new instructions, CP\_PRELOAD, and CP\_EDGE\_DETECT.\\
-
-In order to increase throughput, and potentially accelerate the process, the conclusion was made that the best approach to performing edge detection is as follows. Since the laplacian edge detection operation performed on a pixel requires the values of the eight pixels that surround it, a design decision made was that edge detection will not be performed on the pixels on the edge of the screen. 
-
 	 \begin{figure}[H]
 	 	\begin{center}
 	 		\includegraphics[scale=0.6]{../part5_files/Fixed_point_greyscale_coprocessor_results.png}
 	 		\caption{Fixed Point Coprocessor Grayscale Conversion Results}
 	 	\end{center}
 	 \end{figure}
+
+
+
 
 \subsection{Coprocessor Interface Instructions}
 	The LDC - Load Coprocessor Register instruction loads a word (32-bits) from memory into a coprocessor register.\\
@@ -249,6 +244,23 @@ Here is a screenshot of our performance results of the software edge detection:
 %	SECTION 5
 %----------------------------------------------------------------------------------------
 \section{Hardware Coprocessor - Edge Detection}
+In this section, the task given is to modify the coprocessor to be able to perform greyscale edge detection. In order to implement this ability correctly, some changes had to be made to the files \textit{coproc.h}, \textit{coproc.vhd}, and \textit{coproc\_core.vhd}. The changes to the files were to provide two new instructions, CP\_PRELOAD, and CP\_EDGE\_DETECT.\\
+In order to increase throughput, and potentially accelerate the process, the conclusion was made that the best approach to performing edge detection is as follows. Since the laplacian edge detection operation performed on a pixel requires the values of the eight pixels that surround it, a design decision made was that edge detection will not be performed on the pixels on the edge of the screen. Another design decision that was made was to load in six pixels at a time, to reduce the number of loads that were called, and allows for the loading and storing of 32-bit values. The six pixels that are loaded in to the coprocessor are the [$y - 1$][$x - 1$], [$y - 1$][$x$], [$y$][$x - 1$], [$y$][$x$], [$y + 1$][$x - 1$], and [$y + 1$][$x$] pixels used for the calculation. \\
+
+Due to the pixel loading requirement outlined above, each time the algorithm reaches the next row in the frame, a set of six pixels have to be loaded at the beginning to guarantee correct edge detection. With this in mind, the instruction CP\_PRELOAD was created to perform just that, to load the first six pixels at the beginning of a new row. \\
+
+Once the preload is complete, then the row is traversed to perform edge detection on each pixel in the row up to the second to last pixel. For each element in the row, grayscale conversion is performed on the six pixels, and the pixels are then loaded into the coprocessor through the CP\_EDGE\_DETECT instruction. The instruction performs the edge detection operation as shown in figure 6. \\
+
+Another decision made was when the greyscale conversion of the pixels were performed, the greyscale pixels are stored in internal registers of the coprocessor as opposed to writing them out to a temporary framebuffer. This decision was made so that cycles would not be wasted reading and writing to external memory, also, there was no need to wait for the greyscale conversion to finish before edge detection was performed on the pixels. Using the hardware to perform the greyscale conversion, the instruction had to be called twice. Once with the top four pixels, then again with the bottom two pixels with random junk that is not used. Once conversion is complete, the registers that the greyscaled pixels are at are set as inputs to the CP\_EDGE\_DETECT instruction. Edge detection is performed on two adjacent pixels, and the result is returned as a 32-bit result.\\
+
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.45]{./edge_detection.png}
+			\caption{Hardware Laplace Edge Detection diagram}
+		\end{center}
+	\end{figure}
+
+The decisions made that were outlined above have resulted in a speed up of 2.75 in the execution time of the operation, as shown in figure 7.
 
 For the hardware edge detection implementation, we added two new opcodes - CP\_PRELOAD and 
 
