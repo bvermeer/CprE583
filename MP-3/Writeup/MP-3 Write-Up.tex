@@ -32,46 +32,46 @@
 \usepackage{subcaption}
 
 %Add code formating
-\usepackage{listings}
-\lstset{tabsize=2}
+%\usepackage{listings}
+%\lstset{tabsize=2}
 
 %Add support for floating images
 \usepackage{float}
 
 %Define the style for VHDL
-\lstdefinelanguage{VHDL}{
-  morekeywords={
-    library,use,all,entity,is,port,in,out,end,architecture,of,
-    begin,and
-  },
-  morecomment=[l]--
-}
+%\lstdefinelanguage{VHDL}{
+%  morekeywords={
+%    library,use,all,entity,is,port,in,out,end,architecture,of,
+%    begin,and
+%  },
+%  morecomment=[l]--
+%}
 
 %Give the VHDL code color
-\usepackage{xcolor}
-\colorlet{keyword}{blue!100!black!80}
-\colorlet{comment}{green!90!black!90}
-\lstdefinestyle{vhdl}{
-  language     = VHDL,
-  basicstyle   = \ttfamily,
-  keywordstyle = \color{keyword}\bfseries,
-  commentstyle = \color{comment}
-}
+%\usepackage{xcolor}
+%\colorlet{keyword}{blue!100!black!80}
+%\colorlet{comment}{green!90!black!90}
+%\lstdefinestyle{vhdl}{
+%  language     = VHDL,
+%  basicstyle   = \ttfamily,
+%  keywordstyle = \color{keyword}\bfseries,
+%  commentstyle = \color{comment}
+%}
 
 \usepackage{amssymb}
 \usepackage{amsmath}
 
 %Highlight command
-\usepackage{tikz}
-\usepackage{xspace}
-\usetikzlibrary{decorations.pathmorphing}
-\newcommand\hl[1]{%
-    \tikz[baseline,%
-      decoration={random steps,amplitude=1pt,segment length=15pt},%
-      outer sep=-15pt, inner sep = 0pt%
-    ]%
-   \node[decorate,rectangle,fill=yellow,anchor=text]{#1\xspace};%
-}%
+%\usepackage{tikz}
+%\usepackage{xspace}
+%\usetikzlibrary{decorations.pathmorphing}
+%\newcommand\hl[1]{%
+%    \tikz[baseline,%
+%      decoration={random steps,amplitude=1pt,segment length=15pt},%
+%      outer sep=-15pt, inner sep = 0pt%
+%    ]%
+%   \node[decorate,rectangle,fill=yellow,anchor=text]{#1\xspace};%
+%}%
 
 % Create the header and footer
 \usepackage{fancyhdr}
@@ -196,7 +196,7 @@ We based our hardware coprocessor for the grayscale conversion on the logic we u
 	 	\end{center}
 	 \end{figure}
 
-The structure for the hardware coprocessor ended up being fairly simple and easily parallelized. Because of these qualities we were able to make the coprocesser complete the operation in one clock cycle. Additionally, since we were able to output a 64-bit value from the coprocessor, we are able to process four individual pixels in that single clock cycle. Including the load and storing operations (for some reason we could only get the 32-bit load/store operations to work correctly) it would only take 5 clock cycles (assuming the load and store operations take one cycle each).
+The structure for the hardware coprocessor ended up being fairly simple and easily parallelized. Because of these qualities we were able to make the coprocessor complete the operation in one clock cycle. Additionally, since we were able to output a 64-bit value from the coprocessor, we are able to process four individual pixels in that single clock cycle. Including the load and storing operations (for some reason we could only get the 32-bit load/store operations to work correctly) it would only take 5 clock cycles (assuming the load and store operations take one cycle each).
 
 	 \begin{figure}[H]
 	 	\begin{center}
@@ -205,11 +205,29 @@ The structure for the hardware coprocessor ended up being fairly simple and easi
 	 	\end{center}
 	 \end{figure}
 
+\subsection{Coprocessor Interface Instructions}
+	The LDC - Load Coprocessor Register instruction loads a word (32-bits) from memory into a coprocessor register.\\
+	
+	The LDDC - Load Double Coprocessor Register instruction loads a double-word (64-bits) from memory into a coprocessor register pair.\\
+	
+	The STC - Store Coprocessor instruction stores the value of a coporcessor register into memory.\\
+	
+	The STDC - Store Double Coprocessor instruction stores the value of a coprocessory register pair (with consecutive odd and even addresses) into memory.\\
+	
+	The opcode for both the LD and ST class of operations is 11 but they are differentiated by their op3 value.\\
+	
+	The CPOP1 - Coprocessor Operate 8 bits (opcode + op3) to denote that the instruction needs to be executed on the coprocessor. The remaining 24 bits are used to signify the 2 source registers, 1 destination register and the operation to be performed. All the register addresses refer to the coprocessor registers.
+
+
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4
 %----------------------------------------------------------------------------------------
 \section{Software Edge Detection}
+
+For this part, we created a new Mode 5 to implement the edge detection in software. In this mode, we first called the software implementation of the grayscale conversion and then applied the Laplacian edge detector on the image, going left to right and top to bottom. We implemented this using two nested for loops, with the inner one traversing across the columns and the inner one traversing across the rows.\\
+
+Here is a screenshot of our performance results of the software edge detection:
 
 	 \begin{figure}[H]
 	 	\begin{center}
