@@ -166,6 +166,19 @@ After getting acquainted with the build environment for the LEON processor, we d
 
 Next we looked at the two different modes that were present in \textit{frameloop.c} to determine what they did. Mode 1 merely copies the current image from memory to the controller without applying any filters. Mode 2 is much more involved than mode 1. In mode 2, a filter is applied to each frame being transferred from memory to the buffer in the controller. Currently, two RGB values are being computed for each image frame and an OR is performed between the two RGB values to obtain the final the image frame that will be sent to the controller.
 
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part4_files/Floating_Point_Grayscale_Screenshot.png}
+	 		\caption{Floating Point Software Grayscale Conversion Results}
+	 	\end{center}
+	 \end{figure}
+	 
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part4_files/Fixed_point_grayscale_resluts_screenshot.png}
+	 		\caption{Fixed Point Software Grayscale Conversion Results}
+	 	\end{center}
+	 \end{figure}
 
 
 %----------------------------------------------------------------------------------------
@@ -185,9 +198,43 @@ We based our hardware coprocessor for the grayscale conversion on the logic we u
 
 The structure for the hardware coprocessor ended up being fairly simple and easily parallelized. Because of these qualities we were able to make the coprocesser complete the operation in one clock cycle. Additionally, since we were able to output a 64-bit value from the coprocessor, we are able to process four individual pixels in that single clock cycle. Including the load and storing operations (for some reason we could only get the 32-bit load/store operations to work correctly) it would only take 5 clock cycles (assuming the load and store operations take one cycle each).
 
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part5_files/Fixed_point_greyscale_coprocessor_results.png}
+	 		\caption{Fixed Point Coprocessor Grayscale Conversion Results}
+	 	\end{center}
+	 \end{figure}
+
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4
+%----------------------------------------------------------------------------------------
+\section{Software Edge Detection}
+
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part6_files/Software_Laplace_edge_software_performance.png}
+	 		\caption{Software Laplace Edge Detection Results}
+	 	\end{center}
+	 \end{figure}
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 5
+%----------------------------------------------------------------------------------------
+\section{Hardware Coprocessor - Edge Detection}
+
+	 \begin{figure}[H]
+	 	\begin{center}
+	 		\includegraphics[scale=0.6]{../part7_files/Hardware_Laplace_edge_detection_performance.png}
+	 		\caption{Hardware Laplace Edge Detection Results}
+	 	\end{center}
+	 \end{figure}
+
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 6
 %----------------------------------------------------------------------------------------
 \section{Conclusion}
 
