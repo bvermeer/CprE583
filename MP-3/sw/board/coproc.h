@@ -24,9 +24,10 @@
 
 
 /* Define coprocssor-specfic opcodes - used as string arguments to cpop macros (use 9 LSb) */
-#define CP_ANOTHER_OP "0x001"
+#define CP_EDGE_DETECT "0x001"
 #define CP_SIMPLE_ADD "0x002"
 #define CP_COLOR_2_BW "0x004"
+#define CP_PRELOAD "0x008"
 
 
 /* Coprocessor operator 1 */
@@ -56,7 +57,7 @@ inline void cp_en()
 /* An example illustrating use of the cpop1 instruction */
 inline void cpop1_use()
 {
-	asm(cpop1(CP_ANOTHER_OP, "0x0", "0x0", "0x0"));
+	//asm(cpop1(CP_ANOTHER_OP, "0x0", "0x0", "0x0"));
 }
 
 

@@ -55,13 +55,20 @@ package coproc_config is
   end component;
 
   -- opcodes; they do not need to be 1-hot encode as shown here
-  constant CP_ANOTHER_OP : std_logic_vector(8 downto 0) := "000000001";
+  constant CP_EDGE_DETECT : std_logic_vector(8 downto 0) := "000000001";
   constant CP_SIMPLE_ADD : std_logic_vector(8 downto 0) := "000000010";
   constant CP_COLOR_2_BW : std_logic_vector(8 downto 0) := "000000100";
+  constant CP_PRELOAD : std_logic_vector(8 downto 0) := "000001000";
  
   -- current control state
   type unit_status_type is (free, started, ready);
   type store_status_type is (free, wait_a, wait_e, first_half, second_half);
   type load_status_type is (free, first_half, second_half);
+  type pixel_shift_type is record
+    S1 : signed (19 downto 0);
+    S2 : signed (19 downto 0);
+    S3 : signed (19 downto 0);
+    S4 : signed (19 downto 0);
+  end record;
 
 end coproc_config;
