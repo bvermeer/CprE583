@@ -172,8 +172,9 @@ begin
             control_state <= ready;
 
 	  when CP_EDGE_DETECT =>
-	    temp1 := (mid_shift.S3 * 8) - up_shift.S4 - up_shift.S3 - up_shift.S2 - mid_shift.S4 - mid_shift.S2 - low_shift.S4 - low_shift.S3 - 			low_shift.S2;
-	    temp2 := (mid_shift.S2 * 8) - up_shift.S3 - up_shift.S2 - up_shift.S1 - mid_shift.S3 - mid_shift.S1 - low_shift.S3 - low_shift.S2 -
+	    temp1 := (8 * mid_shift.S3) - up_shift.S4 - up_shift.S3 - up_shift.S2 - mid_shift.S4 - mid_shift.S2 - low_shift.S4 - low_shift.S3 -
+ 			low_shift.S2;
+	    temp2 := (8 * mid_shift.S2) - up_shift.S3 - up_shift.S2 - up_shift.S1 - mid_shift.S3 - mid_shift.S1 - low_shift.S3 - low_shift.S2 -
 			low_shift.S1;
 
 	    if(temp1 > 65535) then
