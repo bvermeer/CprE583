@@ -198,17 +198,15 @@ We based our hardware coprocessor for the grayscale conversion on the logic we u
 
 The structure for the hardware coprocessor ended up being fairly simple and easily parallelized. Because of these qualities we were able to make the coprocessor complete the operation in one clock cycle. Additionally, since we were able to output a 64-bit value from the coprocessor, we are able to process four individual pixels in that single clock cycle. Including the load and storing operations (for some reason we could only get the 32-bit load/store operations to work correctly) it would only take 5 clock cycles (assuming the load and store operations take one cycle each).
 
-%----------------------------------------------------------------------------------------
-%   SECTION 4
-%----------------------------------------------------------------------------------------
-\section{Hardware Coprocessor - Edge Detection}
-
 	 \begin{figure}[H]
 	 	\begin{center}
 	 		\includegraphics[scale=0.6]{../part5_files/Fixed_point_greyscale_coprocessor_results.png}
 	 		\caption{Fixed Point Coprocessor Grayscale Conversion Results}
 	 	\end{center}
 	 \end{figure}
+
+
+
 
 \subsection{Coprocessor Interface Instructions}
 	The LDC - Load Coprocessor Register instruction loads a word (32-bits) from memory into a coprocessor register.\\
@@ -264,7 +262,11 @@ Another decision made was when the greyscale conversion of the pixels were perfo
 
 The decisions made that were outlined above have resulted in a speed up of 2.75 in the execution time of the operation, as shown in figure 7.
 
-For the hardware edge detection implementation, we added two new opcodes - CP_PRELOAD and CP_EDGE_DETECT. In coproc_core, we essentially implemented 3 shift registers each being 64-bits long. Using CP_PRELOAD, we shift in the next pixels to be apply the Laplacian edge detection on. CP_EDGE_DETECT consists of two cycles. In the first cycle, it performs the internal shifting of the shift registers and in the next cycle, it performs the Laplacian edge detection computation. Since we have 64-bit (4 pixels) shift registers, we are able to compute the Laplacian value for two center pixels simultaneously.\\
+For the hardware edge detection implementation, we added two new opcodes - CP\_PRELOAD and 
+
+CP\_EDGE\_DETECT. In coproc\_core, we essentially implemented 3 shift registers each being 64-bits long. Using CP\_PRELOAD, we shift in the next pixels to be apply the Laplacian edge detection on. 
+
+CP\_EDGE\_DETECT consists of two cycles. In the first cycle, it performs the internal shifting of the shift registers and in the next cycle, it performs the Laplacian edge detection computation. Since we have 64-bit (4 pixels) shift registers, we are able to compute the Laplacian value for two center pixels simultaneously.\\
 
 We perform our grayscale conversion in line with the edge detection computation, unlike the software implementation in which we first converted all the images to grayscale and then performed the edge detection. With the hardware implementation we were able to observe a 2.75 speedup when compared to the software implementation of the edge detection algorithm.\\
 
