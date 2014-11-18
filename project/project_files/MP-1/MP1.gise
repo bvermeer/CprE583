@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<generated_project xmlns="http://www.xilinx.com/XMLSchema" xmlns:xil_pn="http://www.xilinx.com/XMLSchema">
+
+  <!--                                                          -->
+
+  <!--             For tool use only. Do not edit.              -->
+
+  <!--                                                          -->
+
+  <!-- ProjectNavigator created generated project file.         -->
+
+  <!-- For use in tracking generated file and other information -->
+
+  <!-- allowing preservation of process status.                 -->
+
+  <!--                                                          -->
+
+  <!-- Copyright (c) 1995-2011 Xilinx, Inc.  All rights reserved. -->
+
+  <version xmlns="http://www.xilinx.com/XMLSchema">11.1</version>
+
+  <sourceproject xmlns="http://www.xilinx.com/XMLSchema" xil_pn:fileType="FILE_XISE" xil_pn:name="MP1.xise"/>
+
+  <files xmlns="http://www.xilinx.com/XMLSchema">
+    <file xil_pn:fileType="FILE_NCD" xil_pn:name="MP1_top_guide.ncd" xil_pn:origination="imported"/>
+  </files>
+
+  <transforms xmlns="http://www.xilinx.com/XMLSchema">
+    <transform xil_pn:end_ts="1347240390" xil_pn:in_ck="-884904841007704747" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1347240390">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="MP1.vhd"/>
+      <outfile xil_pn:name="MP1_tb.vhd"/>
+      <outfile xil_pn:name="MP1_top_driver.vhd"/>
+      <outfile xil_pn:name="baud_cnt.vhd"/>
+      <outfile xil_pn:name="echo.vhd"/>
+      <outfile xil_pn:name="mmu_uart_top.vhd"/>
+      <outfile xil_pn:name="process_data.vhd"/>
+      <outfile xil_pn:name="rx.vhd"/>
+      <outfile xil_pn:name="tx.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1347240390" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-8177977950184157701" xil_pn:start_ts="1347240390">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1347240390" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="8455652147719685417" xil_pn:start_ts="1347240390">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1347240390" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="4611135691895907725" xil_pn:start_ts="1347240390">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1347240390" xil_pn:in_ck="-884904841007704747" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1347240390">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="MP1.vhd"/>
+      <outfile xil_pn:name="MP1_tb.vhd"/>
+      <outfile xil_pn:name="MP1_top_driver.vhd"/>
+      <outfile xil_pn:name="baud_cnt.vhd"/>
+      <outfile xil_pn:name="echo.vhd"/>
+      <outfile xil_pn:name="mmu_uart_top.vhd"/>
+      <outfile xil_pn:name="process_data.vhd"/>
+      <outfile xil_pn:name="rx.vhd"/>
+      <outfile xil_pn:name="tx.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1347240413" xil_pn:in_ck="-884904841007704747" xil_pn:name="TRAN_MSimulateBehavioralModel" xil_pn:prop_ck="3059053937850560255" xil_pn:start_ts="1347240390">
+      <status xil_pn:value="FailedRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+  </transforms>
+
+</generated_project>
