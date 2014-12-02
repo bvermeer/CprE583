@@ -1,0 +1,1 @@
+-intstyle "ise" -incremental -lib "secureip" -o "/home/rszambre/cpre583/project/PRNDG/testbench_isim_beh.exe" -prj "/home/rszambre/cpre583/project/PRNDG/testbench_beh.prj" "work.testbench" 
