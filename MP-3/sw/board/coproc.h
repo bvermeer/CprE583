@@ -57,7 +57,7 @@ inline void cp_en()
 /* An example illustrating use of the cpop1 instruction */
 inline void cpop1_use()
 {
-	asm(cpop1(CP_ANOTHER_OP, "0x0", "0x0", "0x0"));
+	//asm(cpop1(CP_ANOTHER_OP, "0x0", "0x0", "0x0"));
 }
 
 

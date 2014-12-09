@@ -47,7 +47,7 @@ int main()
 
 	t1 = clock(); /* Get the start time */
 
-    for (i = 0; i < NFRAMES; i++)
+    for (i = 0; i < NFRAMES-1; i++)
     {
     	switch(MODE)
     	{
@@ -68,6 +68,8 @@ int main()
     		case 5: /* Mode to do the Laplacian edge detection in software  */
     			mode5(fbase, imageaddr);
     			break;
+            case 6:
+                mode6(fbase, imageaddr);
     		// case 7: /* "Hack" the screen! */
     		// 	hackmode(fbase, imageaddr);
     		// 	break;
@@ -174,12 +176,12 @@ inline void mode3(uint32_t *fbase, uint32_t *imageaddr)
 		Y1 = 158*R1 + 152*G1 + 60*B1;
 		Y2 = 158*R2 + 152*G2 + 60*B2;
 
-		R1 = (Y1 & 0x3E00) >> 9;
-		G1 = R1*2;
+		G1 = (Y1 & 0x3F00) >> 8;
+		R1 = G1 >> 1;
 		B1 = R1;
 
-		R2 = (Y2 & 0x3E00) >> 9;
-		G2 = R2*2;
+		G2 = (Y2 & 0x3F00) >> 8;
+		R2 = G2 >> 1;
 		B2 = R2;
 
 
@@ -241,7 +243,7 @@ inline void mode5(uint32_t *fbase, uint32_t *imageaddr)
     // Test to see if assumption on array index is correct.
 	uint16_t (*fbase2d)[f->hactive_video] = (uint16_t (*)[f->hactive_video])&fbase[0];
     
-    uint32_t *grayscale_img = (uint32_t *)malloc(2*f->hactive_video*f->vactive_video);
+    uint32_t *grayscale_img = (uint32_t *)malloc(f->hactive_video*f->vactive_video*2);
 
     uint16_t (*grayscale_img2d)[f->hactive_video]= (uint16_t (*)[f->hactive_video])&grayscale_img[0];
 
@@ -321,39 +323,258 @@ inline void mode6(uint32_t *fbase, uint32_t *imageaddr){
 
 	uint32_t x, y;
 
-	uint32_t (*imageaddr_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&imageaddr[0];
+	// uint32_t (*imageaddr_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&imageaddr[0];
 	uint32_t (*fbase_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&fbase[0];
 
-	for(y = 1; y < (f->vactive_video - 1); y++){
-		ld_c0(imageaddr_2d[y-1][0]);
-		ld_c2(imageaddr_2d[y][0]);
-		ld_c4(imageaddr_2d[y+1][0]);
+    // int32_t u1, u2, u3, u4, m1, m2, m3, m4, l1, l2, l3, l4, out1, out2;
 
-		//Grayscale conversion
-		asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
-		asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+    // uint32_t du1, du2, du3, du4, dm1, dm2, dm3, dm4, dl1, dl2, dl3, dl4;
+
+
+
+    //DEBUG
+    uint32_t *grayscale_img = (uint32_t *)malloc(f->hactive_video*f->vactive_video*2);
+
+    uint32_t (*grayscale_img2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&grayscale_img[0];
+
+    if(grayscale_img == 0)
+    {
+        printf("ERROR: Out of memory!\n");
+    }
+
+    // Used the fixed point software grayscale mode to get a grayscale image
+    mode4(grayscale_img, imageaddr);
+
+
+	for(y = 1; y < (f->vactive_video) - 1; y++){
+		ld_c0(grayscale_img2d[y-1][0]);
+		ld_c1(grayscale_img2d[y][0]);
+		ld_c2(grayscale_img2d[y+1][0]);
+
 
 		asm(cpop1(CP_PRELOAD, "0x0", "0x2", "0x4"));
 
-		for (x = 1; x < (f->hactive_video - 1); x+=2)
+		for (x = 1; x < (f->hactive_video)/2 - 1; x++)
 		{
-        	// Load the next 4 pixels to be processed (16 bits per pixel)
-        	ld_c0(imageaddr_2d[y-1][x]);
-		ld_c2(imageaddr_2d[y][x]);
-        	ld_c4(imageaddr_2d[y+1][x]);
-	
-        	// Call the coprocessor to process the 4 input pixels 
-        	// Instruction format: IN1, IN2, OUTPUT
-		    asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
-		    asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+            ld_c0(grayscale_img2d[y-1][x]);
+		    ld_c1(grayscale_img2d[y][x]);
+            ld_c2(grayscale_img2d[y+1][x]);
 
 		    asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
 
-        	// Store the 4 BW pixels to the output framebuffer
-        	st_c4(&(fbase_2d[y][x]));
-        	
-		}
-	}
+            st_c4(&(fbase_2d[y][x]));
+        }
+    }
+
+   // Free the memory we used for the temporary image
+   free(grayscale_img); 
+
+
+	// for(y = 1; y < (f->vactive_video) - 1; y++){
+	// 	ld_c0(imageaddr_2d[y-1][0]);
+	// 	ld_c2(imageaddr_2d[y][0]);
+	// 	ld_c4(imageaddr_2d[y+1][0]);
+
+	// 	//Grayscale conversion
+	// 	asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
+	// 	asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+
+	// 	asm(cpop1(CP_PRELOAD, "0x0", "0x2", "0x4"));
+
+	// 	for (x = 1; x < (f->hactive_video)/2 - 1; x++)
+	// 	{
+    //     	// Load the next 4 pixels to be processed (16 bits per pixel)
+    //     	// ld_c0(imageaddr_2d[y-1][x]);
+	// 		// ld_c2(imageaddr_2d[y][x]);
+    //     	// ld_c4(imageaddr_2d[y+1][x]);
+    //     	
+    //    		// if(x == y){
+	// 		// 	ld_c0(0);
+	// 		// 	ld_c1();
+	// 		// 	ld_c2(0);
+	// 		// }else if(x == (y - 1) || x == (y + 20)){
+	// 		// 	ld_c0(0);
+	// 		// 	ld_c1(2016);
+	// 		// 	ld_c2(0);
+	// 		// }else{
+	// 		// 	ld_c0(0);
+	// 		// 	ld_c1(0);
+	// 		// 	ld_c2(0);
+	// 		// }
+	// 
+    //         
+    //         
+
+    //     	// Call the coprocessor to process the 4 input pixels 
+    //     	// Instruction format: IN1, IN2, OUTPUT
+	// 	    // asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
+	// 	    // asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+
+	// 	    // asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
+
+    //         
+    //         //DEBUG input
+    //         if(x%1)
+    //         {
+    //     	    ld_c0(imageaddr_2d[y-1][x]);
+	// 		    ld_c2(imageaddr_2d[y][x]);
+    //     	    ld_c4(imageaddr_2d[y+1][x]);
+
+	// 	        asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
+	// 	        asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+
+	// 	        asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
+
+    //             st_c4(&(fbase_2d[y][x]));
+    //         }
+    //         else
+    //         {
+    //     	    ld_c6(imageaddr_2d[y-1][x]);
+	// 		    ld_c8(imageaddr_2d[y][x]);
+    //     	    ld_c10(imageaddr_2d[y+1][x]);
+    //             
+	// 	        asm(cpop1(CP_COLOR_2_BW, "0x6", "0x8", "0x6"));
+	// 	        asm(cpop1(CP_COLOR_2_BW, "0xa", "0x8", "0xa"));
+
+	// 	        asm(cpop1(CP_EDGE_DETECT, "0x6", "0xa", "0xc"));
+    //         
+    //             st_c12(&(fbase_2d[y][x]));
+    //         }
+    //         
+    //         
+    //         
+    //     	// Store the 4 BW pixels to the output framebuffer
+    //     	// st_c4(&(fbase_2d[y][x]));
+    //     	
+    //        // Debug printout
+    //        u1 = (grayscale_img2d[y-1][x-1] & 0xFFFF0000) >> 16;
+    //        u2 = (grayscale_img2d[y-1][x-1] & 0xFFFF);
+    //        u3 = (grayscale_img2d[y-1][x] & 0xFFFF0000) >> 16;
+    //        u4 = (grayscale_img2d[y-1][x] & 0xFFFF);
+    //        m1 = (grayscale_img2d[y][x-1] & 0xFFFF0000) >> 16;
+    //        m2 = (grayscale_img2d[y][x-1] & 0xFFFF);
+    //        m3 = (grayscale_img2d[y][x] & 0xFFFF0000) >> 16;
+    //        m4 = (grayscale_img2d[y][x] & 0xFFFF);
+    //        l1 = (grayscale_img2d[y+1][x-1] & 0xFFFF0000) >> 16;
+    //        l2 = (grayscale_img2d[y+1][x-1] & 0xFFFF);
+    //        l3 = (grayscale_img2d[y+1][x] & 0xFFFF0000) >> 16;
+    //        l4 = (grayscale_img2d[y+1][x] & 0xFFFF);
+
+    //        // out1 = (8*m2) - u1 - u2 - u3 - m1 - m3 - l1 - l2 - l3;
+    //        // out2 = (8*m3) - u2 - u3 - u4 - m2 - m4 - l2 - l3 - l4; 
+
+
+    //        if(out1 > 65535)
+    //        {
+    //            out1 = 0xFFFF;
+    //        }
+    //        else if(out1 < 0)
+    //        {
+    //            out1 = 0;
+    //        }
+
+    //        if(out2 > 65535)
+    //        {
+    //            out2 = 0xFFFF;
+    //        }
+    //        else if(out2 < 0)
+    //        {
+    //            out2 = 0;
+    //        }
+
+    //        
+    //        // if(((out1 & 0xFFFF) != ((fbase_2d[y][x] & 0xFFFF0000) >> 16)) || ((out2 & 0xFFFF) != ((fbase_2d[y][x] & 0xFFFF))))
+    //        // { 
+    //            if(x%1)
+    //            {
+    //                 st_c0(&du4);
+    //                 du3 = du4 & 0xFFFF;
+    //                 du4 = (du4 & 0xFFFF0000) >> 16;
+
+    //                 st_c1(&dm4);
+    //                 dm3 = dm4 & 0xFFFF;
+    //                 dm4 = (dm4 & 0xFFFF0000) >> 16;
+
+    //                 st_c2(&dl4);
+    //                 dl3 = dl4 & 0xFFFF;
+    //                 dl4 = (dl4 & 0xFFFF0000) >> 16;
+
+    //                 st_c6(&du2);
+    //                 du1 = du2 & 0xFFFF;
+    //                 du2 = (du2 & 0xFFFF0000) >> 16;
+
+    //                 st_c7(&dm2);
+    //                 dm1 = dm2 & 0xFFFF;
+    //                 dm2 = (dm2 & 0xFFFF0000) >> 16;
+
+    //                 st_c10(&dl2);
+    //                 dl1 = dl2 & 0xFFFF;
+    //                 dl2 = (dl2 & 0xFFFF0000) >> 16;
+
+
+    //                 // Test for coprocessor correct functionality
+    //                 out1 = (8*dm2) - du1 - du2 - du3 - dm1 - dm3 - dl1 - dl2 - dl3;
+    //                 out2 = (8*dm3) - du2 - du3 - du4 - dm2 - dm4 - dl2 - dl3 - dl4; 
+
+
+    //                 printf("x = %d, y = %d\n\n", x, y);
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n", u1, u2, u3, du1, du2, du3); 
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |    Expected Output: 0x%x   Actual Output: 0x%x\n", m1, m2, m3, dm1, dm2, dm3, out1 & 0xFFFF, (fbase_2d[y][x] & 0xFFFF0000) >> 16);
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n\n", l1, l2, l3, dl1, dl2, dl3); 
+
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n", u2, u3, u4, du2, du3, du4); 
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |    Expected Output: 0x%x   Actual Output: 0x%x\n", m2, m3, m4, dm2, dm2, dm4, out2 & 0xFFFF, (fbase_2d[y][x] & 0xFFFF));
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n\n", l2, l3, l4, dl2, dl3, dl4); 
+
+    //                 printf("----------------------------------------\n\n");
+    //            }
+    //            else
+    //            {
+    //                 st_c6(&du4);
+    //                 du3 = du4 & 0xFFFF;
+    //                 du4 = (du4 & 0xFFFF0000) >> 16;
+
+    //                 st_c7(&dm4);
+    //                 dm3 = dm4 & 0xFFFF;
+    //                 dm4 = (dm4 & 0xFFFF0000) >> 16;
+
+    //                 st_c10(&dl4);
+    //                 dl3 = dl4 & 0xFFFF;
+    //                 dl4 = (dl4 & 0xFFFF0000) >> 16;
+
+    //                 st_c0(&du2);
+    //                 du1 = du2 & 0xFFFF;
+    //                 du2 = (du2 & 0xFFFF0000) >> 16;
+
+    //                 st_c1(&dm2);
+    //                 dm1 = dm2 & 0xFFFF;
+    //                 dm2 = (dm2 & 0xFFFF0000) >> 16;
+
+    //                 st_c2(&dl2);
+    //                 dl1 = dl2 & 0xFFFF;
+    //                 dl2 = (dl2 & 0xFFFF0000) >> 16;
+
+    //                 // Test for coprocessor correct functionality
+    //                 out1 = (8*dm2) - du1 - du2 - du3 - dm1 - dm3 - dl1 - dl2 - dl3;
+    //                 out2 = (8*dm3) - du2 - du3 - du4 - dm2 - dm4 - dl2 - dl3 - dl4; 
+
+    //                 printf("x = %d, y = %d\n\n", x, y);
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n", u1, u2, u3, du1, du2, du3); 
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |    Expected Output: 0x%x   Actual Output: 0x%x\n", m1, m2, m3, dm1, dm2, dm3, out1 & 0xFFFF, (fbase_2d[y][x] & 0xFFFF0000) >> 16);
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n\n", l1, l2, l3, dl1, dl2, dl3); 
+
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n", u2, u3, u4, du2, du3, du4); 
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |    Expected Output: 0x%x   Actual Output: 0x%x\n", m2, m3, m4, dm2, dm3, dm4, out2 & 0xFFFF, (fbase_2d[y][x] & 0xFFFF));
+    //                 printf("| 0x%4x | 0x%4x | 0x%4x |  | 0x%4x | 0x%4x | 0x%4x |\n\n", l2, l3, l4, dl2, dl3, dl4); 
+
+    //                 printf("----------------------------------------\n\n");
+
+    //            }
+    //        // }
+    //        
+
+	// 	}
+	// }
 
 }
 
