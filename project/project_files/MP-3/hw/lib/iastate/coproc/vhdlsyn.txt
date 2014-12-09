@@ -1,4 +1,0 @@
-coproc_config.vhd
-coproc_core.vhd
-coproc.vhd
-
