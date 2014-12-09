@@ -26,7 +26,7 @@
 
 /* Set the run mode as a compile-time constant */
 #ifndef MODE
-#define MODE 4
+#define MODE 6
 #endif
 
 
@@ -323,7 +323,7 @@ inline void mode6(uint32_t *fbase, uint32_t *imageaddr){
 
 	uint32_t x, y;
 
-	// uint32_t (*imageaddr_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&imageaddr[0];
+	uint32_t (*imageaddr_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&imageaddr[0];
 	uint32_t (*fbase_2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&fbase[0];
 
     // int32_t u1, u2, u3, u4, m1, m2, m3, m4, l1, l2, l3, l4, out1, out2;
@@ -333,84 +333,87 @@ inline void mode6(uint32_t *fbase, uint32_t *imageaddr){
 
 
     //DEBUG
-    uint32_t *grayscale_img = (uint32_t *)malloc(f->hactive_video*f->vactive_video*2);
+    // uint32_t *grayscale_img = (uint32_t *)malloc(f->hactive_video*f->vactive_video*2);
 
-    uint32_t (*grayscale_img2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&grayscale_img[0];
+    // uint32_t (*grayscale_img2d)[f->hactive_video/2]= (uint32_t (*)[f->hactive_video/2])&grayscale_img[0];
 
-    if(grayscale_img == 0)
-    {
-        printf("ERROR: Out of memory!\n");
-    }
+    // if(grayscale_img == 0)
+    // {
+    //     printf("ERROR: Out of memory!\n");
+    // }
 
-    // Used the fixed point software grayscale mode to get a grayscale image
-    mode4(grayscale_img, imageaddr);
-
-
-	for(y = 1; y < (f->vactive_video) - 1; y++){
-		ld_c0(grayscale_img2d[y-1][0]);
-		ld_c1(grayscale_img2d[y][0]);
-		ld_c2(grayscale_img2d[y+1][0]);
-
-
-		asm(cpop1(CP_PRELOAD, "0x0", "0x2", "0x4"));
-
-		for (x = 1; x < (f->hactive_video)/2 - 1; x++)
-		{
-            ld_c0(grayscale_img2d[y-1][x]);
-		    ld_c1(grayscale_img2d[y][x]);
-            ld_c2(grayscale_img2d[y+1][x]);
-
-		    asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
-
-            st_c4(&(fbase_2d[y][x]));
-        }
-    }
-
-   // Free the memory we used for the temporary image
-   free(grayscale_img); 
+    // // Used the fixed point software grayscale mode to get a grayscale image
+    // mode4(grayscale_img, imageaddr);
 
 
 	// for(y = 1; y < (f->vactive_video) - 1; y++){
-	// 	ld_c0(imageaddr_2d[y-1][0]);
-	// 	ld_c2(imageaddr_2d[y][0]);
-	// 	ld_c4(imageaddr_2d[y+1][0]);
+	// 	ld_c0(grayscale_img2d[y-1][0]);
+	// 	ld_c1(grayscale_img2d[y][0]);
+	// 	ld_c2(grayscale_img2d[y+1][0]);
 
-	// 	//Grayscale conversion
-	// 	asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
-	// 	asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
 
 	// 	asm(cpop1(CP_PRELOAD, "0x0", "0x2", "0x4"));
 
 	// 	for (x = 1; x < (f->hactive_video)/2 - 1; x++)
 	// 	{
-    //     	// Load the next 4 pixels to be processed (16 bits per pixel)
-    //     	// ld_c0(imageaddr_2d[y-1][x]);
-	// 		// ld_c2(imageaddr_2d[y][x]);
-    //     	// ld_c4(imageaddr_2d[y+1][x]);
-    //     	
-    //    		// if(x == y){
-	// 		// 	ld_c0(0);
-	// 		// 	ld_c1();
-	// 		// 	ld_c2(0);
-	// 		// }else if(x == (y - 1) || x == (y + 20)){
-	// 		// 	ld_c0(0);
-	// 		// 	ld_c1(2016);
-	// 		// 	ld_c2(0);
-	// 		// }else{
-	// 		// 	ld_c0(0);
-	// 		// 	ld_c1(0);
-	// 		// 	ld_c2(0);
-	// 		// }
-	// 
-    //         
-    //         
+    //         ld_c0(grayscale_img2d[y-1][x]);
+	// 	    ld_c1(grayscale_img2d[y][x]);
+    //         ld_c2(grayscale_img2d[y+1][x]);
 
-    //     	// Call the coprocessor to process the 4 input pixels 
-    //     	// Instruction format: IN1, IN2, OUTPUT
-	// 	    // asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
-	// 	    // asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+	// 	    asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
 
-	// 	    // asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
+    //         st_c4(&(fbase_2d[y][x]));
+    //     }
+    // }
+
+    // // Free the memory we used for the temporary image
+    // free(grayscale_img); 
+
+
+
+
+
+	 for(y = 1; y < (f->vactive_video) - 1; y++){
+	 	ld_c0(imageaddr_2d[y-1][0]);
+	 	ld_c2(imageaddr_2d[y][0]);
+	 	ld_c4(imageaddr_2d[y+1][0]);
+
+	 	//Grayscale conversion
+	 	asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
+	 	asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+
+	 	asm(cpop1(CP_PRELOAD, "0x0", "0x2", "0x4"));
+
+	 	for (x = 1; x < (f->hactive_video)/2 - 1; x++)
+	 	{
+         	 // Load the next 4 pixels to be processed (16 bits per pixel)
+         	 ld_c0(imageaddr_2d[y-1][x]);
+	 		 ld_c2(imageaddr_2d[y][x]);
+         	 ld_c4(imageaddr_2d[y+1][x]);
+         	
+        		// if(x == y){
+	 		// 	ld_c0(0);
+	 		// 	ld_c1();
+	 		// 	ld_c2(0);
+	 		// }else if(x == (y - 1) || x == (y + 20)){
+	 		// 	ld_c0(0);
+	 		// 	ld_c1(2016);
+	 		// 	ld_c2(0);
+	 		// }else{
+	 		// 	ld_c0(0);
+	 		// 	ld_c1(0);
+	 		// 	ld_c2(0);
+	 		// }
+	 
+             
+             
+
+         	 // Call the coprocessor to process the 4 input pixels 
+         	 // Instruction format: IN1, IN2, OUTPUT
+	 	     asm(cpop1(CP_COLOR_2_BW, "0x0", "0x2", "0x0"));
+	 	     asm(cpop1(CP_COLOR_2_BW, "0x4", "0x2", "0x2"));
+
+	 	     asm(cpop1(CP_EDGE_DETECT, "0x0", "0x2", "0x4"));
 
     //         
     //         //DEBUG input
@@ -443,8 +446,8 @@ inline void mode6(uint32_t *fbase, uint32_t *imageaddr){
     //         
     //         
     //         
-    //     	// Store the 4 BW pixels to the output framebuffer
-    //     	// st_c4(&(fbase_2d[y][x]));
+         	// Store the 4 BW pixels to the output framebuffer
+         	 st_c4(&(fbase_2d[y][x]));
     //     	
     //        // Debug printout
     //        u1 = (grayscale_img2d[y-1][x-1] & 0xFFFF0000) >> 16;
@@ -573,8 +576,8 @@ inline void mode6(uint32_t *fbase, uint32_t *imageaddr){
     //        // }
     //        
 
-	// 	}
-	// }
+	 	}
+	 }
 
 }
 

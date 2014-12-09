@@ -1,0 +1,22 @@
+Running: /remote/Xilinx/13.4/ISE/bin/lin64/unwrapped/fuse -intstyle ise -incremental -lib secureip -o /home/rszambre/cpre583/project/PRNDG/testbench_isim_beh.exe -prj /home/rszambre/cpre583/project/PRNDG/testbench_beh.prj work.testbench 
+ISim O.87xd (signature 0x8ddf5b5d)
+Number of CPUs detected in this system: 16
+Turning on mult-threading, number of parallel sub-compilation jobs: 32 
+Determining compilation order of HDL files
+Parsing VHDL file "/home/rszambre/cpre583/project/PRNDG/prndg.vhd" into library work
+Parsing VHDL file "/home/rszambre/cpre583/project/PRNDG/prndg_TB.vhd" into library work
+Starting static elaboration
+Completed static elaboration
+Fuse Memory Usage: 93820 KB
+Fuse CPU Usage: 920 ms
+Compiling package standard
+Compiling package std_logic_1164
+Compiling architecture behavorial of entity random [\random(4)\]
+Compiling architecture behavior of entity testbench
+Time Resolution for simulation is 1ps.
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 5 VHDL Units
+Built simulation executable /home/rszambre/cpre583/project/PRNDG/testbench_isim_beh.exe
+Fuse Memory Usage: 2230332 KB
+Fuse CPU Usage: 960 ms
+GCC CPU Usage: 600 ms

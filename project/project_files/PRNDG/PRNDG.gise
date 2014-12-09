@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<generated_project xmlns="http://www.xilinx.com/XMLSchema" xmlns:xil_pn="http://www.xilinx.com/XMLSchema">
+
+  <!--                                                          -->
+
+  <!--             For tool use only. Do not edit.              -->
+
+  <!--                                                          -->
+
+  <!-- ProjectNavigator created generated project file.         -->
+
+  <!-- For use in tracking generated file and other information -->
+
+  <!-- allowing preservation of process status.                 -->
+
+  <!--                                                          -->
+
+  <!-- Copyright (c) 1995-2011 Xilinx, Inc.  All rights reserved. -->
+
+  <version xmlns="http://www.xilinx.com/XMLSchema">11.1</version>
+
+  <sourceproject xmlns="http://www.xilinx.com/XMLSchema" xil_pn:fileType="FILE_XISE" xil_pn:name="PRNDG.xise"/>
+
+  <files xmlns="http://www.xilinx.com/XMLSchema">
+    <file xil_pn:fileType="FILE_LSO" xil_pn:name=".lso"/>
+    <file xil_pn:fileType="FILE_LOG" xil_pn:name="fuse.log"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="isim"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_CMD" xil_pn:name="isim.cmd"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_LOG" xil_pn:name="isim.log"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_MODELSIM_CMD" xil_pn:name="random.fdo"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_MODELSIM_CMD" xil_pn:name="random_gen.fdo"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="random_gen.prj"/>
+    <file xil_pn:fileType="FILE_XST_STX" xil_pn:name="random_gen.stx"/>
+    <file xil_pn:fileType="FILE_XST" xil_pn:name="random_gen.xst"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_MODELSIM_CMD" xil_pn:name="testbench.fdo"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="testbench.prj"/>
+    <file xil_pn:fileType="FILE_XST_STX" xil_pn:name="testbench.stx"/>
+    <file xil_pn:fileType="FILE_XST" xil_pn:name="testbench.xst"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="testbench_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testbench_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="testbench_isim_beh.wdb"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="testbench_stx_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_MODELSIM_LOG" xil_pn:name="vsim.wlf"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="work"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_INI" xil_pn:name="xilinxsim.ini"/>
+    <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xst"/>
+  </files>
+
+  <transforms xmlns="http://www.xilinx.com/XMLSchema">
+    <transform xil_pn:end_ts="1417545618" xil_pn:name="TRAN_copyInitialToAbstractSimulation" xil_pn:start_ts="1417545618">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1417545618" xil_pn:in_ck="-961265596565020821" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1417545618">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="prndg.vhd"/>
+      <outfile xil_pn:name="prndg_TB.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1417545618" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="4434870115928851094" xil_pn:start_ts="1417545618">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1417545618" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="-8681248348864795388" xil_pn:start_ts="1417545618">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1417545618" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="-2195190311279131733" xil_pn:start_ts="1417545618">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1417545618" xil_pn:in_ck="-961265596565020821" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1417545618">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="prndg.vhd"/>
+      <outfile xil_pn:name="prndg_TB.vhd"/>
+    </transform>
+    <transform xil_pn:end_ts="1417545618" xil_pn:in_ck="-961265596565020821" xil_pn:name="TRAN_MSimulateBehavioralModel" xil_pn:prop_ck="-7741847843370713625" xil_pn:start_ts="1417545618">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="testbench.fdo"/>
+      <outfile xil_pn:name="vsim.wlf"/>
+      <outfile xil_pn:name="work"/>
+    </transform>
+  </transforms>
+
+</generated_project>

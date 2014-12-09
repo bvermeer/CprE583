@@ -1,0 +1,5 @@
+set -tmpdir "/home/rszambre/cpre583/project/PRNDG/xst/projnav.tmp"
+set -xsthdpdir "/home/rszambre/cpre583/project/PRNDG/xst"
+elaborate
+-ifn random_gen.prj
+-ifmt mixed
