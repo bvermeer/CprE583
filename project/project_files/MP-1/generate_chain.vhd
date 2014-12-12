@@ -7,7 +7,7 @@ entity generate_chain is port(
 	clk		: in std_logic;
 	reset		: in std_logic;
 	debug		: in std_logic;				--indicates if in debug mode
-	seed		: in std_logic_vector(255 downto 0);	--the 256 bit seed from prndg.vhd
+	seed		: in unsigned(255 downto 0);		--the 256 bit seed from prndg.vhd
 	TX_busy_n	: in std_logic;				--active low, use to know when to send data out
 	send_data	: out std_logic;			--tell UART to transmit a byte
 	data_out	: out std_logic_vector(7 downto 0);	--data to send to the UART
@@ -23,7 +23,13 @@ architecture mixed of generate_chain is
 -------------------------------------------
 -- 	signal declarations		 --
 -------------------------------------------
+signal seed_in_reg	:	unsigned(255 downto 0);		--register for the seed value that is inputted
+signal candidate_reg	:	unsigned(255 downto 0);		--register to store the current candidate
 
 begin
+	process(clk)
+	begin
+	
+	end process;
 
 end mixed;
