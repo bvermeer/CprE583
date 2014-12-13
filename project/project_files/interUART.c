@@ -7,18 +7,18 @@
 #include <termios.h> /* POSIX terminal control definitions */
 
 //int open_port(void);
-
-// this just sends and receives a byte from the 
+char convToNumb(char ch);
+char convToChar(char ch);
 
 int main()
 {
   int fd = 0;
   int r = 0;
   int w = 0;
-  char ucmd[32];
-  //char ucmd[5];
+  //char ucmd[32];
+  char ucmd[5];
   //char rdch[5];
-  char rdch;
+  char rdch[32];
   struct termios options, oldtio;
 
   fd = open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY); // opening up the serial port
@@ -66,6 +66,8 @@ int main()
     if (ucmd[0]=='q')		// exit the program if you encounter a q
       break;
 
+    ucmd[0] = convToNumb(ucmd[0]); // converting the number character to 
+
     w = write(fd, &ucmd[0], 1);	// otherwise, transmit the data
     if (w < 0)
       printf("write failed!\n");
@@ -77,11 +79,30 @@ int main()
       printf("read failed!\n");
     else
       if ( r > 0 )
-        printf("%d chars read: %c\n", r, rdch);
+      {
+        rdch[0] = convToChar(rdch[0]);
+        printf("%d chars read: %c\n", r, rdch[0]);
+      }
 
   }
   
   tcsetattr(fd, TCSANOW, &oldtio);
   close(fd);
   return 0;
+}
+
+/* Converting number character to its actual number 
+	ch : character 48-57
+*/
+char convToNumb(char ch)
+{
+  return ch - 48;
+}
+
+/* Converting actual number to its number character
+	ch : character 0-9
+*/
+char convToChar(char ch)
+{
+  return ch + 48;
 }
