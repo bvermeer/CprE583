@@ -6,6 +6,8 @@
 #include <errno.h>   /* Error number definitions */
 #include <termios.h> /* POSIX terminal control definitions */
 
+/* Range of seed: 0 to 65535*/
+
 //int open_port(void);
 char convToNumb(char ch);
 char convToChar(char ch);
@@ -61,12 +63,16 @@ int main()
   {
 
     printf("> "); 		// command prompt
-    fgets(ucmd,32, stdin); 	// obtaining user's data
+    fgets(ucmd,5, stdin); 	// obtaining user's data
+
+    //int numToSend = 9;		//UNCOMMENT THIS FOR TO SEND THE INTEGER
 
     if (ucmd[0]=='q')		// exit the program if you encounter a q
       break;
 
     ucmd[0] = convToNumb(ucmd[0]); // converting the number character to 
+
+    //ucmd[0] = (char) numToSend;	//UNCOMMENT THIS TO SEND THE INTEGER
 
     w = write(fd, &ucmd[0], 1);	// otherwise, transmit the data
     if (w < 0)
