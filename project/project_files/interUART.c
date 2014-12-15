@@ -14,14 +14,12 @@ char convToChar(char ch);
 
 int main()
 {
-  int fd = 0;
-  int r = 0;
-  int w = 0;
-  //char ucmd[32];
-  char ucmd[5];
-  //char rdch[5];
-  char rdch[32];
-  struct termios options, oldtio;
+  int fd = 0;				// file descriptor for UART
+  int r = 0;				// number of bytes read from the UART
+  int w = 0;				// number of bytes written to the UART
+  char ucmd[6];				// allowing only a character long input.
+  char rdch[32]; 			// will decide the size of rdch soon
+  struct termios options, oldtio; 	// necessary structures for UART setup
 
   fd = open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY); // opening up the serial port
 
@@ -32,12 +30,10 @@ int main()
     exit(1);
   }
   
-  
-  
   // setting up the port
 
   fcntl(fd, F_SETFL); 			        // FNDELAY option will cause the read function to return immediately if there is no data to be read
-						// instead of stalling
+						// instead of stalling (NOT SURE WHY THIS IS NOT WORKING WITH THE FNDELAY OPTION SET OFF)
 
   tcgetattr(fd, &oldtio);			// saving the default settings of the port
   tcgetattr(fd, &options);			// getting the current settings of the port
@@ -63,22 +59,48 @@ int main()
   {
 
     printf("> "); 		// command prompt
-    fgets(ucmd,5, stdin); 	// obtaining user's data
-
-    //int numToSend = 9;		//UNCOMMENT THIS FOR TO SEND THE INTEGER
+    fgets(ucmd, 6, stdin); 	// obtaining user's data (6 because NULL is automatically appended at the end. This way we can read 5 characters)
 
     if (ucmd[0]=='q')		// exit the program if you encounter a q
       break;
 
-    ucmd[0] = convToNumb(ucmd[0]); // converting the number character to 
+    if (ucmd[0] >= '0' && ucmd[0] <= '9')
+    {  //user entered a number with it being a 5-digit number at the max
+	short i; // loop control variable
+  	unsigned short num; // corresponding number of a character
+	unsigned short finNum; // final number corresponding to the user's input
+	unsigned short unit = 10000; // number to multiply the number by
+	 
+	for (i = 0; i < 5; i++) // 5 = sizeof(ucmd) - 1 because the seed will be 5 characters long and ucmd[5] will be a NULL
+	{
+	  if ( ucmd[i] == '\n')
+	  {
+	    finNum = finNum / (unit*10); // if the user entered less than 5 digits, then extracting the right number
+	    break;
+	  }
+	  num = convToNumb(ucmd[i]); // extracting the number from user's input
+	  finNum = finNum + num*unit; // adding the extracted number to the final number at the right place
+	  unit = unit/10; // scaling unit for next number to be added
+	}
 
-    //ucmd[0] = (char) numToSend;	//UNCOMMENT THIS TO SEND THE INTEGER
+	unsigned char  chOne = ( char ) ( finNum & 0x00FF );
+	unsigned char  chTwo = ( char ) ( ( finNum & 0xFF00 ) >> 8 );	
+ 	
+	write(fd, &chOne, 1);
+	usleep(100);		// NOT SURE IF THIS IS NECESSARY
+	write(fd, &chTwo, 1);
+    }
+      else
+    {  // user entered a character
+       w = write(fd, &ucmd[0], 1);
+    }
 
-    w = write(fd, &ucmd[0], 1);	// otherwise, transmit the data
     if (w < 0)
       printf("write failed!\n");
 
     sleep(1); // this is an overshoot of wait time
+
+// NEED TO WORK ON READING PART AFTER CONFIGURING THE HARDWARE TO BE ABLE TO SEND TWO CONSECUTIVE BYTES
 
     r = read(fd, &rdch, sizeof(rdch));	// read data after transmitting
     if ( r < 0 )
