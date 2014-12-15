@@ -32,7 +32,7 @@ int main()
   
   // setting up the port
 
-  fcntl(fd, F_SETFL); 			        // FNDELAY option will cause the read function to return immediately if there is no data to be read
+  fcntl(fd, F_SETFL, 0); 			// FNDELAY option will cause the read function to return immediately if there is no data to be read
 						// instead of stalling (NOT SURE WHY THIS IS NOT WORKING WITH THE FNDELAY OPTION SET OFF)
 
   tcgetattr(fd, &oldtio);			// saving the default settings of the port
@@ -98,7 +98,7 @@ int main()
     if (w < 0)
       printf("write failed!\n");
 
-    sleep(1); // this is an overshoot of wait time
+    //sleep(1); // this is an overshoot of wait time
 
 // NEED TO WORK ON READING PART AFTER CONFIGURING THE HARDWARE TO BE ABLE TO SEND TWO CONSECUTIVE BYTES
 
