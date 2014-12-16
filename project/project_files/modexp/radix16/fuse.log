@@ -1,0 +1,37 @@
+Running: /remote/Xilinx/13.4/ISE/bin/lin64/unwrapped/fuse -intstyle ise -incremental -lib unisims_ver -lib unimacro_ver -lib xilinxcorelib_ver -lib secureip -o /home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_bridge_test_v_isim_beh.exe -prj /home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_bridge_test_v_beh.prj work.mm_bridge_test_v work.glbl 
+ISim O.87xd (signature 0x8ddf5b5d)
+Number of CPUs detected in this system: 16
+Turning on mult-threading, number of parallel sub-compilation jobs: 32 
+Determining compilation order of HDL files
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mult16.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_radix16_pipe.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_setup.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_rom2.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_rom.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_residue.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_radix16_mult.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_bridge.v" into library work
+Analyzing Verilog file "/home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_bridge_test.v" into library work
+Analyzing Verilog file "/remote/Xilinx/13.4/ISE//verilog/src/glbl.v" into library work
+Starting static elaboration
+Completed static elaboration
+Fuse Memory Usage: 94852 KB
+Fuse CPU Usage: 950 ms
+Compiling module mm_rom
+Compiling module mm_rom2
+Compiling module mm_residue
+Compiling module DSP48(AREG=32'b01,BREG=32'b01,B_...
+Compiling module mult16
+Compiling module mm_setup
+Compiling module mm_radix16_pipe
+Compiling module mm_radix16_mult
+Compiling module mm_bridge(MM_BRIDGE_BASEADDR=42'...
+Compiling module mm_bridge_test_v
+Compiling module glbl
+Time Resolution for simulation is 1ps.
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 11 Verilog Units
+Built simulation executable /home/bvermeer/cpre583/CprE583/project/project_files/modexp/radix16/mm_bridge_test_v_isim_beh.exe
+Fuse Memory Usage: 2232444 KB
+Fuse CPU Usage: 1120 ms
+GCC CPU Usage: 2760 ms

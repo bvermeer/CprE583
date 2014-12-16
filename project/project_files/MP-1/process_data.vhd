@@ -45,9 +45,8 @@ architecture mixed of process_data is
 
 -- Component declarations
 
--- Component that echos data recived from the PC
--- back to the PC.
-component echo
+-- Component that recieves and parses commands from the PC
+component cmd_parse
 port
 (
   clk       : in  STD_LOGIC;
@@ -143,9 +142,8 @@ data_out <= data_out_reg;
 
 -- Component instantiations
 
--- Component that echos data recived from the PC
--- back to the PC.
-echo1 : echo
+-- Component that recieves and parses commands from the PC
+cmd_parse1 : cmd_parse
 port map
 ( 
   clk       => clk,

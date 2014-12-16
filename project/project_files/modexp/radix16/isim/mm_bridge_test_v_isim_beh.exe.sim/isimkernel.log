@@ -1,0 +1,10 @@
+Command line:
+   mm_bridge_test_v_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  38652
+
+Mon Dec  8 15:53:15 2014
+
+
+ Elaboration Time: 0.04 sec
