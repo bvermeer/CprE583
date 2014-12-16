@@ -60,6 +60,19 @@ port
 );
 end component;
 
+
+-- Component that computes a randum number using a seed from the PC
+-- and then sends the data back to the PC
+component random_gen
+port
+(
+  clk : in std_logic;
+  rst : in std_logic;
+  seed : in std_logic_vector(255 downto 0);
+  random_num : out std_logic_vector(255 downto 0)
+);
+end component;
+
 -- signal declarations
 
   -- reading data from the UART
@@ -155,6 +168,16 @@ port map
   TX_busy_n => TX_busy_n,
   send_data => send_data,
   data_out  => data_to_send
+);
+
+random_gen1 : random_gen
+port map
+( 
+  clk       => clk,
+  rst     	=> reset,
+  seed  		=> new_data_reg,
+  send_num  => ,
+  random_num  => data_to_send
 );
 
 
