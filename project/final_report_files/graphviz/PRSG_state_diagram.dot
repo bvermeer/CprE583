@@ -1,0 +1,32 @@
+// CprE 583 - Project
+// State Diagram for Pseudo-random Number Generator
+//
+// Author: Rohit Zambre
+// Date: 12-17-14
+
+digraph StateMachine {
+	rankdir=UD;
+
+	reset [style=invis];
+	
+	reset -> WAIT_START [label="Reset"];
+	
+	WAIT_START -> REC_BYTE_ONE [label="enable = '1'"];
+	WAIT_START -> WAIT_START [label="enable = '0'"];
+
+	REC_BYTE_ONE -> REC_BYTE_TWO [label="new_data = '1'"];
+	REC_BYTE_ONE -> REC_BYTE_ONE [label="new_data = '0'"];
+
+	REC_BYTE_TWO -> RAND_GEN [label="new_data = '1'"];
+	REC_BYTE_TWO -> REC_BYTE_TWO [label="new_data = '0'"];
+	
+	RAND_GEN -> LOAD_BYTE [label="gen_once = '0'"];
+	RAND_GEN -> RAND_GEN [label="gen_once = '1'"];
+	
+	LOAD_BYTE -> SEND_BYTE [label=""];
+	
+	SEND_BYTE -> LOAD_BYTE [label="counter < 32"];
+	SEND_BYTE -> SEND_BYTE [label="TX_busy_n = '0'"];
+	SEND_BYTE -> RAND_GEN  [label="counter > 32"];
+
+}
