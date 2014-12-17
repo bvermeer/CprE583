@@ -40,7 +40,10 @@ COMPONENT random_gen
 				data_out 	: out std_logic_vector(7 downto 0); -- byte of the random_number to be sent out
 				random_num 	: out std_logic_vector(255 downto 0); -- random number being generated every clock cycle
 			
-				debug_state	: out std_logic_vector(7 downto 0)
+				debug_state	: out std_logic_vector(7 downto 0);
+				debug_seed 	: out std_logic_vector(255 downto 0);
+				debug_gen_once_reg : out std_logic
+
 			);
 end COMPONENT;
 
@@ -59,6 +62,9 @@ signal send_data    : std_logic ;
 signal data_out 	: std_logic_vector ( 7 downto 0) ; 
 
 signal debug_state	: std_logic_vector(7 downto 0);
+signal debug_seed	: std_logic_vector(255 downto 0);
+signal debug_gen_once_reg: std_logic;
+
 
 -- signal debug_state  : std_logic_vector ( 3 downto 0) ;
 -- signal debug_date_in_reg : std_logic_vector ( 7 downto 0) ;
@@ -88,9 +94,9 @@ begin
   system_clk <= '0';
   wait for 10 ns;
     loop
-      wait for clk_period;
+      wait for clk_period/2;
       system_clk <= '1';
-      wait for clk_period;
+      wait for clk_period/2;
       system_clk <= '0';
     end loop;
 end process system_clk_gen;
@@ -132,11 +138,11 @@ begin
 
     wait for clk_period;
 
-    wait until send_data = '1';
-
+    wait until send_data = '1';    
+	 
     TX_busy_n <= '0';
 
-    wait for 50 ns;
+    wait for 10 ns;
 
 end process sim_tx;
 
@@ -163,7 +169,7 @@ begin
 	 
 	 enable 		<= '1';
 	 
-	 wait for clk_period;
+	 wait for clk_period/2;
 
     data_in    <= x"39";
 
@@ -172,16 +178,18 @@ begin
     new_data <= '1';
 
     wait for clk_period;
-
-    new_data <= '0';
+	 
+	 new_data <= '0';
+	
+	 wait for clk_period;	
 
 	 data_in    <= x"30";
 
-    wait for clk_period; 
-
-    new_data <= '1';
-
     wait for clk_period;
+	 
+	 new_data <= '1';
+
+ 	 wait for clk_period;
 
     new_data <= '0';
 
@@ -213,7 +221,9 @@ port map
     data_out  	=> data_out,
 	 random_num	=> random_num,
 	 
-	 debug_state => debug_state
+	 debug_state => debug_state,
+	 debug_seed  => debug_seed,
+	 debug_gen_once_reg => debug_gen_once_reg
 );
 
 end rtl;

@@ -35,7 +35,9 @@ port(
 		data_out 	: out std_logic_vector(7 downto 0); -- byte of the random_number to be sent out
 		random_num 	: out std_logic_vector(255 downto 0); -- random number being generated every clock cycle
 		
-		debug_state	: out std_logic_vector(7 downto 0)
+		debug_state	: out std_logic_vector(7 downto 0);
+		debug_seed	: out std_logic_vector(255 downto 0);
+		debug_gen_once_reg : out std_logic
 );
 end random_gen;
 
@@ -43,7 +45,7 @@ end random_gen;
 architecture Behavorial of random_gen is
 
 -- types
-type random_gen_state_type is (WAIT_START, REC_BYTE_ONE, REC_BYTE_TWO, RAND_GEN, LOAD_BYTE, SEND_BYTE);
+type random_gen_state_type is (WAIT_START, REC_BYTE_ONE, WAIT_BYTE, REC_BYTE_TWO, RAND_GEN, LOAD_BYTE, SEND_BYTE);
 --type random_num_bytes_type is array(0 to 31) of std_logic_vector(7 downto 0);
 
 -- SIGNALS --
@@ -52,22 +54,13 @@ type random_gen_state_type is (WAIT_START, REC_BYTE_ONE, REC_BYTE_TWO, RAND_GEN,
 signal random_gen_state			: random_gen_state_type;
 signal random_gen_state_next	: random_gen_state_type;	
 
---signal rdy_send_data_reg 		: std_logic; -- Indicate there is data that is ready to be sent
---signal rdy_send_data_reg_en 	: std_logic;
---signal rdy_send_data_reg_in 	: std_logic;
-
  -- Tell UART to send a byte of data
 signal send_data_reg  			: std_logic;
---signal send_data_reg_en 		: std_logic;
---signal send_data_reg_in  		: std_logic;
 
 -- Temp storage for new data
 signal data_out_reg   			: std_logic_vector(7 downto 0);
 signal data_out_reg_en	 		: std_logic;
 signal data_out_reg_in  		: std_logic_vector(7 downto 0);
-
---signal random_num_reg			: std_logic_vector(255 downto 0);
---signal random_num_reg_en 	: std_logic;
 
 -- Counter
 signal counter_reg				: integer;
@@ -112,7 +105,7 @@ begin
 	
 	
 	-- Combinational process to compute the next state of state machine
-	compute_next_state_random_gen: process (random_gen_state, enable, new_data, TX_busy_n)
+	compute_next_state_random_gen: process (random_gen_state, enable, new_data, TX_busy_n, data_in, gen_once_reg, seed_val_reg, random_num_reg, random_num_reg_byte, counter_reg)
 		variable tempSeed : unsigned(255 downto 0) := (others => '0');
 		variable tempShift : unsigned(255 downto 0);
 	begin
@@ -130,6 +123,7 @@ begin
 		data_out_reg_en			<= '0';
 		seed_val_reg_en			<= '0';
 		gen_once_reg_en			<= '0';
+		random_num_reg_en			<= '0';
 		
 		send_data_reg 				<= '0';
 		random_num_reg_in			<= (others => '0');
@@ -175,13 +169,20 @@ begin
 					seed_val_reg_offset 	<= '0';
 					
 					-- move state to receiving second byte of seed
-					random_gen_state_next <= REC_BYTE_TWO;
+					random_gen_state_next <= WAIT_BYTE;
 					
 				else
 					
 					random_gen_state_next <= REC_BYTE_ONE;	
 					
 				end if;
+				
+			when WAIT_BYTE => 			
+			
+				debug_state <= x"F1";
+			
+				-- move state to receiving second byte of seed
+					random_gen_state_next <= REC_BYTE_TWO;
 			
 			when REC_BYTE_TWO =>		-- receiving MSByte of seed via UART
 				
@@ -210,12 +211,12 @@ begin
 				 --initializing tempSeed
 				if (gen_once_reg = '0') then
 					tempSeed := unsigned(seed_val_reg);
-					
+					debug_state <= x"13";
 					-- moving on to sending the random number generated
 					random_gen_state_next <= LOAD_BYTE;
 				else
 					tempSeed := unsigned(random_num_reg);
-					
+					debug_state <= x"23";
 					-- moving on to sending the random number generated
 					random_gen_state_next <= RAND_GEN;
 				end if;
@@ -229,12 +230,6 @@ begin
 				tempSeed  := tempSeed XOR tempShift;	-- xor with shifted value
 				-- tempSeed holds random number
 				
-				-- indicate that the first number has been generated
-				if (gen_once_reg = '0') then
-					gen_once_reg_en <= '1';
-					gen_once_reg_in <= '1';
-				end if;
-				
 				-- store this random number generated in a register
 				random_num_reg_en 		<= '1';
 				random_num_reg_in			<= std_logic_vector(tempSeed);
@@ -244,6 +239,12 @@ begin
 			when LOAD_BYTE => 	-- loading byte to be sent out
 				
 				debug_state <= x"04";
+				
+				-- indicate that the first number has been generated
+				if (gen_once_reg = '0') then
+					gen_once_reg_en <= '1';
+					gen_once_reg_in <= '1';
+				end if;
 				
 				-- load byte to be sent out
 				data_out_reg_en <= '1';
@@ -330,24 +331,17 @@ begin
 			
 	end process update_regs;	
 	
-	-- Process to update Random Number OR Seed
-	update_random_num_OR_seed : process(clk)
+	-- Process to update seed val reg
+	update_seed_val_reg : process(clk)
 	begin
 	
 		if( falling_edge(clk) ) then
 			
 			if(rst = '1') then
 				
-				random_num_reg 	<= (others => '0');
 				seed_val_reg 		<= (others => '0');
 				
 			else
-			
-				if(random_num_reg_en = '1') then
-			
-					random_num_reg <= random_num_reg_in;
-			
-				end if;
 				
 				if(seed_val_reg_en = '1') then
 					
@@ -373,7 +367,7 @@ begin
 			
 		end if;
 		
-	end process update_random_num_OR_seed;
+	end process update_seed_val_reg;
 	
 	-- Process to read the data from the random_num_reg
 	read_random_num_reg : process(random_num_reg_offset, random_num_reg)
@@ -531,6 +525,10 @@ begin
 					
 					case counter_reg is
 					
+						when 0 =>
+						
+							random_num_reg_offset <= x"00";
+						
 						when 1 =>
 						
 							random_num_reg_offset <= x"01";
@@ -678,6 +676,11 @@ data_out  <= data_out_reg;
 
 -- Mapping random num output
 random_num <= random_num_reg;
+
+
+-- See the seed value
+debug_seed 	<= seed_val_reg;
+debug_gen_once_reg <= gen_once_reg;
 	
 --	gen_process: process(clk) is
 --		variable tempSeed : unsigned(255 downto 0) := (others => '0');
