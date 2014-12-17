@@ -33,7 +33,9 @@ port(
 		send_data	: out std_logic;	-- Request UART to transmit data_out
 		done			: out std_logic;	-- Indicate that output has finished transmitting
 		data_out 	: out std_logic_vector(7 downto 0); -- byte of the random_number to be sent out
-		random_num 	: out std_logic_vector(255 downto 0) -- random number being generated every clock cycle
+		random_num 	: out std_logic_vector(255 downto 0); -- random number being generated every clock cycle
+		
+		debug_state	: out std_logic_vector(7 downto 0)
 );
 end random_gen;
 
@@ -87,9 +89,9 @@ signal seed_val_reg_en			: std_logic;
 signal seed_val_reg_offset		: std_logic; -- either 0 or 1
 signal seed_val_reg				: std_logic_vector(255 downto 0);
 
---signal gen_once_reg				: std_logic; -- if random number has been generated once
---signal gen_once_reg_en			: std_logic;
---signal gen_once_reg_in			: std_logic;
+signal gen_once_reg				: std_logic; -- if random number has been generated once
+signal gen_once_reg_en			: std_logic;
+signal gen_once_reg_in			: std_logic;
 
 begin
 	
@@ -110,7 +112,7 @@ begin
 	
 	
 	-- Combinational process to compute the next state of state machine
-	compute_next_state_random_gen: process (random_gen_state)
+	compute_next_state_random_gen: process (random_gen_state, enable, new_data, TX_busy_n)
 		variable tempSeed : unsigned(255 downto 0) := (others => '0');
 		variable tempShift : unsigned(255 downto 0);
 	begin
@@ -121,20 +123,22 @@ begin
 		--send_data_reg_in  		<= '0';
 		data_out_reg_in  		 	<= (others => '0');
 		seed_val_reg_in			<= (others => '0');
-		--gen_once_reg_in			<= '0';
+		gen_once_reg_in			<= '0';
 		
 		--rdy_send_data_reg_en 	<= '0';
 		--send_data_reg_en 			<= '0';
 		data_out_reg_en			<= '0';
 		seed_val_reg_en			<= '0';
-		--gen_once_reg_en			<= '0';
+		gen_once_reg_en			<= '0';
 		
 		send_data_reg 				<= '0';
 		random_num_reg_in			<= (others => '0');
-		random_num_bytes_offset	<= (others => '0');
-		seed_val_reg_offset		<= (others => '0');
+		seed_val_reg_offset		<= '0';
 		
-		random_gen_next_state	<= random_gen_state; -- NOT SURE ABOUT THIS
+		counter_count_up 			<= '0';
+		counter_reset_sig			<= '0';
+		
+		--random_gen_state_next	<= random_gen_state; -- NOT SURE ABOUT THIS
 		
 		done 							<= '0';-- To indicate when random num has been sent to UART for transmission
 		
@@ -142,16 +146,26 @@ begin
 		
 			when WAIT_START =>	-- waiting for start signal
 				
+				debug_state <= x"00";
+				
 				--seed_val <= (others => '0'); I'M THINKING I DONT NEED THIS
 				
 				if(enable = '1') then
 				
+					debug_state <= x"F0";
+				
 					-- move state to receiving first byte of seed
-					random_gen_next_state <= REC_BYTE_ONE;
+					random_gen_state_next <= REC_BYTE_ONE;
+					
+				else 
+				
+					random_gen_state_next <= WAIT_START;
 				
 				end if;
 				
 			when REC_BYTE_ONE =>		-- receiving LSByte of seed via UART
+				
+				debug_state <= x"01";
 				
 				if(new_data = '1') then 
 					
@@ -161,11 +175,17 @@ begin
 					seed_val_reg_offset 	<= '0';
 					
 					-- move state to receiving second byte of seed
-					random_gen_next_state <= REC_BYTE_TWO;
+					random_gen_state_next <= REC_BYTE_TWO;
+					
+				else
+					
+					random_gen_state_next <= REC_BYTE_ONE;	
 					
 				end if;
 			
 			when REC_BYTE_TWO =>		-- receiving MSByte of seed via UART
+				
+				debug_state <= x"02";
 				
 				if(new_data = '1') then 
 					
@@ -175,14 +195,32 @@ begin
 					seed_val_reg_offset 	<= '1';
 					
 					-- move state to computing random number
-					random_gen_next_state <= RAND_GEN;
-				
+					random_gen_state_next <= RAND_GEN;
+					
+				else
+					
+					random_gen_state_next <= REC_BYTE_TWO;
+					
 				end if;
 			
 			when RAND_GEN =>	-- computing the random number
+				
+				debug_state <= x"03";
+				
+				 --initializing tempSeed
+				if (gen_once_reg = '0') then
+					tempSeed := unsigned(seed_val_reg);
+					
+					-- moving on to sending the random number generated
+					random_gen_state_next <= LOAD_BYTE;
+				else
+					tempSeed := unsigned(random_num_reg);
+					
+					-- moving on to sending the random number generated
+					random_gen_state_next <= RAND_GEN;
+				end if;
 		
 				-- computing random number
-				tempSeed := unsigned(seed_val_reg); 	-- initializing tempSeed
 				tempShift := "000000000000" & tempSeed(255 downto 12); 					-- shifting right by 12
 				tempSeed	 := tempSeed XOR tempShift;	-- xor with shifted value
 				tempShift := tempSeed(230 downto 0) & "0000000000000000000000000"; 	-- shift left by 25
@@ -191,16 +229,22 @@ begin
 				tempSeed  := tempSeed XOR tempShift;	-- xor with shifted value
 				-- tempSeed holds random number
 				
+				-- indicate that the first number has been generated
+				if (gen_once_reg = '0') then
+					gen_once_reg_en <= '1';
+					gen_once_reg_in <= '1';
+				end if;
+				
 				-- store this random number generated in a register
 				random_num_reg_en 		<= '1';
-				random_num_bytes_offset <= x"FF";
 				random_num_reg_in			<= std_logic_vector(tempSeed);
 				
-				-- moving on to sending the random number generated
-				random_gen_next_state <= LOAD_BYTE;
+				
 			
 			when LOAD_BYTE => 	-- loading byte to be sent out
-			
+				
+				debug_state <= x"04";
+				
 				-- load byte to be sent out
 				data_out_reg_en <= '1';
 				data_out_reg_in <= random_num_reg_byte;
@@ -209,23 +253,41 @@ begin
 				counter_count_up <= '1';
 				
 				-- move to sending the loaded byte
-				random_gen_next_state <= SEND_BYTE;
+				random_gen_state_next <= SEND_BYTE;
 			
 			when SEND_BYTE => 	-- sending byte via the UART
+				
+				debug_state <= x"05";
 				
 				-- Check if UART is busy transmitting
 				if(TX_busy_n = '1') then
 					
 					send_data_reg <= '1';     -- tell UART to transmit a byte 
 					
+					-- check for counter value
+					if(counter_reg = 32) then
+						
+						done <= '1';
+						counter_reset_sig <= '1';
+						random_gen_state_next <= RAND_GEN;
+						
+					else	
+						random_gen_state_next <= LOAD_BYTE;
+						
+					end if;	
+						
 				else
 				
-					random_gen_next_state <= SEND_BYTES;
+					random_gen_state_next <= SEND_BYTE;
 				
 				end if;
 				
 			
-			when OTHERS => 
+			when OTHERS =>
+
+				random_gen_state_next <= WAIT_START;
+
+				debug_state <= x"FF";
 				-- something here
 		
 		end case;
@@ -244,7 +306,7 @@ begin
 				--rdy_send_data_reg <= '0';
 				--send_data_reg 	<= '0';
 				random_num_reg <= (others => '0'); -- set the registers to 0 over here
-				--gen_once_reg	<= '0';
+				gen_once_reg	<= '0';
 			
 			else
 				
@@ -254,6 +316,10 @@ begin
 				
 				if (random_num_reg_en = '1') then
 					random_num_reg <= random_num_reg_in;
+				end if;
+				
+				if (gen_once_reg_en = '1') then
+					gen_once_reg <= gen_once_reg_in;
 				end if;
 				
 				-- add more if statements for different register signals
@@ -285,7 +351,7 @@ begin
 				
 				if(seed_val_reg_en = '1') then
 					
-					case seed_val_reg_offset
+					case seed_val_reg_offset is
 						
 						when '0' =>
 						
@@ -313,7 +379,7 @@ begin
 	read_random_num_reg : process(random_num_reg_offset, random_num_reg)
 	begin
 		
-		case random_num_reg_offset
+		case random_num_reg_offset is
 		
 			when x"00" =>
 						
@@ -443,6 +509,8 @@ begin
 
 				random_num_reg_byte <= random_num_reg(255 downto 248);
 		
+			when others =>
+				--
 		end case;
 	
 	end process read_random_num_reg;
@@ -461,7 +529,7 @@ begin
 				if(counter_count_up = '1') then
 					counter_reg <= counter_reg + 1;
 					
-					case counter_reg
+					case counter_reg is
 					
 						when 1 =>
 						
@@ -607,6 +675,9 @@ counter_reset <= rst or counter_reset_sig;
 -- Assign outputs
 send_data <= send_data_reg;
 data_out  <= data_out_reg;
+
+-- Mapping random num output
+random_num <= random_num_reg;
 	
 --	gen_process: process(clk) is
 --		variable tempSeed : unsigned(255 downto 0) := (others => '0');
@@ -630,18 +701,7 @@ data_out  <= data_out_reg;
 	
 end Behavorial;
 
--- initializing tempSeed
-	--if (gen_once_reg = '0') then
-		--tempSeed := unsigned(seed_val_reg);
-	--else
-		--tempSeed := unsigned(random_num_bytes);
-	--end if;
 
--- indicate that the first number has been generated
-		--if (gen_once_reg = '0') then
-			--gen_once_reg_en <= '1';
-			--gen_once_reg_in <= '1';
-		--end if;
 
 --if (gen_once_reg_en = '1') then
 	--	gen_once_reg <= gen_once_reg_in;

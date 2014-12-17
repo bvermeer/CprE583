@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 --                                                                           --
--- File Name: cmd_parse_tb.vhd                                               --
+-- File Name: random_gen_tb.vhd                                               --
 -- Author: Blake Vermeer                                                     --
 -- Date: 12/9/2014                                                           --
 --                                                                           --
@@ -14,32 +14,33 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 
-entity cmd_parse_tb is
+entity random_gen_tb is
 port
 (
     my_in : in std_logic --input to keep modelsim from complaining
 );
-end cmd_parse_tb;
+end random_gen_tb;
 
-architecture rtl of cmd_parse_tb is
+architecture rtl of random_gen_tb is
 
 ----------------------------------------------
 --       Component declarations             --
 ----------------------------------------------
 
 -- Component that get put on the FPGA
-COMPONENT cmd_parse
-    Port ( clk       	: in  	STD_LOGIC;
-	       reset     	: in 	STD_LOGIC;
-           new_data  	: in  	STD_LOGIC; -- Indicate a new byte has been captured from UART
-           data_in   	: in  	STD_LOGIC_VECTOR (7 downto 0);
-           TX_busy_n 	: in  	STD_LOGIC;
-           send_data 	: out  	STD_LOGIC; -- Request UART to transmit data_out
-           data_out  	: out  	STD_LOGIC_VECTOR (7 downto 0)
-
-           -- debug_state : out std_logic_vector ( 3 downto 0); 
-           -- debug_date_in_reg : out std_logic_vector ( 7 downto 0) ;
-           -- debug_help_msg_done : out std_logic  
+COMPONENT random_gen
+    Port ( 	clk 			: in std_logic;
+				rst 			: in std_logic;
+				enable 		: in std_logic;	-- start random number generation process
+				new_data 	: in std_logic;
+				TX_busy_n 	: in std_logic; 	-- Indicate a new byte has been captured from UART
+				data_in		: in std_logic_vector(7 downto 0);
+				send_data	: out std_logic;	-- Request UART to transmit data_out
+				done			: out std_logic;	-- Indicate that output has finished transmitting
+				data_out 	: out std_logic_vector(7 downto 0); -- byte of the random_number to be sent out
+				random_num 	: out std_logic_vector(255 downto 0); -- random number being generated every clock cycle
+			
+				debug_state	: out std_logic_vector(7 downto 0)
 			);
 end COMPONENT;
 
@@ -49,10 +50,15 @@ end COMPONENT;
 signal system_clk 	: std_logic ;  -- system clock
 signal reset    	: std_logic ;  -- Reset active low
 signal new_data 	: std_logic ; 
+signal enable		: std_logic ;
+signal done			: std_logic	;
+signal random_num	: std_logic_vector(255 downto 0) ;
 signal data_in 		: std_logic_vector ( 7 downto 0) ;
 signal TX_busy_n 	: std_logic ; 
 signal send_data    : std_logic ; 
 signal data_out 	: std_logic_vector ( 7 downto 0) ; 
+
+signal debug_state	: std_logic_vector(7 downto 0);
 
 -- signal debug_state  : std_logic_vector ( 3 downto 0) ;
 -- signal debug_date_in_reg : std_logic_vector ( 7 downto 0) ;
@@ -130,7 +136,7 @@ begin
 
     TX_busy_n <= '0';
 
-    wait for 800 us;
+    wait for 50 ns;
 
 end process sim_tx;
 
@@ -151,10 +157,25 @@ begin
 
     new_data 	<= '0'; 
     data_in 	<= (others => '0') ; 	
+	 enable		<= '0';
     
     wait for 150 ns;
+	 
+	 enable 		<= '1';
+	 
+	 wait for clk_period;
 
-    data_in    <= x"3F";
+    data_in    <= x"39";
+
+    wait for clk_period; 
+
+    new_data <= '1';
+
+    wait for clk_period;
+
+    new_data <= '0';
+
+	 data_in    <= x"30";
 
     wait for clk_period; 
 
@@ -168,7 +189,7 @@ begin
 
     data_in <= x"00";
 
-    wait for 200 ns;
+    wait for 20 us;
 
 
 end process main_stim;
@@ -178,22 +199,21 @@ end process main_stim;
 
 
   -- Port map MP1_top_driver
-CMD_Parse_Driver : cmd_parse 
+Random_Gen_Driver : random_gen 
 port map
 (
-    clk         => system_clk,	
-	reset       => reset,	
-    new_data  	=> new_data,
+    clk        => system_clk,	
+	 rst       	=> reset,
+	 enable  	=> enable,
+	 new_data 	=> new_data,
     data_in   	=> data_in,
     TX_busy_n 	=> TX_busy_n,
     send_data 	=> send_data,
-    data_out  	=> data_out
-
-    -- debug_state => debug_state,
-    -- debug_date_in_reg => debug_date_in_reg,
-    -- debug_help_msg_done => debug_help_msg_done
+	 done 		=> done,
+    data_out  	=> data_out,
+	 random_num	=> random_num,
+	 
+	 debug_state => debug_state
 );
-
-
 
 end rtl;
