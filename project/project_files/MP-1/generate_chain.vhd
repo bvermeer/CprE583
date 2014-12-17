@@ -44,6 +44,7 @@ signal candidate_state_next	:	generate_candidate_type;	--the next state in candi
 
 --state machine registers and flags
 signal gen_complete_flag	:	std_logic;			--register holding the value of whether or not generation of a candidate is complete
+signal from_gen_cand		:	std_logic;			--a register to keep track of whether or not the last state was GEN_CAND
 signal is_prime_flag		:	std_logic;			--register holding the value of whether or not a candidate is prime
 signal mm_complete_flag		:	std_logic;			--register holding the value of whether or not the multiplier is done calculating
 signal print_complete_flag	:	std_logic;			--register holding the value of whether or not printing it complete
@@ -52,7 +53,6 @@ signal debug_reg		:	std_logic;			--register to store if we are running in debug 
 signal done_reg			:	std_logic;			--register that states whether or not the chain is complete
 signal seed_in_reg		:	unsigned(255 downto 0);		--register for the seed value used to calculate a candidate
 signal candidate_reg		:	unsigned(255 downto 0);		--register to store the current candidate
-signal candidate_reg_temp	:	unsigned(255 downto 0);		--register to store the intermediate value for calculating a candidate
 
 --montgomery multiplier signals and regs
 signal mm_addr_reg		:	std_logic_vector(41 downto 0);	--address register for the montgomery multiplier
@@ -164,16 +164,15 @@ begin
 	begin
 		if(rising_edge(clk)) then
 			if(reset = '1') then
-				candidate_reg_temp	<= (others => '0');
 				candidate_reg		<= (others => '0');
 				gen_complete_flag	<= '0';
+				from_gen_cand		<= '0';
 			else
 				if(candidate_state = CAND_GEN) then
-					candidate_reg_temp	<= seed_in_reg(254 downto 0) & '0';
-					candidate_reg		<= candidate_reg_temp + 1;
+					candidate_reg		<= seed_in_reg(254 downto 0) & '1';
 					gen_complete_flag	<= '1';
+					from_gen_cand		<= '1';
 				else
-					candidate_reg_temp	<= (others => '0');
 					gen_complete_flag	<= '0';
 				end if;
 			end if;
@@ -181,7 +180,7 @@ begin
 	end process Output_Generation;
 
 	--process to handle the printing of stuff
-	Print_Process : process(clk, candidate_state)
+	Print_Process : process(clk)
 	begin
 		if(rising_edge(clk)) then
 			if(reset = '1') then
@@ -190,6 +189,8 @@ begin
 				data_out_reg		<= (others => '0');
 				rdy_send_data		<= '0';
 				byte_count		<= (others => '0');
+				done_reg		<= '0';
+				from_gen_cand		<= '0';
 			else
 				if(candidate_state = PRINT and debug_reg = '0') then
 					if(rdy_send_data = '0') then
@@ -295,19 +296,20 @@ begin
 						else
 							if(byte_count = 0) then
 								byte_count	<= byte_count + 1;
-								data_out_reg	<= ;	--send "D"
+								data_out_reg	<= x"44";	--send "D"
 							elsif(byte_count = 1) then
 								byte_count	<= byte_count + 1;
-								data_out_reg	<= ;	--send "O"
+								data_out_reg	<= x"4F";	--send "O"
 							elsif(byte_count = 2) then
 								byte_count	<= byte_count + 1;
-								data_out_reg	<= ;	--send "N"
+								data_out_reg	<= x"4E";	--send "N"
 							elsif(byte_count = 3) then
 								byte_count	<= byte_count + 1;
-								data_out_reg	<= ;	--send "E"
+								data_out_reg	<= x"45";	--send "E"
 							else
 								data_out_reg	<= x"00";	--send NULL
 								candidate_sent	<= '1';
+								done_reg	<= '1';
 							end if;
 						end if;
 					else
@@ -320,11 +322,147 @@ begin
 						end if;
 					end if;
 				elsif(candidate_state = PRINT and debug_reg = '1') then
+					if(gen_complete_flag_d1 = '1') then	--if this is from candidate generation
+						from_gen_cand	<= '1';
+					else					--otherwise
+						from_gen_cand	<= '0';
+					end if;
+					if(rdy_send_data = '0') then
+						if(from_gen_cand = '1') then
 
+						else
+							if(is_prime_flag = '1') then
+								if(byte_count = 0) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(7 downto 0);
+								elsif(byte_count = 1) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(15 downto 8);
+								elsif(byte_count = 2) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(23 downto 16);
+								elsif(byte_count = 3) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(31 downto 24);
+								elsif(byte_count = 4) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(39 downto 32);
+								elsif(byte_count = 5) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(47 downto 40);
+								elsif(byte_count = 6) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(55 downto 48);
+								elsif(byte_count = 7) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(63 downto 56);
+								elsif(byte_count = 8) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(71 downto 64);
+								elsif(byte_count = 9) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(79 downto 72);
+								elsif(byte_count = 10) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(87 downto 80);
+								elsif(byte_count = 11) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(95 downto 88);
+								elsif(byte_count = 12) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(103 downto 96);
+								elsif(byte_count = 13) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(111 downto 104);
+								elsif(byte_count = 14) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(119 downto 112);
+								elsif(byte_count = 15) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(127 downto 120);
+								elsif(byte_count = 16) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(135 downto 128);
+								elsif(byte_count = 17) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(143 downto 136);
+								elsif(byte_count = 18) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(151 downto 144);
+								elsif(byte_count = 19) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(159 downto 152);
+								elsif(byte_count = 20) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(167 downto 160);
+								elsif(byte_count = 21) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(175 downto 168);
+								elsif(byte_count = 22) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(183 downto 176);
+								elsif(byte_count = 23) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(191 downto 184);
+								elsif(byte_count = 24) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(199 downto 192);
+								elsif(byte_count = 25) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(207 downto 200);
+								elsif(byte_count = 26) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(215 downto 208);
+								elsif(byte_count = 27) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(223 downto 216);
+								elsif(byte_count = 28) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(231 downto 224);
+								elsif(byte_count = 29) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(239 downto 232);
+								elsif(byte_count = 30) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= candidate(247 downto 240);
+								else
+									data_out_reg	<= candidate(255 downto 248);
+									candidate_sent	<= '1';
+								end if;
+							else
+								if(byte_count = 0) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= x"44";	--send "D"
+								elsif(byte_count = 1) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= x"4F";	--send "O"
+								elsif(byte_count = 2) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= x"4E";	--send "N"
+								elsif(byte_count = 3) then
+									byte_count	<= byte_count + 1;
+									data_out_reg	<= x"45";	--send "E"
+								else
+									data_out_reg	<= x"00";	--send NULL
+									candidate_sent	<= '1';
+									done_reg	<= '1';
+								end if;
+							end if;
+						end if;
+					else
+						if(TX_busy_n = '1') then
+							rdy_send_data	<= '0';
+							send_data_reg	<= '1';
+							if(candidate_sent = '1') then
+								print_complete_flag <= '1';
+							end if;
+						end if;
+					end if;
 				else
 					print_complete_flag	<= '0';
 					send_data_reg		<= '0';
 					rdy_send_data		<= '0';
+					done_reg		<= '0';
 				end if;
 			end if;
 		end if;
