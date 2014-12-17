@@ -12,7 +12,7 @@ entity generate_chain is port(
 	TX_busy_n	: in std_logic;				--active low, use to know when to send data out
 	done		: out std_logic;			--a signal to tell the interpretter that a chain is done
 	send_data	: out std_logic;			--tell UART to transmit a byte
-	data_out	: out std_logic_vector(7 downto 0);	--data to send to the UART
+	data_out	: out std_logic_vector(7 downto 0)	--data to send to the UART
 );
 end generate_chain;
 
@@ -28,7 +28,7 @@ component mm_bridge
 		read_d	:	in std_logic;
 		write_d	:	in std_logic;
 		din	:	in std_logic_vector(15 downto 0);
-		dout	:	out std_logic_vector(15 downto 0);
+		dout	:	out std_logic_vector(15 downto 0)
 	);
 end component;
 -------------------------------------------
@@ -43,6 +43,7 @@ signal candidate_state		:	generate_candidate_type;	--current state of candidate 
 signal candidate_state_next	:	generate_candidate_type;	--the next state in candidate generation
 
 --state machine registers and flags
+signal seed_en			:	std_logic;			--enable for the seed value coming in
 signal gen_complete_flag	:	std_logic;			--register holding the value of whether or not generation of a candidate is complete
 signal from_gen_cand		:	std_logic;			--a register to keep track of whether or not the last state was GEN_CAND
 signal is_prime_flag		:	std_logic;			--register holding the value of whether or not a candidate is prime
@@ -67,6 +68,7 @@ signal send_data_reg		:	std_logic;			--register for telling UART to read data_ou
 signal rdy_send_data		:	std_logic;			--register to tell when data is ready to be sent
 signal byte_count		:	unsigned(4 downto 0);		--register to keep track of the byte count for the result printing
 signal candidate_sent		:	std_logic;			--register for telling the circuit that the candidate is sent
+signal debug_byte_count		:	unsigned(6 downto 0);		--register to keep track of the byte count for the printing of debug info
 
 begin
 	--portmap of the montgomery multiplier
@@ -88,15 +90,21 @@ begin
 				gen_start_reg <= '0';
 				debug_reg <= '0';
 				seed_in_reg <= (others => '0');
-				
+				seed_en <= '1';
 			else
 				gen_start_reg <= start;
 				debug_reg <= debug;
-				
-				if(is_prime_flag = '0') then		--if the previous candidate is not prime
-					seed_in_reg <= seed;		--set the seed to the pseudo-random seed
+
+				if(is_prime_flag = '0' and seed_en = '1') then		--if the previous candidate is not prime
+					seed_in_reg <= seed;				--set the seed to the pseudo-random seed
+				elsif(is_prime_flag = '1' and seed_en = '1') then
+					seed_in_reg <= candidate_reg;
 				else					--otherwise
-					seed_in_reg <= candidate_reg;	--set the seed to the previous candidate
+					seed_in_reg <= seed_in_reg;	--set the seed to the previous candidate
+				end if;
+
+				if(start = '1') then
+					seed_en <= '0'
 				end if;
 			end if;
 		end if;
@@ -115,7 +123,7 @@ begin
 	end process State_Update;
 
 	--process to get the next state
-	Next_State_Comp : process(candidate_state, gen_complete_flag, gen_start_reg
+	Next_State_Comp : process(candidate_state, gen_complete_flag, gen_start_reg,
 					mm_complete_flag, debug_reg, print_complete_flag)
 	begin
 	
@@ -172,8 +180,14 @@ begin
 					candidate_reg		<= seed_in_reg(254 downto 0) & '1';
 					gen_complete_flag	<= '1';
 					from_gen_cand		<= '1';
-				else
+				elsif(candidate_state = PRINT) then
+					from_gen_cand		<= from_gen_cand;
+					candidate_reg		<= candidate_reg;
 					gen_complete_flag	<= '0';
+				else
+					candidate_reg		<= candidate_reg;
+					gen_complete_flag	<= '0';
+					from_gen_cand		<= '0';
 				end if;
 			end if;
 		end if;
@@ -191,10 +205,11 @@ begin
 				byte_count		<= (others => '0');
 				done_reg		<= '0';
 				from_gen_cand		<= '0';
+				debug_byte_count	<= (others => '0');
 			else
 				if(candidate_state = PRINT and debug_reg = '0') then
 					if(rdy_send_data = '0') then
-						rdy_send_data = '1';
+						rdy_send_data <= '1';
 						if(is_prime_flag = '1') then
 							if(byte_count = 0) then
 								byte_count	<= byte_count + 1;
@@ -317,20 +332,217 @@ begin
 							rdy_send_data	<= '0';
 							send_data_reg	<= '1';
 							if(candidate_sent = '1') then
-								print_complete_flag <= '1';
+								print_complete_flag	<= '1';
+								byte_count		<= (others => '0');
 							end if;
 						end if;
 					end if;
 				elsif(candidate_state = PRINT and debug_reg = '1') then
-					if(gen_complete_flag_d1 = '1') then	--if this is from candidate generation
-						from_gen_cand	<= '1';
-					else					--otherwise
-						from_gen_cand	<= '0';
-					end if;
 					if(rdy_send_data = '0') then
-						if(from_gen_cand = '1') then
-
-						else
+						if(from_gen_cand = '1') then			--if it just came from gen_gand
+							if(debug_byte_count = 0) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= x"53";			--print S
+							elsif(debug_byte_count = 1) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(7 downto 0);
+							elsif(debug_byte_count = 2) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(15 downto 8);
+							elsif(debug_byte_count = 3) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(23 downto 16);
+							elsif(debug_byte_count = 4) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(31 downto 24);
+							elsif(debug_byte_count = 5) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(39 downto 32);
+							elsif(debug_byte_count = 6) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(47 downto 40);
+							elsif(debug_byte_count = 7) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(55 downto 48);
+							elsif(debug_byte_count = 8) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(63 downto 56);
+							elsif(debug_byte_count = 9) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(71 downto 64);
+							elsif(debug_byte_count = 10) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(79 downto 72);
+							elsif(debug_byte_count = 11) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(87 downto 80);
+							elsif(debug_byte_count = 12) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(95 downto 88);
+							elsif(debug_byte_count = 13) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(103 downto 96);
+							elsif(debug_byte_count = 14) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(111 downto 104);
+							elsif(debug_byte_count = 15) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(119 downto 112);
+							elsif(debug_byte_count = 16) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(127 downto 120);
+							elsif(debug_byte_count = 17) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(135 downto 128);
+							elsif(debug_byte_count = 18) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(143 downto 136);
+							elsif(debug_byte_count = 19) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(151 downto 144);
+							elsif(debug_byte_count = 20) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(159 downto 152);
+							elsif(debug_byte_count = 21) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(167 downto 160);
+							elsif(debug_byte_count = 22) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(175 downto 168);
+							elsif(debug_byte_count = 23) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(183 downto 176);
+							elsif(debug_byte_count = 24) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(191 downto 184);
+							elsif(debug_byte_count = 25) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(199 downto 192);
+							elsif(debug_byte_count = 26) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(207 downto 200);
+							elsif(debug_byte_count = 27) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(215 downto 208);
+							elsif(debug_byte_count = 28) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(223 downto 216);
+							elsif(debug_byte_count = 29) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(231 downto 224);
+							elsif(debug_byte_count = 30) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(239 downto 232);
+							elsif(debug_byte_count = 31) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(247 downto 240);
+							elsif(debug_byte_count = 32) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= seed_in_reg(255 downto 248);
+							elsif(debug_byte_count = 33) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= x"43";			--print C
+							elsif(debug_byte_count = 34) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(7 downto 0);
+							elsif(debug_byte_count = 35) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(15 downto 8);
+							elsif(debug_byte_count = 36) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(23 downto 16);
+							elsif(debug_byte_count = 37) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(31 downto 24);
+							elsif(debug_byte_count = 38) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(39 downto 32);
+							elsif(debug_byte_count = 39) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(47 downto 40);
+							elsif(debug_byte_count = 40) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(55 downto 48);
+							elsif(debug_byte_count = 41) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(63 downto 56);
+							elsif(debug_byte_count = 42) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(71 downto 64);
+							elsif(debug_byte_count = 43) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(79 downto 72);
+							elsif(debug_byte_count = 44) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(87 downto 80);
+							elsif(debug_byte_count = 45) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(95 downto 88);
+							elsif(debug_byte_count = 46) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(103 downto 96);
+							elsif(debug_byte_count = 47) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(111 downto 104);
+							elsif(debug_byte_count = 48) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(119 downto 112);
+							elsif(debug_byte_count = 49) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(127 downto 120);
+							elsif(debug_byte_count = 50) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(135 downto 128);
+							elsif(debug_byte_count = 51) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(143 downto 136);
+							elsif(debug_byte_count = 52) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(151 downto 144);
+							elsif(debug_byte_count = 53) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(159 downto 152);
+							elsif(debug_byte_count = 54) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(167 downto 160);
+							elsif(debug_byte_count = 55) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(175 downto 168);
+							elsif(debug_byte_count = 56) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(183 downto 176);
+							elsif(debug_byte_count = 57) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(191 downto 184);
+							elsif(debug_byte_count = 58) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(199 downto 192);
+							elsif(debug_byte_count = 59) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(207 downto 200);
+							elsif(debug_byte_count = 60) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(215 downto 208);
+							elsif(debug_byte_count = 61) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(223 downto 216);
+							elsif(debug_byte_count = 62) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(231 downto 224);
+							elsif(debug_byte_count = 63) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(239 downto 232);
+							elsif(debug_byte_count = 64) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(247 downto 240);
+							elsif(debug_byte_count = 65) then
+								debug_byte_count	<= debug_byte_count + 1;
+								data_out_reg		<= candidate(255 downto 248);
+								candidate_sent		<= '1';
+							else
+								--do nothing
+							end if;
+						else						--otherwise
 							if(is_prime_flag = '1') then
 								if(byte_count = 0) then
 									byte_count	<= byte_count + 1;
@@ -454,7 +666,9 @@ begin
 							rdy_send_data	<= '0';
 							send_data_reg	<= '1';
 							if(candidate_sent = '1') then
-								print_complete_flag <= '1';
+								print_complete_flag	<= '1';
+								byte_count		<= (others => '0');
+								debug_byte_count	<= (others => '0');
 							end if;
 						end if;
 					end if;
