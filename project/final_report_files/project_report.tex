@@ -372,6 +372,7 @@
 \usepackage{graphicx} % Required for the inclusion of images
 
 
+
 \begin{document}
 %
 % paper title
@@ -452,7 +453,7 @@
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-This paper outlines a project report to hardware accelerate the generation of a chain of large prime numbers, known as a Cunningham chain, on an FPGA. The motivation for this project came from a cryptocurrency called Primecoin, specifically its proof-of-work. Primecoin accepts as a proof-of-work a Cunningham chain of the first or second kind, as well as a Bi-twin chain. Due to this proof-of-work, there have been little public success with hardware acceleration of the mining of this cryptocurrency, providing proof that such a problem is not an easy one to attempt.\\
+This paper outlines the attempt at creating a hardware accelerator for the generation of a chain of large prime numbers, known as a Cunningham chain. The motivation for this project came from a cryptocurrency called Primecoin, specifically its proof-of-work. Primecoin accepts as a proof-of-work a Cunningham chain of the first or second kind, as well as a Bi-twin chain. To this date there have been little public success with hardware acceleration of the mining of this cryptocurrency. This project was an attempt to accelerate the generation and validation of Cunningham chains to be used with Primecoin. \\
 
 The core problems of this project are the generation of Cunningham chain prime number candidates, and the validation of the candidates as being prime. Using the equation to describe Cunningham chains, the candidates can be generated very quickly after using a generated random number. Validation was performed using a probabilistic test of primality, specifically the Rabin-Miller primality test, as the team does not fully understand the math behind the fast deterministic algorithm to test for primality.
 \end{abstract}
@@ -539,7 +540,14 @@ Again, $a_{0}$ is the prime number seed for the chain. Cunningham chains of the 
 
 Cunningham chains of the first kind generate what are called Sophie Germain primes, which is defined as:\\
 
-A prime number p is a Sophie Germain prime if 2p + 1 is also prime.\\
+\begin{tabular}{ p{3in} }
+	\textit{Definition 1:} \\
+	\hline
+	A prime number p is a Sophie Germain prime if 2p + 1 is also prime. \\
+	\hline
+\end{tabular}
+
+\vspace{2em}
 
 The value 2p + 1 that is generated from a Sophie Germain prime is called a safe prime. A Cunningham chain is called \textbf{complete} if the chain can no longer be extended. Using a Cunningham chain of the first kind, candidates can be quickly generated with very little computational overhead. This is due to the fact that each $a_{i+1}$ is effectively $2a_{i} + 1$, or $2a_{i} - 1$. The simplest approach to this problem was to take the previously generated candidate, shift it to the left by one bit, and add or subtract 1 to the result.
 
@@ -794,6 +802,7 @@ Producing Cunningham chains is a very computationally intensive problem that can
 \ifCLASSOPTIONcaptionsoff
   \newpage
 \fi
+
 
 
 
