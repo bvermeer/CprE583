@@ -455,7 +455,6 @@
 \begin{abstract}
 This paper outlines the attempt at creating a hardware accelerator for the generation of a chain of large prime numbers, known as a Cunningham chain. The motivation for this project came from a cryptocurrency called Primecoin, specifically its proof-of-work. Primecoin accepts as a proof-of-work a Cunningham chain of the first or second kind, as well as a Bi-twin chain. To this date there have been little public success with hardware acceleration of the mining of this cryptocurrency. This project was an attempt to accelerate the generation and validation of Cunningham chains to be used with Primecoin. \\
 
-The core problems of this project are the generation of Cunningham chain prime number candidates, and the validation of the candidates as being prime. Using the equation to describe Cunningham chains, the candidates can be generated very quickly after using a generated random number. Validation was performed using a probabilistic test of primality, specifically the Rabin-Miller primality test, as the team does not fully understand the math behind the fast deterministic algorithm to test for primality.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -516,8 +515,12 @@ With such a problem in mind, the goal of this project is to attempt to perform h
  
 %\hfill December 27, 2012
 
-\section{Core Problems}
-After researching the topic of prime number generation and verification, we have identified three main core problems that need to be solved:
+\section{Implementation}
+After researching the topic of prime number generation and verification, the problem was then broken down into several parts: Control over UART, generation of random numbers, generation of prime candidates, and verification of prime numbers.
+
+\subsection{UART Control}
+The first part of the implementation was UART control. The basic idea for this component is to wait for a valid single byte command and then pass control onto the corresponding submodule corresponding to that control byte. The command module then waits for the submodule to complete its work and then return control back to the command module.
+
 
 \subsection{Generation of Cunningham Chains}
 A Cunningham chain, named after the mathematician A.J.C. Cunningham and sometimes called a chain of nearly doubled primes, is a certain sequence of prime numbers such that the following property is true:
@@ -552,7 +555,6 @@ Cunningham chains of the first kind generate what are called Sophie Germain prim
 The value 2p + 1 that is generated from a Sophie Germain prime is called a safe prime. A Cunningham chain is called \textbf{complete} if the chain can no longer be extended. Using a Cunningham chain of the first kind, candidates can be quickly generated with very little computational overhead. This is due to the fact that each $a_{i+1}$ is effectively $2a_{i} + 1$, or $2a_{i} - 1$. The simplest approach to this problem was to take the previously generated candidate, shift it to the left by one bit, and add or subtract 1 to the result.
 
 
-\subsection{Communication with Cores}
 
 
 
