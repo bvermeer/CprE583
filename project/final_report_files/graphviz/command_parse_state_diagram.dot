@@ -1,0 +1,22 @@
+// CprE 583 - Project
+// State Diagram for UART command chooser 
+//
+// Author: Blake Vermeer 
+// Date: 12-18-14
+
+digraph StateMachine {
+	rankdir=UD;
+
+	reset [style=invis];
+	
+	reset -> ST_RST [label="Reset"];
+	
+	ST_RST -> ST_IDLE ;
+
+	ST_IDLE -> ST_WAIT [label="Valid Command Byte   "];
+	ST_IDLE -> ST_IDLE [label="Otherwise"];
+
+	ST_WAIT -> ST_IDLE [label="done = '1'"];
+	ST_WAIT -> ST_WAIT [label="done = '0'"];
+
+}

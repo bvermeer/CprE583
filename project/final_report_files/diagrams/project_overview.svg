@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="project_overview.png">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path3854"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="136.52167"
+     inkscape:cy="658.90689"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1151"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#fff9f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985"
+       width="181.5869"
+       height="152.36601"
+       x="284.88528"
+       y="322.14996" />
+    <text
+       xml:space="preserve"
+       style="font-size:82.64913177px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="375.54086"
+       y="395.66516"
+       id="text3755"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3757"
+         x="375.54086"
+         y="395.66516"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle">UART Command</tspan><tspan
+         sodipodi:role="line"
+         x="375.54086"
+         y="421.49301"
+         id="tspan3759"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle">Parse Module</tspan></text>
+    <rect
+       style="fill:#fff9f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985-1"
+       width="181.5869"
+       height="152.36601"
+       x="284.99298"
+       y="111.73902" />
+    <text
+       xml:space="preserve"
+       style="font-size:82.64913177px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="375.64856"
+       y="185.2542"
+       id="text3755-5"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="375.64856"
+         y="185.2542"
+         id="tspan3759-1"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle">UART Process</tspan><tspan
+         sodipodi:role="line"
+         x="375.64856"
+         y="211.08205"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle"
+         id="tspan3790">Data Module</tspan></text>
+    <rect
+       style="fill:#fff9f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985-9"
+       width="181.5869"
+       height="152.36601"
+       x="45.162914"
+       y="540.48138" />
+    <text
+       xml:space="preserve"
+       style="font-size:82.64913177px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="135.81847"
+       y="613.99658"
+       id="text3755-4"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="135.81847"
+         y="613.99658"
+         id="tspan3759-3"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle">Debug Help</tspan><tspan
+         sodipodi:role="line"
+         x="135.81847"
+         y="639.82446"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle"
+         id="tspan5029">Message Module</tspan></text>
+    <rect
+       style="fill:#fff9f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985-2"
+       width="181.5869"
+       height="152.36601"
+       x="287.20682"
+       y="540.48132" />
+    <text
+       xml:space="preserve"
+       style="font-size:82.64913177px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="377.8624"
+       y="613.99658"
+       id="text3755-53"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="377.8624"
+         y="613.99658"
+         id="tspan3759-4"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle">Random Number</tspan><tspan
+         sodipodi:role="line"
+         x="377.8624"
+         y="639.82446"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle"
+         id="tspan5033"> Module</tspan></text>
+    <rect
+       style="fill:#fff9f9;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect2985-5"
+       width="181.5869"
+       height="152.36601"
+       x="531.46448"
+       y="541.2193" />
+    <text
+       xml:space="preserve"
+       style="font-size:82.64913177px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="622.12006"
+       y="614.73456"
+       id="text3755-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="625.40906"
+         y="614.73456"
+         id="tspan3759-41"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle">Cunningham </tspan><tspan
+         sodipodi:role="line"
+         x="622.12006"
+         y="640.56244"
+         style="font-size:20.66228294px;text-align:center;text-anchor:middle"
+         id="tspan5037">Chain Module</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 378.00022,262.45381 -0.36896,56.08334"
+       id="path3845"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 378.36919,474.6112 0,29.8865 253.85092,0 0,34.68311"
+       id="path4291"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 378.36919,504.4977 0,32.10034"
+       id="path4659"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 377.76591,504.25868 -242.37678,0 0,31.56897"
+       id="path4843"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.06622839px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 468.39771,624.78171 58.29716,0"
+       id="path5039"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

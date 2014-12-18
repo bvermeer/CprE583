@@ -521,6 +521,22 @@ After researching the topic of prime number generation and verification, the pro
 \subsection{UART Control}
 The first part of the implementation was UART control. The basic idea for this component is to wait for a valid single byte command and then pass control onto the corresponding submodule corresponding to that control byte. The command module then waits for the submodule to complete its work and then return control back to the command module.
 
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.35]{graphviz/command_parse_state_diagram.png}
+		\caption{Command Module State Machine}
+	\end{figure}  
+
+The command module does not enter the ST\_WAIT stage until a valid command byte is received. After a valid command byte is received, the ST\_WAIT stage is entered and the UART TX and RX signals are connected to the appropriate submodule as well as setting the enable signal for that module. The command module then waits in the ST\_WAIT stage until the submodule indicates that it is done by setting the "done" flag. The command module then transitions the ST\_IDLE stage and disconnects the TX and RX lines from the submodule. \\
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.3]{diagrams/project_overview.png}
+		\caption{Overview of Project Structure}
+		\label{project_overview}
+	\end{figure}
+
+Figure \ref{project_overview} gives an overview of the project structure and how the command module fits into the overarching project.
 
 \subsection{Generation of Cunningham Chains}
 A Cunningham chain, named after the mathematician A.J.C. Cunningham and sometimes called a chain of nearly doubled primes, is a certain sequence of prime numbers such that the following property is true:
